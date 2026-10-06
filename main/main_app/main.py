@@ -49,6 +49,41 @@ class JatekAblak(QMainWindow):
         self.ui.btn_karakter.clicked.connect(lambda: self.ui.stackedWidget.setCurrentIndex(3))
         self.ui.btn_expedicio.clicked.connect(lambda: self.ui.stackedWidget.setCurrentIndex(1))
         self.ui.btn_dungeon_soteterdo.clicked.connect(lambda: self.ui.stackedWidget.setCurrentIndex(2))
+
+        # térkép
+
+        self.terkep_cellak = {}
+        
+        self.ui.gridLayout.setSpacing(0)
+        self.ui.gridLayout.setContentsMargins(0, 0, 0, 0)
+        for row in range(self.ui.gridLayout.rowCount()):
+            for col in range(self.ui.gridLayout.columnCount()):
+                item = self.ui.gridLayout.itemAtPosition(row, col)
+                if item is not None:
+                    cella_widget = item.widget()
+                    
+                    # eltároljuk a x-y értékeket 
+                    self.terkep_cellak[(col, row)] = cella_widget
+                    
+                    # Teszt: köd, minden fekete
+                    cella_widget.setStyleSheet("background-color: black;")
+
+        
+        self.hos_x = 4
+        self.hos_y = 3
+        
+        #TESZT szörny encounter / piros a mező
+        self.szorny_x = 6
+        self.szorny_y = 4
+        self.terkep_cellak[(self.szorny_x, self.szorny_y)].setStyleSheet("background-color: red;")
+        
+        #Ha minden stimmel, akkor a hős cellája zöld körülötte pedig köd(fekete egyenlőre)
+        self.terkep_cellak[(self.hos_x, self.hos_y)].setStyleSheet("background-color: green;")
+
+
+        self.ui.listWidget.setDragDropMode(QAbstractItemView.NoDragDrop)
+        self.ui.listWidget.setIconSize(QSize(64, 64))
+        projekt_mappa = os.path.dirname(os.path.abspath(__file__))
 		
 #----------------------__init__(self): VÉGE ---------------------------------
     
@@ -66,6 +101,53 @@ class JatekAblak(QMainWindow):
         self.ui.textBrowser.hide()   
         self.ui.stackedWidget.setCurrentIndex(0) 
         print("Visszatértél a főmenübe.")
+
+    def keyPressEvent(self, event):
+        #csak a dungeonbe mozoghatunk
+        if self.ui.stackedWidget.currentIndex() != 2: 
+            return
+    
+        #zöld szín visszaváltoztatása miatt kell
+        uj_x, uj_y = self.hos_x, self.hos_y
+        if event.key() == Qt.Key_W:
+             uj_y -= 1
+        elif event.key() == Qt.Key_S:
+            uj_y += 1
+        elif event.key() == Qt.Key_A:
+            uj_x -= 1
+        elif event.key() == Qt.Key_D:
+             uj_x += 1
+        
+        #TESZT: szörny encounter
+        if uj_x == self.szorny_x and uj_y == self.szorny_y:
+            print("Egy szörnyet találtál, a csata elkezdődik!")
+            
+            #hős képe betöltése
+            hos_kep_utvonal =  os.path.join(assets_mappa,"hero.png")
+            hos_pixmap = QPixmap(hos_kep_utvonal)
+            self.ui.lbl_hos_img.setPixmap(hos_pixmap)
+            self.ui.lbl_hos_img.setScaledContents(True)
+            
+            #szörny képe betöltése
+            szorny_kep_utvonal = os.path.join(assets_mappa,"monster.png")
+            szorny_pixmap = QPixmap(szorny_kep_utvonal)
+            self.ui.lbl_szorn_img.setPixmap(szorny_pixmap)
+            self.ui.lbl_szorn_img.setScaledContents(True)
+
+            #3. harci gui, váltunk rá
+            self.ui.stackedWidget.setCurrentIndex(4) 
+            #TODO: statok betöltése itt?
+            return
+        
+        max_x = self.ui.gridLayout.columnCount()
+        max_y = self.ui.gridLayout.rowCount()
+    
+        #hős cella színezése, zöld <-> fekete
+        if 0 <= uj_x < max_x and 0 <= uj_y < max_y:
+            self.terkep_cellak[(self.hos_x, self.hos_y)].setStyleSheet("background-color: black;")
+            self.hos_x, self.hos_y = uj_x, uj_y
+            self.terkep_cellak[(self.hos_x, self.hos_y)].setStyleSheet("background-color: green;")
+
 #---------------------------JÁTÉKABLAK VÉGE-------------------------		
 if __name__ == "__main__":
     app = QApplication(sys.argv)
