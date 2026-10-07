@@ -84,6 +84,42 @@ class JatekAblak(QMainWindow):
         self.ui.listWidget.setDragDropMode(QAbstractItemView.NoDragDrop)
         self.ui.listWidget.setIconSize(QSize(64, 64))
         projekt_mappa = os.path.dirname(os.path.abspath(__file__))
+
+	#teszt tárgyakkal
+         
+        self.ui.listWidget.setDragDropMode(QAbstractItemView.NoDragDrop)
+        self.ui.listWidget.setIconSize(QSize(64, 64))
+        projekt_mappa = os.path.dirname(os.path.abspath(__file__))
+
+        teszt_targyak = [
+            {"nev": "Kard", "info": "Sebzés: +5\nRitkaság: Gyakori", "kep": "sword.png"},
+            {"nev": "Mellvért", "info": "Védelem: +10\nRitkaság: Gyakori", "kep": "chestplate.png"},
+            {"nev": "Sisak", "info": "Védelem: +15\nBlokkolás: 10%", "kep": "helmet.png"},
+            {"nev": "Pajzs", "info": "Védelem: +15\nBlokkolás: 10%", "kep": "shield.png"},
+            {"nev": "Nadrág", "info": "Védelem: +8\nMozgás: -1", "kep": "leggings.png"},
+            {"nev": "Kesztyű", "info": "Ügyesség: +3\nVédelem: +2", "kep": "gloves.png"},
+            {"nev": "Csizma", "info": "Sebesség: +2\nVédelem: +1", "kep": "boots.png"},
+        ]
+
+        for targy in teszt_targyak:
+            item = QListWidgetItem() 
+            item.setToolTip(f"<b>{targy['nev']}</b><br>{targy['info']}")
+            item.setData(Qt.UserRole, targy["nev"])
+            
+            teljes_utvonal = os.path.join(assets_mappa, targy["kep"])
+            pixmap = QPixmap(teljes_utvonal)
+            if pixmap.isNull():
+                print(f"HIBA: Még mindig null ez a kép: {teljes_utvonal}")
+            
+            #képek átméretezése fix 64x64-re
+            atmeretezett_kep = pixmap.scaled(64, 64, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+  
+            item.setIcon(QIcon(atmeretezett_kep))
+            #icon betöltése assets/ mappából
+            
+            self.ui.listWidget.addItem(item)
+        
+		self.ui.listWidget.itemDoubleClicked.connect(self.targyra_kattintott)
 		
 #----------------------__init__(self): VÉGE ---------------------------------
     
@@ -147,6 +183,21 @@ class JatekAblak(QMainWindow):
             self.terkep_cellak[(self.hos_x, self.hos_y)].setStyleSheet("background-color: black;")
             self.hos_x, self.hos_y = uj_x, uj_y
             self.terkep_cellak[(self.hos_x, self.hos_y)].setStyleSheet("background-color: green;")
+	def targyra_kattintott(self, item):
+        targy_neve = item.data(Qt.UserRole)
+        print(f"Duplán kattintottál erre a tárgyra: {targy_neve}")
+        #TODO: equip logika normálisan
+
+        #teszt equip frontend szinten
+        if "kard" in targy_neve.lower():
+        
+            self.ui.btn_kard.setIcon(item.icon())
+            self.ui.btn_kard.setIconSize(QSize(64, 64))
+            self.ui.btn_kard.setText("")
+        
+            row = self.ui.listWidget.row(item)
+            self.ui.listWidget.takeItem(row)
+            print(f"Felszerelve: {targy_neve}")
 
 #---------------------------JÁTÉKABLAK VÉGE-------------------------		
 if __name__ == "__main__":
