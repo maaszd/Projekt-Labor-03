@@ -119,7 +119,14 @@ class JatekAblak(QMainWindow):
             
             self.ui.listWidget.addItem(item)
         
-		self.ui.listWidget.itemDoubleClicked.connect(self.targyra_kattintott)
+        self.ui.listWidget.itemDoubleClicked.connect(self.targyra_kattintott)
+
+    #harc teszt
+        
+        #harc idozito
+        self.harc_timer = QTimer(self)
+        self.harc_timer.timeout.connect(self.auto_harc_kor)
+        self.ui.btn_harcinditas.clicked.connect(self.harc_inditasa)
 		
 #----------------------__init__(self): VÉGE ---------------------------------
     
@@ -183,7 +190,7 @@ class JatekAblak(QMainWindow):
             self.terkep_cellak[(self.hos_x, self.hos_y)].setStyleSheet("background-color: black;")
             self.hos_x, self.hos_y = uj_x, uj_y
             self.terkep_cellak[(self.hos_x, self.hos_y)].setStyleSheet("background-color: green;")
-	def targyra_kattintott(self, item):
+    def targyra_kattintott(self, item):
         targy_neve = item.data(Qt.UserRole)
         print(f"Duplán kattintottál erre a tárgyra: {targy_neve}")
         #TODO: equip logika normálisan
@@ -198,6 +205,63 @@ class JatekAblak(QMainWindow):
             row = self.ui.listWidget.row(item)
             self.ui.listWidget.takeItem(row)
             print(f"Felszerelve: {targy_neve}")
+
+    def harc_inditasa(self):
+        if self.ui.btn_harcinditas.text() == "Tovább a térképre":
+            self.ui.stackedWidget.setCurrentIndex(1)
+            self.ui.btn_harcinditas.setText("Harc indítása")
+            
+            #szörny letörlése a térképről
+            self.terkep_cellak[(self.szorny_x, self.szorny_y)].setStyleSheet("background-color: black;")
+            #semmissé tesszük a szörny koordinátáit, TODO: elegánsabb megoldás?
+            self.szorny_x, self.szorny_y = -1, -1
+            return
+        print("A harc elkezdődött!")
+        self.ui.btn_harcinditas.setEnabled(False) 
+            
+        #1000ms = 1sec ütések között
+        self.hos_kore = True
+        self.harc_timer.start(1000)
+
+    def auto_harc_kor(self):
+        if self.hos_kore:
+            #TESZT: hős támadás
+            sebzes = 15
+            valos_sebzes = int(random.uniform(0.8,1) * sebzes)
+            print(f"A hős lecsapott: {valos_sebzes} sebzés!")
+            
+            #szörny hp bar frissitése
+            jelenlegi_szorny_hp = self.ui.pb_szorny_hp.value()
+            uj_hp = max(0, jelenlegi_szorny_hp - valos_sebzes)
+            self.ui.pb_szorny_hp.setValue(uj_hp)
+            
+            if uj_hp <= 0:
+                print("A szörny halott!")
+                self.harc_timer.stop()
+                self.ui.btn_harcinditas.setText("Tovább a térképre")
+                self.ui.btn_harcinditas.setEnabled(True)
+                return
+            
+            self.hos_kore = False
+        else:
+            #TESZT: szörny támad
+            szorny_sebzes = 8
+            valos_sebzes = int(random.uniform(0.8,1) * szorny_sebzes)
+            print(f"A szörny visszatámadt: {valos_sebzes} sebzés!")
+            
+            jelenlegi_hos_hp = self.ui.pb_hos_hp.value()
+            uj_hos_hp = max(0, jelenlegi_hos_hp - valos_sebzes)
+            self.ui.pb_hos_hp.setValue(uj_hos_hp)
+
+            # Vereség ellenőrzése
+            if uj_hos_hp <= 0:
+                print("Meghaltál, a Szörny megölt.")
+                self.harc_timer.stop()
+                self.ui.btn_harcinditas.setText("Vége a játéknak")
+                self.ui.btn_harcinditas.setEnabled(True)
+                return
+            
+            self.hos_kore = True
 
 #---------------------------JÁTÉKABLAK VÉGE-------------------------		
 if __name__ == "__main__":
