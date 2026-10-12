@@ -3,7 +3,7 @@ import random
 import sys
 import os
 from PySide6.QtCore import Qt, QSize, QObject, Signal, QTimer
-from PySide6.QtWidgets import QApplication, QMainWindow, QListWidget, QListWidgetItem, QAbstractItemView
+from PySide6.QtWidgets import QApplication, QMainWindow, QListWidget, QListWidgetItem, QAbstractItemView, QListView
 from PySide6.QtGui import QIcon, QPixmap
 from ui_menu import Ui_MainWindow 
 
@@ -80,9 +80,15 @@ class JatekAblak(QMainWindow):
         #Ha minden stimmel, akkor a hős cellája zöld körülötte pedig köd(fekete egyenlőre)
         self.terkep_cellak[(self.hos_x, self.hos_y)].setStyleSheet("background-color: green;")
 
-
+        #inventory beallitasai   
         self.ui.listWidget.setDragDropMode(QAbstractItemView.NoDragDrop)
         self.ui.listWidget.setIconSize(QSize(64, 64))
+        self.ui.listWidget.setViewMode(QListWidget.IconMode)
+        self.ui.listWidget.setResizeMode(QListWidget.Adjust)
+        self.ui.listWidget.setMovement(QListView.Static)
+        self.ui.listWidget.setSpacing(10) 
+        self.ui.listWidget.setGridSize(QSize(80, 80))
+        
         projekt_mappa = os.path.dirname(os.path.abspath(__file__))
 
 	#teszt tárgyakkal
@@ -95,8 +101,8 @@ class JatekAblak(QMainWindow):
         teszt_targyak = [
             {"nev": "Kard", "info": "Sebzés: +5\nRitkaság: Gyakori", "kep": "sword.png"},
             {"nev": "Mellvért", "info": "Védelem: +10\nRitkaság: Gyakori", "kep": "chestplate.png"},
-            {"nev": "Sisak", "info": "Védelem: +15\nBlokkolás: 10%", "kep": "helmet.png"},
-            {"nev": "Pajzs", "info": "Védelem: +15\nBlokkolás: 10%", "kep": "shield.png"},
+            {"nev": "Sisak", "info": "Védelem: +15\n", "kep": "helmet.png"},
+            {"nev": "Pajzs", "info": "Védelem: +15\n","kep": "shield.png"},
             {"nev": "Kesztyű", "info": "Ügyesség: +3\nVédelem: +2", "kep": "gloves.png"},
             {"nev": "Csizma", "info": "Sebesség: +2\nVédelem: +1", "kep": "boots.png"},
         ]
@@ -166,13 +172,13 @@ class JatekAblak(QMainWindow):
             print("Egy szörnyet találtál, a csata elkezdődik!")
             
             #hős képe betöltése
-            hos_kep_utvonal =  os.path.join(assets_mappa,"hero.png")
+            hos_kep_utvonal =  os.path.join(self.assets_mappa,"hero.png")
             hos_pixmap = QPixmap(hos_kep_utvonal)
             self.ui.lbl_hos_img.setPixmap(hos_pixmap)
             self.ui.lbl_hos_img.setScaledContents(True)
             
             #szörny képe betöltése
-            szorny_kep_utvonal = os.path.join(assets_mappa,"monster.png")
+            szorny_kep_utvonal = os.path.join(self.assets_mappa,"monster.png")
             szorny_pixmap = QPixmap(szorny_kep_utvonal)
             self.ui.lbl_szorn_img.setPixmap(szorny_pixmap)
             self.ui.lbl_szorn_img.setScaledContents(True)
