@@ -89,14 +89,14 @@ class JatekAblak(QMainWindow):
          
         self.ui.listWidget.setDragDropMode(QAbstractItemView.NoDragDrop)
         self.ui.listWidget.setIconSize(QSize(64, 64))
-        projekt_mappa = os.path.dirname(os.path.abspath(__file__))
-
+        self.projekt_mappa = os.path.dirname(os.path.abspath(__file__))
+        self.assets_mappa = os.path.join(self.projekt_mappa, "assets")
+        
         teszt_targyak = [
             {"nev": "Kard", "info": "Sebzés: +5\nRitkaság: Gyakori", "kep": "sword.png"},
             {"nev": "Mellvért", "info": "Védelem: +10\nRitkaság: Gyakori", "kep": "chestplate.png"},
             {"nev": "Sisak", "info": "Védelem: +15\nBlokkolás: 10%", "kep": "helmet.png"},
             {"nev": "Pajzs", "info": "Védelem: +15\nBlokkolás: 10%", "kep": "shield.png"},
-            {"nev": "Nadrág", "info": "Védelem: +8\nMozgás: -1", "kep": "leggings.png"},
             {"nev": "Kesztyű", "info": "Ügyesség: +3\nVédelem: +2", "kep": "gloves.png"},
             {"nev": "Csizma", "info": "Sebesség: +2\nVédelem: +1", "kep": "boots.png"},
         ]
@@ -106,17 +106,17 @@ class JatekAblak(QMainWindow):
             item.setToolTip(f"<b>{targy['nev']}</b><br>{targy['info']}")
             item.setData(Qt.UserRole, targy["nev"])
             
-            teljes_utvonal = os.path.join(assets_mappa, targy["kep"])
+            teljes_utvonal = os.path.join(self.assets_mappa, targy["kep"])
             pixmap = QPixmap(teljes_utvonal)
             if pixmap.isNull():
-                print(f"HIBA: Még mindig null ez a kép: {teljes_utvonal}")
+              print(f"HIBA: Még mindig null ez a kép: {teljes_utvonal}")
             
             #képek átméretezése fix 64x64-re
             atmeretezett_kep = pixmap.scaled(64, 64, Qt.KeepAspectRatio, Qt.SmoothTransformation)
   
             item.setIcon(QIcon(atmeretezett_kep))
-            #icon betöltése assets/ mappából
             
+            #icon betöltése assets/ mappából
             self.ui.listWidget.addItem(item)
         
         self.ui.listWidget.itemDoubleClicked.connect(self.targyra_kattintott)
