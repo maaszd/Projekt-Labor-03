@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'mainwindow.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.11.2
+## Created by: Qt User Interface Compiler version 6.12.0
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -16,11 +16,11 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
     QIcon, QImage, QKeySequence, QLinearGradient,
     QPainter, QPalette, QPixmap, QRadialGradient,
     QTransform)
-from PySide6.QtWidgets import (QApplication, QFrame, QGridLayout, QHBoxLayout,
-    QLabel, QListWidget, QListWidgetItem, QMainWindow,
-    QMenu, QMenuBar, QProgressBar, QPushButton,
-    QSizePolicy, QSpacerItem, QStackedWidget, QStatusBar,
-    QTextBrowser, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QFrame, QGraphicsView, QGridLayout,
+    QHBoxLayout, QLabel, QListWidget, QListWidgetItem,
+    QMainWindow, QMenu, QMenuBar, QProgressBar,
+    QPushButton, QSizePolicy, QSpacerItem, QStackedWidget,
+    QStatusBar, QTextBrowser, QVBoxLayout, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -139,552 +139,14 @@ class Ui_MainWindow(object):
         self.page2_soteterdo.setObjectName(u"page2_soteterdo")
         self.verticalLayout_4 = QVBoxLayout(self.page2_soteterdo)
         self.verticalLayout_4.setObjectName(u"verticalLayout_4")
-        self.gridLayout = QGridLayout()
-        self.gridLayout.setObjectName(u"gridLayout")
-        self.label_73 = QLabel(self.page2_soteterdo)
-        self.label_73.setObjectName(u"label_73")
-        self.label_73.setScaledContents(True)
+        self.graphicsView = QGraphicsView(self.page2_soteterdo)
+        self.graphicsView.setObjectName(u"graphicsView")
+        self.graphicsView.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.graphicsView.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
 
-        self.gridLayout.addWidget(self.label_73, 5, 2, 1, 1)
+        self.verticalLayout_4.addWidget(self.graphicsView)
 
-        self.label_60 = QLabel(self.page2_soteterdo)
-        self.label_60.setObjectName(u"label_60")
-        self.label_60.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_60, 5, 8, 1, 1)
-
-        self.label_80 = QLabel(self.page2_soteterdo)
-        self.label_80.setObjectName(u"label_80")
-        self.label_80.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_80, 8, 2, 1, 1)
-
-        self.label5 = QLabel(self.page2_soteterdo)
-        self.label5.setObjectName(u"label5")
-        self.label5.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label5, 2, 6, 1, 1)
-
-        self.label_59 = QLabel(self.page2_soteterdo)
-        self.label_59.setObjectName(u"label_59")
-        self.label_59.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_59, 7, 7, 1, 1)
-
-        self.label_81 = QLabel(self.page2_soteterdo)
-        self.label_81.setObjectName(u"label_81")
-        self.label_81.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_81, 8, 0, 1, 1)
-
-        self.label_40 = QLabel(self.page2_soteterdo)
-        self.label_40.setObjectName(u"label_40")
-        self.label_40.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_40, 6, 8, 1, 1)
-
-        self.label_75 = QLabel(self.page2_soteterdo)
-        self.label_75.setObjectName(u"label_75")
-        self.label_75.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_75, 8, 7, 1, 1)
-
-        self.label_61 = QLabel(self.page2_soteterdo)
-        self.label_61.setObjectName(u"label_61")
-        self.label_61.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_61, 8, 1, 1, 1)
-
-        self.label_48 = QLabel(self.page2_soteterdo)
-        self.label_48.setObjectName(u"label_48")
-        self.label_48.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_48, 3, 8, 1, 1)
-
-        self.label_3 = QLabel(self.page2_soteterdo)
-        self.label_3.setObjectName(u"label_3")
-        self.label_3.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_3, 9, 0, 1, 1)
-
-        self.label4 = QLabel(self.page2_soteterdo)
-        self.label4.setObjectName(u"label4")
-        self.label4.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label4, 2, 2, 1, 1)
-
-        self.label_17 = QLabel(self.page2_soteterdo)
-        self.label_17.setObjectName(u"label_17")
-        self.label_17.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_17, 1, 6, 1, 1)
-
-        self.label_55 = QLabel(self.page2_soteterdo)
-        self.label_55.setObjectName(u"label_55")
-        self.label_55.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_55, 7, 5, 1, 1)
-
-        self.label_43 = QLabel(self.page2_soteterdo)
-        self.label_43.setObjectName(u"label_43")
-        self.label_43.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_43, 4, 6, 1, 1)
-
-        self.label_28 = QLabel(self.page2_soteterdo)
-        self.label_28.setObjectName(u"label_28")
-        self.label_28.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_28, 7, 1, 1, 1)
-
-        self.label_31 = QLabel(self.page2_soteterdo)
-        self.label_31.setObjectName(u"label_31")
-        self.label_31.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_31, 4, 1, 1, 1)
-
-        self.label_30 = QLabel(self.page2_soteterdo)
-        self.label_30.setObjectName(u"label_30")
-        self.label_30.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_30, 3, 1, 1, 1)
-
-        self.label_33 = QLabel(self.page2_soteterdo)
-        self.label_33.setObjectName(u"label_33")
-        self.label_33.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_33, 3, 2, 1, 1)
-
-        self.label_65 = QLabel(self.page2_soteterdo)
-        self.label_65.setObjectName(u"label_65")
-        self.label_65.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_65, 6, 0, 1, 1)
-
-        self.label_32 = QLabel(self.page2_soteterdo)
-        self.label_32.setObjectName(u"label_32")
-        self.label_32.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_32, 5, 1, 1, 1)
-
-        self.label_64 = QLabel(self.page2_soteterdo)
-        self.label_64.setObjectName(u"label_64")
-        self.label_64.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_64, 5, 0, 1, 1)
-
-        self.label_57 = QLabel(self.page2_soteterdo)
-        self.label_57.setObjectName(u"label_57")
-        self.label_57.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_57, 6, 6, 1, 1)
-
-        self.label_67 = QLabel(self.page2_soteterdo)
-        self.label_67.setObjectName(u"label_67")
-        self.label_67.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_67, 6, 2, 1, 1)
-
-        self.label_50 = QLabel(self.page2_soteterdo)
-        self.label_50.setObjectName(u"label_50")
-        self.label_50.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_50, 3, 6, 1, 1)
-
-        self.label_27 = QLabel(self.page2_soteterdo)
-        self.label_27.setObjectName(u"label_27")
-        self.label_27.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_27, 9, 5, 1, 1)
-
-        self.label_49 = QLabel(self.page2_soteterdo)
-        self.label_49.setObjectName(u"label_49")
-        self.label_49.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_49, 3, 7, 1, 1)
-
-        self.label_44 = QLabel(self.page2_soteterdo)
-        self.label_44.setObjectName(u"label_44")
-        self.label_44.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_44, 4, 5, 1, 1)
-
-        self.label_72 = QLabel(self.page2_soteterdo)
-        self.label_72.setObjectName(u"label_72")
-        self.label_72.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_72, 5, 3, 1, 1)
-
-        self.label_45 = QLabel(self.page2_soteterdo)
-        self.label_45.setObjectName(u"label_45")
-        self.label_45.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_45, 4, 4, 1, 1)
-
-        self.label_77 = QLabel(self.page2_soteterdo)
-        self.label_77.setObjectName(u"label_77")
-        self.label_77.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_77, 8, 5, 1, 1)
-
-        self.label_19 = QLabel(self.page2_soteterdo)
-        self.label_19.setObjectName(u"label_19")
-        self.label_19.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_19, 1, 5, 1, 1)
-
-        self.label_53 = QLabel(self.page2_soteterdo)
-        self.label_53.setObjectName(u"label_53")
-        self.label_53.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_53, 5, 5, 1, 1)
-
-        self.label_70 = QLabel(self.page2_soteterdo)
-        self.label_70.setObjectName(u"label_70")
-        self.label_70.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_70, 6, 3, 1, 1)
-
-        self.label_76 = QLabel(self.page2_soteterdo)
-        self.label_76.setObjectName(u"label_76")
-        self.label_76.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_76, 8, 6, 1, 1)
-
-        self.label_35 = QLabel(self.page2_soteterdo)
-        self.label_35.setObjectName(u"label_35")
-        self.label_35.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_35, 3, 5, 1, 1)
-
-        self.label_10 = QLabel(self.page2_soteterdo)
-        self.label_10.setObjectName(u"label_10")
-        self.label_10.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_10, 0, 0, 1, 1)
-
-        self.label_22 = QLabel(self.page2_soteterdo)
-        self.label_22.setObjectName(u"label_22")
-        self.label_22.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_22, 2, 3, 1, 1)
-
-        self.label_20 = QLabel(self.page2_soteterdo)
-        self.label_20.setObjectName(u"label_20")
-        self.label_20.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_20, 1, 4, 1, 1)
-
-        self.label7_10 = QLabel(self.page2_soteterdo)
-        self.label7_10.setObjectName(u"label7_10")
-        self.label7_10.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label7_10, 0, 1, 1, 1)
-
-        self.label_41 = QLabel(self.page2_soteterdo)
-        self.label_41.setObjectName(u"label_41")
-        self.label_41.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_41, 5, 7, 1, 1)
-
-        self.label_63 = QLabel(self.page2_soteterdo)
-        self.label_63.setObjectName(u"label_63")
-        self.label_63.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_63, 4, 0, 1, 1)
-
-        self.label_79 = QLabel(self.page2_soteterdo)
-        self.label_79.setObjectName(u"label_79")
-        self.label_79.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_79, 8, 3, 1, 1)
-
-        self.label_78 = QLabel(self.page2_soteterdo)
-        self.label_78.setObjectName(u"label_78")
-        self.label_78.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_78, 8, 4, 1, 1)
-
-        self.label_29 = QLabel(self.page2_soteterdo)
-        self.label_29.setObjectName(u"label_29")
-        self.label_29.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_29, 6, 1, 1, 1)
-
-        self.label7_14 = QLabel(self.page2_soteterdo)
-        self.label7_14.setObjectName(u"label7_14")
-        self.label7_14.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label7_14, 0, 7, 1, 1)
-
-        self.label_37 = QLabel(self.page2_soteterdo)
-        self.label_37.setObjectName(u"label_37")
-        self.label_37.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_37, 4, 7, 1, 1)
-
-        self.label_42 = QLabel(self.page2_soteterdo)
-        self.label_42.setObjectName(u"label_42")
-        self.label_42.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_42, 4, 8, 1, 1)
-
-        self.label7_15 = QLabel(self.page2_soteterdo)
-        self.label7_15.setObjectName(u"label7_15")
-        self.label7_15.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label7_15, 0, 6, 1, 1)
-
-        self.label_24 = QLabel(self.page2_soteterdo)
-        self.label_24.setObjectName(u"label_24")
-        self.label_24.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_24, 2, 5, 1, 1)
-
-        self.label_58 = QLabel(self.page2_soteterdo)
-        self.label_58.setObjectName(u"label_58")
-        self.label_58.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_58, 7, 6, 1, 1)
-
-        self.label_34 = QLabel(self.page2_soteterdo)
-        self.label_34.setObjectName(u"label_34")
-        self.label_34.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_34, 3, 3, 1, 1)
-
-        self.label_39 = QLabel(self.page2_soteterdo)
-        self.label_39.setObjectName(u"label_39")
-        self.label_39.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_39, 6, 7, 1, 1)
-
-        self.label_54 = QLabel(self.page2_soteterdo)
-        self.label_54.setObjectName(u"label_54")
-        self.label_54.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_54, 6, 5, 1, 1)
-
-        self.label8 = QLabel(self.page2_soteterdo)
-        self.label8.setObjectName(u"label8")
-        self.label8.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label8, 1, 2, 1, 1)
-
-        self.label_8 = QLabel(self.page2_soteterdo)
-        self.label_8.setObjectName(u"label_8")
-        self.label_8.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_8, 9, 6, 1, 1)
-
-        self.label7_12 = QLabel(self.page2_soteterdo)
-        self.label7_12.setObjectName(u"label7_12")
-        self.label7_12.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label7_12, 0, 3, 1, 1)
-
-        self.label_6 = QLabel(self.page2_soteterdo)
-        self.label_6.setObjectName(u"label_6")
-        self.label_6.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_6, 2, 8, 1, 1)
-
-        self.label = QLabel(self.page2_soteterdo)
-        self.label.setObjectName(u"label")
-        self.label.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label, 1, 0, 1, 1)
-
-        self.label_56 = QLabel(self.page2_soteterdo)
-        self.label_56.setObjectName(u"label_56")
-        self.label_56.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_56, 5, 6, 1, 1)
-
-        self.label2 = QLabel(self.page2_soteterdo)
-        self.label2.setObjectName(u"label2")
-        self.label2.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label2, 2, 1, 1, 1)
-
-        self.label_23 = QLabel(self.page2_soteterdo)
-        self.label_23.setObjectName(u"label_23")
-        self.label_23.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_23, 2, 4, 1, 1)
-
-        self.label_74 = QLabel(self.page2_soteterdo)
-        self.label_74.setObjectName(u"label_74")
-        self.label_74.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_74, 8, 8, 1, 1)
-
-        self.label_71 = QLabel(self.page2_soteterdo)
-        self.label_71.setObjectName(u"label_71")
-        self.label_71.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_71, 5, 4, 1, 1)
-
-        self.label7_17 = QLabel(self.page2_soteterdo)
-        self.label7_17.setObjectName(u"label7_17")
-        self.label7_17.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label7_17, 0, 4, 1, 1)
-
-        self.label_5 = QLabel(self.page2_soteterdo)
-        self.label_5.setObjectName(u"label_5")
-        self.label_5.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_5, 2, 0, 1, 1)
-
-        self.label7_16 = QLabel(self.page2_soteterdo)
-        self.label7_16.setObjectName(u"label7_16")
-        self.label7_16.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label7_16, 0, 5, 1, 1)
-
-        self.label7_13 = QLabel(self.page2_soteterdo)
-        self.label7_13.setObjectName(u"label7_13")
-        self.label7_13.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label7_13, 0, 8, 1, 1)
-
-        self.label6 = QLabel(self.page2_soteterdo)
-        self.label6.setObjectName(u"label6")
-        self.label6.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label6, 2, 7, 1, 1)
-
-        self.label_21 = QLabel(self.page2_soteterdo)
-        self.label_21.setObjectName(u"label_21")
-        self.label_21.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_21, 1, 3, 1, 1)
-
-        self.label_25 = QLabel(self.page2_soteterdo)
-        self.label_25.setObjectName(u"label_25")
-        self.label_25.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_25, 9, 3, 1, 1)
-
-        self.label_66 = QLabel(self.page2_soteterdo)
-        self.label_66.setObjectName(u"label_66")
-        self.label_66.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_66, 7, 0, 1, 1)
-
-        self.label_4 = QLabel(self.page2_soteterdo)
-        self.label_4.setObjectName(u"label_4")
-        self.label_4.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_4, 9, 8, 1, 1)
-
-        self.label_26 = QLabel(self.page2_soteterdo)
-        self.label_26.setObjectName(u"label_26")
-        self.label_26.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_26, 9, 4, 1, 1)
-
-        self.label_69 = QLabel(self.page2_soteterdo)
-        self.label_69.setObjectName(u"label_69")
-        self.label_69.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_69, 7, 3, 1, 1)
-
-        self.label_47 = QLabel(self.page2_soteterdo)
-        self.label_47.setObjectName(u"label_47")
-        self.label_47.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_47, 4, 2, 1, 1)
-
-        self.label3 = QLabel(self.page2_soteterdo)
-        self.label3.setObjectName(u"label3")
-        self.label3.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label3, 9, 1, 1, 1)
-
-        self.label_52 = QLabel(self.page2_soteterdo)
-        self.label_52.setObjectName(u"label_52")
-        self.label_52.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_52, 7, 4, 1, 1)
-
-        self.label_2 = QLabel(self.page2_soteterdo)
-        self.label_2.setObjectName(u"label_2")
-        self.label_2.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_2, 1, 8, 1, 1)
-
-        self.label_38 = QLabel(self.page2_soteterdo)
-        self.label_38.setObjectName(u"label_38")
-        self.label_38.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_38, 7, 8, 1, 1)
-
-        self.label_68 = QLabel(self.page2_soteterdo)
-        self.label_68.setObjectName(u"label_68")
-        self.label_68.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_68, 7, 2, 1, 1)
-
-        self.label7_11 = QLabel(self.page2_soteterdo)
-        self.label7_11.setObjectName(u"label7_11")
-        self.label7_11.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label7_11, 0, 2, 1, 1)
-
-        self.label_51 = QLabel(self.page2_soteterdo)
-        self.label_51.setObjectName(u"label_51")
-        self.label_51.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_51, 6, 4, 1, 1)
-
-        self.label7 = QLabel(self.page2_soteterdo)
-        self.label7.setObjectName(u"label7")
-        self.label7.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label7, 1, 1, 1, 1)
-
-        self.label_18 = QLabel(self.page2_soteterdo)
-        self.label_18.setObjectName(u"label_18")
-        self.label_18.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_18, 1, 7, 1, 1)
-
-        self.label_46 = QLabel(self.page2_soteterdo)
-        self.label_46.setObjectName(u"label_46")
-        self.label_46.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_46, 4, 3, 1, 1)
-
-        self.label_9 = QLabel(self.page2_soteterdo)
-        self.label_9.setObjectName(u"label_9")
-        self.label_9.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_9, 9, 2, 1, 1)
-
-        self.label_62 = QLabel(self.page2_soteterdo)
-        self.label_62.setObjectName(u"label_62")
-        self.label_62.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_62, 3, 0, 1, 1)
-
-        self.label_7 = QLabel(self.page2_soteterdo)
-        self.label_7.setObjectName(u"label_7")
-        self.label_7.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_7, 9, 7, 1, 1)
-
-        self.label_36 = QLabel(self.page2_soteterdo)
-        self.label_36.setObjectName(u"label_36")
-        self.label_36.setScaledContents(True)
-
-        self.gridLayout.addWidget(self.label_36, 3, 4, 1, 1)
-
-
-        self.verticalLayout_4.addLayout(self.gridLayout)
-
-        self.verticalSpacer_3 = QSpacerItem(20, 250, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+        self.verticalSpacer_3 = QSpacerItem(20, 245, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
 
         self.verticalLayout_4.addItem(self.verticalSpacer_3)
 
@@ -813,15 +275,15 @@ class Ui_MainWindow(object):
 
         self.gridLayout_2.addWidget(self.label_94, 0, 0, 1, 1)
 
-        self.widget = QWidget(self.page3_karakter)
-        self.widget.setObjectName(u"widget")
-        self.widget.setGeometry(QRect(0, 0, 1391, 421))
-        self.horizontalLayout_3 = QHBoxLayout(self.widget)
+        self.layoutWidget1 = QWidget(self.page3_karakter)
+        self.layoutWidget1.setObjectName(u"layoutWidget1")
+        self.layoutWidget1.setGeometry(QRect(0, 0, 1391, 421))
+        self.horizontalLayout_3 = QHBoxLayout(self.layoutWidget1)
         self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
         self.horizontalLayout_3.setContentsMargins(0, 0, 0, 0)
         self.gridLayout_3 = QGridLayout()
         self.gridLayout_3.setObjectName(u"gridLayout_3")
-        self.btn_cipo = QPushButton(self.widget)
+        self.btn_cipo = QPushButton(self.layoutWidget1)
         self.btn_cipo.setObjectName(u"btn_cipo")
         self.btn_cipo.setMinimumSize(QSize(64, 64))
         self.btn_cipo.setStyleSheet(u"QPushButton {\n"
@@ -835,7 +297,7 @@ class Ui_MainWindow(object):
 
         self.gridLayout_3.addWidget(self.btn_cipo, 3, 1, 1, 1)
 
-        self.btn_pajzs = QPushButton(self.widget)
+        self.btn_pajzs = QPushButton(self.layoutWidget1)
         self.btn_pajzs.setObjectName(u"btn_pajzs")
         self.btn_pajzs.setMinimumSize(QSize(64, 64))
         self.btn_pajzs.setStyleSheet(u"QPushButton {\n"
@@ -849,7 +311,7 @@ class Ui_MainWindow(object):
 
         self.gridLayout_3.addWidget(self.btn_pajzs, 4, 2, 1, 1)
 
-        self.btn_kesztyu = QPushButton(self.widget)
+        self.btn_kesztyu = QPushButton(self.layoutWidget1)
         self.btn_kesztyu.setObjectName(u"btn_kesztyu")
         self.btn_kesztyu.setMinimumSize(QSize(64, 64))
         self.btn_kesztyu.setStyleSheet(u"QPushButton {\n"
@@ -863,7 +325,7 @@ class Ui_MainWindow(object):
 
         self.gridLayout_3.addWidget(self.btn_kesztyu, 1, 0, 1, 1)
 
-        self.btn_nadrag = QPushButton(self.widget)
+        self.btn_nadrag = QPushButton(self.layoutWidget1)
         self.btn_nadrag.setObjectName(u"btn_nadrag")
         self.btn_nadrag.setMinimumSize(QSize(64, 64))
         self.btn_nadrag.setStyleSheet(u"QPushButton {\n"
@@ -877,7 +339,7 @@ class Ui_MainWindow(object):
 
         self.gridLayout_3.addWidget(self.btn_nadrag, 2, 1, 1, 1)
 
-        self.btn_sisak = QPushButton(self.widget)
+        self.btn_sisak = QPushButton(self.layoutWidget1)
         self.btn_sisak.setObjectName(u"btn_sisak")
         self.btn_sisak.setMinimumSize(QSize(64, 64))
         self.btn_sisak.setStyleSheet(u"QPushButton {\n"
@@ -891,7 +353,7 @@ class Ui_MainWindow(object):
 
         self.gridLayout_3.addWidget(self.btn_sisak, 0, 1, 1, 1)
 
-        self.btn_gyuru = QPushButton(self.widget)
+        self.btn_gyuru = QPushButton(self.layoutWidget1)
         self.btn_gyuru.setObjectName(u"btn_gyuru")
         self.btn_gyuru.setMinimumSize(QSize(64, 64))
         self.btn_gyuru.setStyleSheet(u"QPushButton {\n"
@@ -905,7 +367,7 @@ class Ui_MainWindow(object):
 
         self.gridLayout_3.addWidget(self.btn_gyuru, 1, 2, 1, 1)
 
-        self.btn_mellvert = QPushButton(self.widget)
+        self.btn_mellvert = QPushButton(self.layoutWidget1)
         self.btn_mellvert.setObjectName(u"btn_mellvert")
         self.btn_mellvert.setMinimumSize(QSize(64, 64))
         self.btn_mellvert.setStyleSheet(u"QPushButton {\n"
@@ -919,7 +381,7 @@ class Ui_MainWindow(object):
 
         self.gridLayout_3.addWidget(self.btn_mellvert, 1, 1, 1, 1)
 
-        self.btn_kard = QPushButton(self.widget)
+        self.btn_kard = QPushButton(self.layoutWidget1)
         self.btn_kard.setObjectName(u"btn_kard")
         self.btn_kard.setMinimumSize(QSize(64, 64))
         self.btn_kard.setStyleSheet(u"QPushButton {\n"
@@ -942,7 +404,7 @@ class Ui_MainWindow(object):
 
         self.gridLayout_7 = QGridLayout()
         self.gridLayout_7.setObjectName(u"gridLayout_7")
-        self.listWidget = QListWidget(self.widget)
+        self.listWidget = QListWidget(self.layoutWidget1)
         self.listWidget.setObjectName(u"listWidget")
 
         self.gridLayout_7.addWidget(self.listWidget, 0, 0, 1, 1)
@@ -953,75 +415,75 @@ class Ui_MainWindow(object):
         self.stackedWidget.addWidget(self.page3_karakter)
         self.page4_harc = QWidget()
         self.page4_harc.setObjectName(u"page4_harc")
-        self.widget1 = QWidget(self.page4_harc)
-        self.widget1.setObjectName(u"widget1")
-        self.widget1.setGeometry(QRect(1, 2, 1401, 411))
-        self.gridLayout_4 = QGridLayout(self.widget1)
+        self.layoutWidget2 = QWidget(self.page4_harc)
+        self.layoutWidget2.setObjectName(u"layoutWidget2")
+        self.layoutWidget2.setGeometry(QRect(1, 2, 1401, 411))
+        self.gridLayout_4 = QGridLayout(self.layoutWidget2)
         self.gridLayout_4.setObjectName(u"gridLayout_4")
         self.gridLayout_4.setContentsMargins(0, 0, 0, 0)
-        self.btn_harcinditas = QPushButton(self.widget1)
+        self.btn_harcinditas = QPushButton(self.layoutWidget2)
         self.btn_harcinditas.setObjectName(u"btn_harcinditas")
 
         self.gridLayout_4.addWidget(self.btn_harcinditas, 1, 1, 1, 1)
 
         self.gridLayout_8 = QGridLayout()
         self.gridLayout_8.setObjectName(u"gridLayout_8")
-        self.label_203 = QLabel(self.widget1)
+        self.label_203 = QLabel(self.layoutWidget2)
         self.label_203.setObjectName(u"label_203")
 
         self.gridLayout_8.addWidget(self.label_203, 0, 3, 1, 1)
 
-        self.lbl_hos_vedekezes_ertek = QLabel(self.widget1)
+        self.lbl_hos_vedekezes_ertek = QLabel(self.layoutWidget2)
         self.lbl_hos_vedekezes_ertek.setObjectName(u"lbl_hos_vedekezes_ertek")
 
         self.gridLayout_8.addWidget(self.lbl_hos_vedekezes_ertek, 1, 2, 1, 1)
 
-        self.label_98 = QLabel(self.widget1)
+        self.label_98 = QLabel(self.layoutWidget2)
         self.label_98.setObjectName(u"label_98")
 
         self.gridLayout_8.addWidget(self.label_98, 2, 1, 1, 1)
 
-        self.label_96 = QLabel(self.widget1)
+        self.label_96 = QLabel(self.layoutWidget2)
         self.label_96.setObjectName(u"label_96")
 
         self.gridLayout_8.addWidget(self.label_96, 1, 1, 1, 1)
 
-        self.label_205 = QLabel(self.widget1)
+        self.label_205 = QLabel(self.layoutWidget2)
         self.label_205.setObjectName(u"label_205")
 
         self.gridLayout_8.addWidget(self.label_205, 1, 3, 1, 1)
 
-        self.label_95 = QLabel(self.widget1)
+        self.label_95 = QLabel(self.layoutWidget2)
         self.label_95.setObjectName(u"label_95")
 
         self.gridLayout_8.addWidget(self.label_95, 0, 1, 1, 1)
 
-        self.lbl_szorny_kezdemenyezes_ertek = QLabel(self.widget1)
+        self.lbl_szorny_kezdemenyezes_ertek = QLabel(self.layoutWidget2)
         self.lbl_szorny_kezdemenyezes_ertek.setObjectName(u"lbl_szorny_kezdemenyezes_ertek")
 
         self.gridLayout_8.addWidget(self.lbl_szorny_kezdemenyezes_ertek, 2, 4, 1, 1)
 
-        self.lbl_hos_kezdemenyezes_ertek = QLabel(self.widget1)
+        self.lbl_hos_kezdemenyezes_ertek = QLabel(self.layoutWidget2)
         self.lbl_hos_kezdemenyezes_ertek.setObjectName(u"lbl_hos_kezdemenyezes_ertek")
 
         self.gridLayout_8.addWidget(self.lbl_hos_kezdemenyezes_ertek, 2, 2, 1, 1)
 
-        self.lbl_hos_ero_ertek = QLabel(self.widget1)
+        self.lbl_hos_ero_ertek = QLabel(self.layoutWidget2)
         self.lbl_hos_ero_ertek.setObjectName(u"lbl_hos_ero_ertek")
 
         self.gridLayout_8.addWidget(self.lbl_hos_ero_ertek, 0, 2, 1, 1)
 
-        self.label_207 = QLabel(self.widget1)
+        self.label_207 = QLabel(self.layoutWidget2)
         self.label_207.setObjectName(u"label_207")
 
         self.gridLayout_8.addWidget(self.label_207, 2, 3, 1, 1)
 
-        self.lbl_szorny_ero_ertek = QLabel(self.widget1)
+        self.lbl_szorny_ero_ertek = QLabel(self.layoutWidget2)
         self.lbl_szorny_ero_ertek.setObjectName(u"lbl_szorny_ero_ertek")
 
         self.gridLayout_8.addWidget(self.lbl_szorny_ero_ertek, 0, 4, 1, 1)
 
-        self.frame = QFrame(self.widget1)
+        self.frame = QFrame(self.layoutWidget2)
         self.frame.setObjectName(u"frame")
         self.frame.setFrameShape(QFrame.Shape.StyledPanel)
         self.frame.setFrameShadow(QFrame.Shadow.Raised)
@@ -1061,12 +523,12 @@ class Ui_MainWindow(object):
 
         self.gridLayout_8.addWidget(self.frame, 0, 0, 3, 1)
 
-        self.lbl_szorn_vedekezes_ertek = QLabel(self.widget1)
+        self.lbl_szorn_vedekezes_ertek = QLabel(self.layoutWidget2)
         self.lbl_szorn_vedekezes_ertek.setObjectName(u"lbl_szorn_vedekezes_ertek")
 
         self.gridLayout_8.addWidget(self.lbl_szorn_vedekezes_ertek, 1, 4, 1, 1)
 
-        self.frame_2 = QFrame(self.widget1)
+        self.frame_2 = QFrame(self.layoutWidget2)
         self.frame_2.setObjectName(u"frame_2")
         self.frame_2.setFrameShape(QFrame.Shape.StyledPanel)
         self.frame_2.setFrameShadow(QFrame.Shadow.Raised)
@@ -1144,7 +606,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.stackedWidget.setCurrentIndex(4)
+        self.stackedWidget.setCurrentIndex(2)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -1164,96 +626,6 @@ class Ui_MainWindow(object):
         self.btn_kilepes.setText(QCoreApplication.translate("MainWindow", u"Kil\u00e9p\u00e9s", None))
         self.btn_dungeon_soteterdo.setText(QCoreApplication.translate("MainWindow", u"S\u00f6t\u00e9t erd\u0151", None))
         self.btn_dungeon_kripta.setText(QCoreApplication.translate("MainWindow", u"Kripta", None))
-        self.label_73.setText("")
-        self.label_60.setText("")
-        self.label_80.setText("")
-        self.label5.setText("")
-        self.label_59.setText("")
-        self.label_81.setText("")
-        self.label_40.setText("")
-        self.label_75.setText("")
-        self.label_61.setText("")
-        self.label_48.setText("")
-        self.label_3.setText("")
-        self.label4.setText("")
-        self.label_17.setText("")
-        self.label_55.setText("")
-        self.label_43.setText("")
-        self.label_28.setText("")
-        self.label_31.setText("")
-        self.label_30.setText("")
-        self.label_33.setText("")
-        self.label_65.setText("")
-        self.label_32.setText("")
-        self.label_64.setText("")
-        self.label_57.setText("")
-        self.label_67.setText("")
-        self.label_50.setText("")
-        self.label_27.setText("")
-        self.label_49.setText("")
-        self.label_44.setText("")
-        self.label_72.setText("")
-        self.label_45.setText("")
-        self.label_77.setText("")
-        self.label_19.setText("")
-        self.label_53.setText("")
-        self.label_70.setText("")
-        self.label_76.setText("")
-        self.label_35.setText("")
-        self.label_10.setText("")
-        self.label_22.setText("")
-        self.label_20.setText("")
-        self.label7_10.setText("")
-        self.label_41.setText("")
-        self.label_63.setText("")
-        self.label_79.setText("")
-        self.label_78.setText("")
-        self.label_29.setText("")
-        self.label7_14.setText("")
-        self.label_37.setText("")
-        self.label_42.setText("")
-        self.label7_15.setText("")
-        self.label_24.setText("")
-        self.label_58.setText("")
-        self.label_34.setText("")
-        self.label_39.setText("")
-        self.label_54.setText("")
-        self.label8.setText("")
-        self.label_8.setText("")
-        self.label7_12.setText("")
-        self.label_6.setText("")
-        self.label.setText("")
-        self.label_56.setText("")
-        self.label2.setText("")
-        self.label_23.setText("")
-        self.label_74.setText("")
-        self.label_71.setText("")
-        self.label7_17.setText("")
-        self.label_5.setText("")
-        self.label7_16.setText("")
-        self.label7_13.setText("")
-        self.label6.setText("")
-        self.label_21.setText("")
-        self.label_25.setText("")
-        self.label_66.setText("")
-        self.label_4.setText("")
-        self.label_26.setText("")
-        self.label_69.setText("")
-        self.label_47.setText("")
-        self.label3.setText("")
-        self.label_52.setText("")
-        self.label_2.setText("")
-        self.label_38.setText("")
-        self.label_68.setText("")
-        self.label7_11.setText("")
-        self.label_51.setText("")
-        self.label7.setText("")
-        self.label_18.setText("")
-        self.label_46.setText("")
-        self.label_9.setText("")
-        self.label_62.setText("")
-        self.label_7.setText("")
-        self.label_36.setText("")
         self.label_91.setText(QCoreApplication.translate("MainWindow", u"\u00d6sszes Kezdem\u00e9nyez\u00e9s:", None))
         self.label_12.setText("")
         self.label_83.setText("")
