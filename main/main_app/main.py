@@ -5,7 +5,7 @@ import os
 from PySide6.QtCore import Qt, QSize, QObject, Signal, QTimer
 from PySide6.QtWidgets import QApplication, QMainWindow, QListWidget, QListWidgetItem, QAbstractItemView, QListView
 from PySide6.QtGui import QIcon, QPixmap
-from ui_menu import Ui_MainWindow 
+from ui_menu import Ui_MainWindow
 
 
 #textBrowserbe kiiratas miatt kell
@@ -86,12 +86,13 @@ class JatekAblak(QMainWindow):
         self.ui.listWidget.setViewMode(QListWidget.IconMode)
         self.ui.listWidget.setResizeMode(QListWidget.Adjust)
         self.ui.listWidget.setMovement(QListView.Static)
-        self.ui.listWidget.setSpacing(10) 
+        self.ui.listWidget.setSpacing(5)
+        self.ui.listWidget.setStyleSheet("QListWidget::item { border: 1px solid gray; }")
         self.ui.listWidget.setGridSize(QSize(80, 80))
         
         projekt_mappa = os.path.dirname(os.path.abspath(__file__))
 
-	#teszt tárgyakkal
+	    #teszt tárgyakkal
          
         self.ui.listWidget.setDragDropMode(QAbstractItemView.NoDragDrop)
         self.ui.listWidget.setIconSize(QSize(64, 64))
