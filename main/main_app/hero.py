@@ -93,15 +93,15 @@ class Hero:
         return self._initiative
 
     @initiative.setter
-    def initiation(self, value: float):
+    def initiative(self, value: float):
         self._initiative = value
 
     #----többi cucc
 
 
     def takedamage(self, amount):
-        if amount>=0:
-            self._current_hp = max(0,self._currenthp-amount)
+        if amount >= 0:
+            self._current_hp = max(0,self._current_hp - amount)
 
     def alive(self):
         return self._current_hp > 0
