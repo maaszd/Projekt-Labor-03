@@ -1,6 +1,4 @@
 from enum import Enum
-
-
 class ItemRarity(Enum):
 
   COMMON = 1  # Gyakori
@@ -36,15 +34,15 @@ class Item:
   def __init__(
       self,
       item_id: int,  # item_id: Egyedi azonosító az adatbázisból
-      name: str,  # name: A tárgy neve (pl. "Sárkányölő kard")[cite: 1]
-      item_type: ItemType,  # item_type: A tárgy típusa[cite: 1]
-      rarity: ItemRarity,  # rarity: A ritkasági szintje[cite: 1]
-      bonus_attack: int,  # bonus_attack: Bónusz támadási érték[cite: 1]
-      bonus_defense: int,  # bonus_defense: Bónusz védekezési érték[cite: 1]
-      gold_value: int,  # gold_value: Mennyit ér aranyban[cite: 1]
-      image_path: str,  # image_path: A tárgyhoz tartozó kép fájlútvonala[cite: 1]
+      name: str,  # name: A tárgy neve (pl. "Sárkányölő kard")
+      item_type: ItemType,  # item_type: A tárgy típusa
+      rarity: ItemRarity,  # rarity: A ritkasági szintje
+      bonus_attack: int,  # bonus_attack: Bónusz támadási érték
+      bonus_defense: int,  # bonus_defense: Bónusz védekezési érték
+      gold_value: int,  # gold_value: Mennyit ér aranyban
+      image_path: str,  # image_path: A tárgyhoz tartozó kép fájlútvonala
   ):
-    # ITT VÁLTOZÁS: aláhúzás került a nevek elé (privát változók)
+    
     self._item_id = item_id
     self._name = name
     self._item_type = item_type
