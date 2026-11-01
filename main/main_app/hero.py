@@ -1,4 +1,7 @@
-
+import os
+from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QGraphicsPixmapItem
+from PySide6.QtGui import QPixmap
 
 class Hero:
 
@@ -133,3 +136,22 @@ class Hero:
         self._initiative = self._initiative * 1.1
         self._xp = 0
 
+#csak a kép miatt kell
+class Hos(QGraphicsPixmapItem):
+    def __init__(self, kep_utvonal, x, y, hero_adatok):
+        super().__init__()
+        
+        self.adatok = hero_adatok
+        
+        projekt_mappa = os.path.dirname(os.path.abspath(__file__))
+        teljes_utvonal = os.path.normpath(os.path.join(projekt_mappa, kep_utvonal))
+        pixmap = QPixmap(teljes_utvonal)
+        
+        if pixmap.isNull():
+            print("HIBA: Nem található a hős képe!")
+        else:
+            #fix 50x50 meretu
+            self.setPixmap(pixmap.scaled(50, 50, Qt.KeepAspectRatio, Qt.SmoothTransformation))
+            
+        self.setPos(x, y)
+        self.sebesseg = 15 #mennyit tud lepni egy gombnyomasra

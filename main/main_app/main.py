@@ -3,9 +3,13 @@ import random
 import sys
 import os
 import json
+from szoba import Szoba
+from hero import Hero, Hos
+from monster import Monster
 from PySide6.QtCore import Qt, QSize, QObject, Signal, QTimer
 from PySide6.QtWidgets import QApplication, QMainWindow, QListWidget, QListWidgetItem, QAbstractItemView, QListView, QGraphicsScene, QGraphicsPixmapItem, QGraphicsRectItem, QGraphicsItem
 from PySide6.QtGui import QIcon, QPixmap, QBrush, QColor, QPen
+
 from ui_menu import Ui_MainWindow
 
 
@@ -22,61 +26,8 @@ class ConsoleRedirector(QObject):
 
 #---------------------------------------------------
 #csak a kép miatt kell
-class Hos(QGraphicsPixmapItem):
-    def __init__(self, kep_utvonal, x, y):
-        super().__init__()
-        
-        projekt_mappa = os.path.dirname(os.path.abspath(__file__))
-        teljes_utvonal = os.path.normpath(os.path.join(projekt_mappa, kep_utvonal))
-        pixmap = QPixmap(teljes_utvonal)
-        
-        if pixmap.isNull():
-            print("HIBA: Nem található a hős képe!")
-        else:
-            #fix 50x50 meretu
-            self.setPixmap(pixmap.scaled(50, 50, Qt.KeepAspectRatio, Qt.SmoothTransformation))
-            
-        self.setPos(x, y)
-        self.sebesseg = 15 #mennyit tud lepni egy gombnyomasra
+
           
-class Szoba(QGraphicsScene):
-    def __init__(self, nev, hatter_kep_utvonal):
-        super().__init__(0, 0, 800, 600)
-        self.nev = nev
-        
-        projekt_mappa = os.path.dirname(os.path.abspath(__file__))
-        teljes_kep_utvonal = os.path.normpath(os.path.join(projekt_mappa, hatter_kep_utvonal))
-        pixmap = QPixmap(teljes_kep_utvonal)
-        #hatterkep betoltese
-        if pixmap.isNull():
-            print(f"HIBA: A Qt nem találja a képet ezen az útvonalon: {teljes_kep_utvonal}")
-            self.setBackgroundBrush(QBrush(Qt.darkGray)) #sotetszurke lesz
-        else:
-            self.hatter = QGraphicsPixmapItem(pixmap)
-            self.addItem(self.hatter)
-
-        self.ajtok = []
-        self.szornyek = []
-        self.akadalyok = []
-
-    def ajto_hozzadasa(self, x, y, szelesseg, magassag, cel_szoba_nev, cel_x, cel_y):
-        ajto = QGraphicsRectItem(x, y, szelesseg, magassag)
-        ajto.setBrush(QBrush(Qt.blue)) #egyelore zöld
-        
-        #setdataval elteszunk plusz infokat az ajtoba
-        ajto.setData(1, cel_szoba_nev) # 1 - hova visz?
-        ajto.setData(2, (cel_x, cel_y)) # 2- milyen x,y-ra dobja a host
-        
-        self.ajtok.append(ajto)
-        self.addItem(ajto)
-
-    def szorny_hozzadasa(self, x, y):
-        szorny = QGraphicsRectItem(0, 0, 50, 50)
-        szorny.setBrush(QBrush(Qt.red))
-        szorny.setPos(x, y)
-        self.szornyek.append(szorny)
-        self.addItem(szorny)
-
 class JatekAblak(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -109,11 +60,14 @@ class JatekAblak(QMainWindow):
         #TÉRKÉP
         self.szobak = {}
         self.palya_betoltese("palya_1.json")
-        self.aktualis_szoba = self.szobak["Kezdo"]
-        self.ui.graphicsView.setScene(self.aktualis_szoba)
-        self.ui.graphicsView.fitInView(self.aktualis_szoba.sceneRect(), Qt.IgnoreAspectRatio)
-        self.hos = Hos("assets/hero.png", 400, 300) 
-        self.aktualis_szoba.addItem(self.hos)
+        self.aktualis_szoba = self.szobak.get("Kezdo")
+        if self.aktualis_szoba:
+            self.ui.graphicsView.setScene(self.aktualis_szoba)
+            self.ui.graphicsView.fitInView(self.aktualis_szoba.sceneRect(), Qt.IgnoreAspectRatio)
+            #MINTA ADAT
+            kezdo_statok = Hero(name="Kalandor", current_hp=100, max_hp=100, damage=15, defense=5)
+            self.hos = Hos("assets/hero.png", 400, 300, kezdo_statok) 
+            self.aktualis_szoba.addItem(self.hos)
         
         
         #inventory beallitasai   
