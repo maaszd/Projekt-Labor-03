@@ -2,7 +2,6 @@ from enum import Enum
 
 
 class ItemRarity(Enum):
-  """A tárgyak ritkaságértéke 1-től 5-ig (adatbázis-kompatibilis számokkal)."""
 
   COMMON = 1  # Gyakori
   UNCOMMON = 2  # Nem gyakori
@@ -22,7 +21,6 @@ class ItemRarity(Enum):
 
 
 class ItemType(Enum):
-  """A tárgy típusa (szintén tárolható számmal vagy szöveggel az adatbázisban)."""
 
   ARMOR = 1  # Páncél
   WEAPON = 2  # Fegyver
@@ -55,8 +53,6 @@ class Item:
     self._bonus_defense = bonus_defense
     self._gold_value = gold_value
     self._image_path = image_path
-
-  # --- Ezt a részt kell bemásolnod az __init__ után az Item osztályon belül ---
 
   @property
   def item_id(self) -> int:
