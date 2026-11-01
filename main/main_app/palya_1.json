@@ -1,0 +1,37 @@
+{
+  "Kezdo": {
+    "hatter": "assets/szoba_1.png",
+    "ajtok": [
+      {
+        "x": 350,
+        "y": 0,
+        "szelesseg": 100,
+        "magassag": 20,
+        "cel_szoba": "Folyoso",
+        "cel_x": 350,
+        "cel_y": 540
+      }
+    ],
+    "szornyek": []
+  },
+  "Folyoso": {
+    "hatter": "assets/szoba_2.png",
+    "ajtok": [
+      {
+        "x": 350,
+        "y": 580,
+        "szelesseg": 100,
+        "magassag": 20,
+        "cel_szoba": "Kezdo",
+        "cel_x": 350,
+        "cel_y": 50
+      }
+    ],
+    "szornyek": [
+      {
+        "x": 400,
+        "y": 300
+      }
+    ]
+  }
+}

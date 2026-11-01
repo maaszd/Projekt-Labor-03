@@ -2,9 +2,10 @@
 import random
 import sys
 import os
+import json
 from PySide6.QtCore import Qt, QSize, QObject, Signal, QTimer
-from PySide6.QtWidgets import QApplication, QMainWindow, QListWidget, QListWidgetItem, QAbstractItemView, QListView
-from PySide6.QtGui import QIcon, QPixmap
+from PySide6.QtWidgets import QApplication, QMainWindow, QListWidget, QListWidgetItem, QAbstractItemView, QListView, QGraphicsScene, QGraphicsPixmapItem, QGraphicsRectItem, QGraphicsItem
+from PySide6.QtGui import QIcon, QPixmap, QBrush, QColor, QPen
 from ui_menu import Ui_MainWindow
 
 
@@ -20,6 +21,61 @@ class ConsoleRedirector(QObject):
         pass 
 
 #---------------------------------------------------
+#csak a kép miatt kell
+class Hos(QGraphicsPixmapItem):
+    def __init__(self, kep_utvonal, x, y):
+        super().__init__()
+        
+        projekt_mappa = os.path.dirname(os.path.abspath(__file__))
+        teljes_utvonal = os.path.normpath(os.path.join(projekt_mappa, kep_utvonal))
+        pixmap = QPixmap(teljes_utvonal)
+        
+        if pixmap.isNull():
+            print("HIBA: Nem található a hős képe!")
+        else:
+            #fix 50x50 meretu
+            self.setPixmap(pixmap.scaled(50, 50, Qt.KeepAspectRatio, Qt.SmoothTransformation))
+            
+        self.setPos(x, y)
+        self.sebesseg = 15 #mennyit tud lepni egy gombnyomasra
+          
+class Szoba(QGraphicsScene):
+    def __init__(self, nev, hatter_kep_utvonal):
+        super().__init__(0, 0, 800, 600)
+        self.nev = nev
+        
+        projekt_mappa = os.path.dirname(os.path.abspath(__file__))
+        teljes_kep_utvonal = os.path.normpath(os.path.join(projekt_mappa, hatter_kep_utvonal))
+        pixmap = QPixmap(teljes_kep_utvonal)
+        #hatterkep betoltese
+        if pixmap.isNull():
+            print(f"HIBA: A Qt nem találja a képet ezen az útvonalon: {teljes_kep_utvonal}")
+            self.setBackgroundBrush(QBrush(Qt.darkGray)) #sotetszurke lesz
+        else:
+            self.hatter = QGraphicsPixmapItem(pixmap)
+            self.addItem(self.hatter)
+
+        self.ajtok = []
+        self.szornyek = []
+        self.akadalyok = []
+
+    def ajto_hozzadasa(self, x, y, szelesseg, magassag, cel_szoba_nev, cel_x, cel_y):
+        ajto = QGraphicsRectItem(x, y, szelesseg, magassag)
+        ajto.setBrush(QBrush(Qt.blue)) #egyelore zöld
+        
+        #setdataval elteszunk plusz infokat az ajtoba
+        ajto.setData(1, cel_szoba_nev) # 1 - hova visz?
+        ajto.setData(2, (cel_x, cel_y)) # 2- milyen x,y-ra dobja a host
+        
+        self.ajtok.append(ajto)
+        self.addItem(ajto)
+
+    def szorny_hozzadasa(self, x, y):
+        szorny = QGraphicsRectItem(0, 0, 50, 50)
+        szorny.setBrush(QBrush(Qt.red))
+        szorny.setPos(x, y)
+        self.szornyek.append(szorny)
+        self.addItem(szorny)
 
 class JatekAblak(QMainWindow):
     def __init__(self):
@@ -48,38 +104,18 @@ class JatekAblak(QMainWindow):
         
         self.ui.btn_karakter.clicked.connect(lambda: self.ui.stackedWidget.setCurrentIndex(3))
         self.ui.btn_expedicio.clicked.connect(lambda: self.ui.stackedWidget.setCurrentIndex(1))
-        self.ui.btn_dungeon_soteterdo.clicked.connect(lambda: self.ui.stackedWidget.setCurrentIndex(2))
+        self.ui.btn_dungeon_soteterdo.clicked.connect(self.belepes_soteterdobe)
 
-        # térkép
-
-        self.terkep_cellak = {}
+        #TÉRKÉP
+        self.szobak = {}
+        self.palya_betoltese("palya_1.json")
+        self.aktualis_szoba = self.szobak["Kezdo"]
+        self.ui.graphicsView.setScene(self.aktualis_szoba)
+        self.ui.graphicsView.fitInView(self.aktualis_szoba.sceneRect(), Qt.IgnoreAspectRatio)
+        self.hos = Hos("assets/hero.png", 400, 300) 
+        self.aktualis_szoba.addItem(self.hos)
         
-        self.ui.gridLayout.setSpacing(0)
-        self.ui.gridLayout.setContentsMargins(0, 0, 0, 0)
-        for row in range(self.ui.gridLayout.rowCount()):
-            for col in range(self.ui.gridLayout.columnCount()):
-                item = self.ui.gridLayout.itemAtPosition(row, col)
-                if item is not None:
-                    cella_widget = item.widget()
-                    
-                    # eltároljuk a x-y értékeket 
-                    self.terkep_cellak[(col, row)] = cella_widget
-                    
-                    # Teszt: köd, minden fekete
-                    cella_widget.setStyleSheet("background-color: black;")
-
         
-        self.hos_x = 4
-        self.hos_y = 3
-        
-        #TESZT szörny encounter / piros a mező
-        self.szorny_x = 6
-        self.szorny_y = 4
-        self.terkep_cellak[(self.szorny_x, self.szorny_y)].setStyleSheet("background-color: red;")
-        
-        #Ha minden stimmel, akkor a hős cellája zöld körülötte pedig köd(fekete egyenlőre)
-        self.terkep_cellak[(self.hos_x, self.hos_y)].setStyleSheet("background-color: green;")
-
         #inventory beallitasai   
         self.ui.listWidget.setDragDropMode(QAbstractItemView.NoDragDrop)
         self.ui.listWidget.setIconSize(QSize(64, 64))
@@ -134,6 +170,15 @@ class JatekAblak(QMainWindow):
         self.harc_timer = QTimer(self)
         self.harc_timer.timeout.connect(self.auto_harc_kor)
         self.ui.btn_harcinditas.clicked.connect(self.harc_inditasa)
+
+
+        self.lenyomott_gombok = set() 
+        
+        #fps(60 FPS = 1000ms / 60 =~ 16ms)
+        self.mozgas_timer = QTimer(self)
+        self.mozgas_timer.timeout.connect(self.folyamatos_mozgas)
+        self.mozgas_timer.start(16)
+        self.szobavaltas_alatt = False
 		
 #----------------------__init__(self): VÉGE ---------------------------------
     
@@ -151,52 +196,67 @@ class JatekAblak(QMainWindow):
         self.ui.textBrowser.hide()   
         self.ui.stackedWidget.setCurrentIndex(0) 
         print("Visszatértél a főmenübe.")
-
+    
     def keyPressEvent(self, event):
-        #csak a dungeonbe mozoghatunk
-        if self.ui.stackedWidget.currentIndex() != 2: 
+        if self.ui.stackedWidget.currentIndex() != 2:
             return
-    
-        #zöld szín visszaváltoztatása miatt kell
-        uj_x, uj_y = self.hos_x, self.hos_y
-        if event.key() == Qt.Key_W:
-             uj_y -= 1
-        elif event.key() == Qt.Key_S:
-            uj_y += 1
-        elif event.key() == Qt.Key_A:
-            uj_x -= 1
-        elif event.key() == Qt.Key_D:
-             uj_x += 1
-        
-        #TESZT: szörny encounter
-        if uj_x == self.szorny_x and uj_y == self.szorny_y:
-            print("Egy szörnyet találtál, a csata elkezdődik!")
-            
-            #hős képe betöltése
-            hos_kep_utvonal =  os.path.join(self.assets_mappa,"hero.png")
-            hos_pixmap = QPixmap(hos_kep_utvonal)
-            self.ui.lbl_hos_img.setPixmap(hos_pixmap)
-            self.ui.lbl_hos_img.setScaledContents(True)
-            
-            #szörny képe betöltése
-            szorny_kep_utvonal = os.path.join(self.assets_mappa,"monster.png")
-            szorny_pixmap = QPixmap(szorny_kep_utvonal)
-            self.ui.lbl_szorn_img.setPixmap(szorny_pixmap)
-            self.ui.lbl_szorn_img.setScaledContents(True)
+        self.lenyomott_gombok.add(event.key())
 
-            #3. harci gui, váltunk rá
-            self.ui.stackedWidget.setCurrentIndex(4) 
-            #TODO: statok betöltése itt?
+    def keyReleaseEvent(self, event):
+        if self.ui.stackedWidget.currentIndex() != 2:
             return
-        
-        max_x = self.ui.gridLayout.columnCount()
-        max_y = self.ui.gridLayout.rowCount()
+        if event.key() in self.lenyomott_gombok:
+            self.lenyomott_gombok.remove(event.key())
     
-        #hős cella színezése, zöld <-> fekete
-        if 0 <= uj_x < max_x and 0 <= uj_y < max_y:
-            self.terkep_cellak[(self.hos_x, self.hos_y)].setStyleSheet("background-color: black;")
-            self.hos_x, self.hos_y = uj_x, uj_y
-            self.terkep_cellak[(self.hos_x, self.hos_y)].setStyleSheet("background-color: green;")
+    def folyamatos_mozgas(self):
+        if self.ui.stackedWidget.currentIndex() != 2 or not hasattr(self, 'hos'):
+            return
+
+        x = self.hos.x()
+        y = self.hos.y()
+        lepes = 3.5
+
+        #atlos mozgas
+        if Qt.Key_W in self.lenyomott_gombok or Qt.Key_Up in self.lenyomott_gombok:
+            y -= lepes
+        if Qt.Key_S in self.lenyomott_gombok or Qt.Key_Down in self.lenyomott_gombok:
+            y += lepes
+        if Qt.Key_A in self.lenyomott_gombok or Qt.Key_Left in self.lenyomott_gombok:
+            x -= lepes
+        if Qt.Key_D in self.lenyomott_gombok or Qt.Key_Right in self.lenyomott_gombok:
+            x += lepes
+       
+        #megortenik a lepes
+        self.hos.setPos(x, y)
+
+        erintett_ajtok = [item for item in self.hos.collidingItems() if item.data(1)]
+
+        #ha a hos nem all ajton feloldjuk
+        if not erintett_ajtok:
+            self.szobavaltas_alatt = False
+
+        #ha ralep az ajtora es atmehet
+        elif not self.szobavaltas_alatt:
+            ajto = erintett_ajtok[0]
+            cel_szoba_nev = ajto.data(1)
+            cel_x, cel_y = ajto.data(2)
+            
+            #addig igy van amig le nem megy az ajtorol
+            self.szobavaltas_alatt = True 
+            
+            #szobavaltas vegrehajtasa
+            self.aktualis_szoba = self.szobak[cel_szoba_nev]
+            self.ui.graphicsView.setScene(self.aktualis_szoba)
+            self.aktualis_szoba.addItem(self.hos)
+            self.hos.setPos(cel_x, cel_y)
+            self.ui.graphicsView.fitInView(self.aktualis_szoba.sceneRect(), Qt.IgnoreAspectRatio)
+            
+            print(f"Átléptél ide: {cel_szoba_nev}")
+            self.lenyomott_gombok.clear()
+    
+    def ajto_engedelyezese(self):
+        self.szobavaltas_alatt = False
+
     def targyra_kattintott(self, item):
         targy_neve = item.data(Qt.UserRole)
         print(f"Duplán kattintottál erre a tárgyra: {targy_neve}")
@@ -269,6 +329,50 @@ class JatekAblak(QMainWindow):
                 return
             
             self.hos_kore = True
+
+    def palya_betoltese(self, json_utvonal):
+        #lekerjuk a main.py helyet es osszefuzzuk a json_utvonallal
+        projekt_mappa = os.path.dirname(os.path.abspath(__file__))
+        teljes_utvonal = os.path.join(projekt_mappa, json_utvonal)
+        with open(teljes_utvonal, 'r', encoding='utf-8') as f:
+            palya_adatok = json.load(f)
+        #vegig iteralunk a szobakon betoltjuk oket
+        for szoba_nev, adatok in palya_adatok.items():
+            uj_szoba = Szoba(szoba_nev, adatok["hatter"])
+            
+            #ajtok generalasa
+            for ajto in adatok.get("ajtok", []):
+                uj_szoba.ajto_hozzadasa(
+                    ajto["x"], ajto["y"], ajto["szelesseg"], ajto["magassag"], 
+                    ajto["cel_szoba"], ajto["cel_x"], ajto["cel_y"]
+                )
+                
+            #szornyek generalasa
+            for szorny in adatok.get("szornyek", []):
+                uj_szoba.szorny_hozzadasa(szorny["x"], szorny["y"])
+                
+            #bekerul memoriaba
+            self.szobak[szoba_nev] = uj_szoba
+
+    def belepes_soteterdobe(self):
+        self.ui.stackedWidget.setCurrentIndex(2)
+        
+        #layout frissitese
+        QApplication.processEvents()
+        
+        #radobjuk a kepet
+        if hasattr(self, 'aktualis_szoba'):
+           self.ui.graphicsView.fitInView(self.aktualis_szoba.sceneRect(), Qt.IgnoreAspectRatio)
+           print("Beléptél a Sötét erdőbe")
+        self.hos.setFocus()
+    
+    def resizeEvent(self, event):
+        #qt elvegzi az atmeretezest a layoutokon
+        super().resizeEvent(event)
+        
+        #ha epp a jatekteren vagyok akkor rateszi a kamerat az ujra
+        if self.ui.stackedWidget.currentIndex() == 2 and hasattr(self, 'aktualis_szoba'):
+            self.ui.graphicsView.fitInView(self.aktualis_szoba.sceneRect(), Qt.IgnoreAspectRatio)
 
 #---------------------------JÁTÉKABLAK VÉGE-------------------------		
 if __name__ == "__main__":
