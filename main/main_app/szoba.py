@@ -2,7 +2,7 @@ import os
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QGraphicsScene, QGraphicsPixmapItem, QGraphicsRectItem
 from PySide6.QtGui import QPixmap, QBrush
-
+from monster import Monster, GraphicalMonster
 class Szoba(QGraphicsScene):
     def __init__(self, nev, hatter_kep_utvonal):
         super().__init__(0, 0, 800, 600)
@@ -35,8 +35,10 @@ class Szoba(QGraphicsScene):
         self.addItem(ajto)
 
     def szorny_hozzadasa(self, x, y):
-        szorny = QGraphicsRectItem(0, 0, 50, 50)
-        szorny.setBrush(QBrush(Qt.red))
-        szorny.setPos(x, y)
+        #letrehozzuk a szornyet
+        szorny_statok = Monster(name="Goblin", current_hp=30, max_hp=30, damage=8, defense=2)
+        
+        szorny = GraphicalMonster("assets/monster.png", x, y, szorny_statok)
+        
         self.szornyek.append(szorny)
         self.addItem(szorny)

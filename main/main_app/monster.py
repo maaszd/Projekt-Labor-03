@@ -1,3 +1,8 @@
+import os
+from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QGraphicsPixmapItem
+from PySide6.QtGui import QPixmap
+
 class Monster:
 
     def __init__(self, name: str, current_hp: int = 10, max_hp: int = 10, damage: int = 1, defense: int = 1, initiative: float = 0.4, id_szam: int = 0, is_boss: bool = False, title_reward: str = None):
@@ -98,3 +103,22 @@ class Monster:
     def takedamage(self, amount: int):
         if amount >= 0:
             self._current_hp = max(0, self._current_hp - amount)
+
+class GraphicalMonster(QGraphicsPixmapItem):
+    def __init__(self, kep_utvonal, x, y, monster_adatok):
+        super().__init__()
+        
+        self.adatok = monster_adatok
+        
+        projekt_mappa = os.path.dirname(os.path.abspath(__file__))
+        teljes_utvonal = os.path.normpath(os.path.join(projekt_mappa, kep_utvonal))
+        pixmap = QPixmap(teljes_utvonal)
+        
+        if pixmap.isNull():
+            print(f"HIBA: Nem található a szörny képe: {teljes_utvonal}")
+        else:
+            self.setPixmap(pixmap.scaled(50, 50, Qt.KeepAspectRatio, Qt.SmoothTransformation))
+            
+        self.setPos(x, y)
+        #azonositas
+        self.setData(3, "szorny")

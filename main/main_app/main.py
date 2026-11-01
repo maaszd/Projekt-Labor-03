@@ -4,8 +4,8 @@ import sys
 import os
 import json
 from szoba import Szoba
-from hero import Hero, Hos
-from monster import Monster
+from hero import Hero, GraphicalHero
+from monster import Monster, GraphicalMonster
 from PySide6.QtCore import Qt, QSize, QObject, Signal, QTimer
 from PySide6.QtWidgets import QApplication, QMainWindow, QListWidget, QListWidgetItem, QAbstractItemView, QListView, QGraphicsScene, QGraphicsPixmapItem, QGraphicsRectItem, QGraphicsItem
 from PySide6.QtGui import QIcon, QPixmap, QBrush, QColor, QPen
@@ -66,7 +66,7 @@ class JatekAblak(QMainWindow):
             self.ui.graphicsView.fitInView(self.aktualis_szoba.sceneRect(), Qt.IgnoreAspectRatio)
             #MINTA ADAT
             kezdo_statok = Hero(name="Kalandor", current_hp=100, max_hp=100, damage=15, defense=5)
-            self.hos = Hos("assets/hero.png", 400, 300, kezdo_statok) 
+            self.hos = GraphicalHero("assets/hero.png", 400, 300, kezdo_statok) 
             self.aktualis_szoba.addItem(self.hos)
         
         
@@ -179,9 +179,49 @@ class JatekAblak(QMainWindow):
             x -= lepes
         if Qt.Key_D in self.lenyomott_gombok or Qt.Key_Right in self.lenyomott_gombok:
             x += lepes
-       
+
+
+        #border ellenorzes, hogy ne menjen ki a hos a jatek teren kivulre
+        x = max(0, min(x, 750))
+        y = max(0, min(y, 550))
         #megortenik a lepes
         self.hos.setPos(x, y)
+
+        #ha a hos ralepett egy szornyre akkor harc kezdodik
+        erintett_szornyek = [item for item in self.hos.collidingItems() if item.data(3) == "szorny"]
+
+        if erintett_szornyek:
+            
+            self.aktualis_harcolt_szorny = erintett_szornyek[0]
+            self.lenyomott_gombok.clear()
+            
+            #hos kepet es nevet frissitjuk a harci menuben
+            self.ui.lbl_hos_img.setPixmap(self.hos.pixmap().scaled(100, 100, Qt.KeepAspectRatio, Qt.SmoothTransformation))
+            self.ui.lbl_hos_nev.setText(self.hos.adatok.name)
+            
+            #szorny kepet es nevet frissitjuk a harci menuben
+            self.ui.lbl_szorn_img.setPixmap(self.aktualis_harcolt_szorny.pixmap().scaled(100, 100, Qt.KeepAspectRatio, Qt.SmoothTransformation))
+            self.ui.lbl_szorny_nev.setText(self.aktualis_harcolt_szorny.adatok.name)
+            
+            #hos es szorny statok frissitese a harci menuben
+            self.ui.lbl_hos_ero_ertek.setText(str(self.hos.adatok.damage))
+            self.ui.lbl_hos_vedekezes_ertek.setText(str(self.hos.adatok.defense))
+            self.ui.lbl_szorny_ero_ertek.setText(str(self.aktualis_harcolt_szorny.adatok.damage))
+            self.ui.lbl_szorn_vedekezes_ertek.setText(str(self.aktualis_harcolt_szorny.adatok.defense))
+            self.ui.lbl_hos_kezdemenyezes_ertek.setText(str(self.hos.adatok.initiative))
+            self.ui.lbl_szorny_kezdemenyezes_ertek.setText(str(self.aktualis_harcolt_szorny.adatok.initiative))
+            
+            
+            #szorny hp bar frissitese
+            self.ui.pb_szorny_hp.setMaximum(self.aktualis_harcolt_szorny.adatok.max_hp)
+            self.ui.pb_szorny_hp.setValue(self.aktualis_harcolt_szorny.adatok.current_hp)
+            
+            #harci kepernyore valtas
+            self.ui.stackedWidget.setCurrentIndex(4)
+            print(f"Harc indult a(z) {self.aktualis_harcolt_szorny.adatok.name} ellen!")
+            
+            
+            return
 
         erintett_ajtok = [item for item in self.hos.collidingItems() if item.data(1)]
 
@@ -229,13 +269,13 @@ class JatekAblak(QMainWindow):
 
     def harc_inditasa(self):
         if self.ui.btn_harcinditas.text() == "Tovább a térképre":
-            self.ui.stackedWidget.setCurrentIndex(1)
+            self.ui.stackedWidget.setCurrentIndex(2)
+            QApplication.processEvents() 
+            if hasattr(self, 'aktualis_szoba') and self.aktualis_szoba:
+                self.ui.graphicsView.fitInView(self.aktualis_szoba.sceneRect(), Qt.IgnoreAspectRatio)
+            self.hos.setFocus()
             self.ui.btn_harcinditas.setText("Harc indítása")
             
-            #szörny letörlése a térképről
-            self.terkep_cellak[(self.szorny_x, self.szorny_y)].setStyleSheet("background-color: black;")
-            #semmissé tesszük a szörny koordinátáit, TODO: elegánsabb megoldás?
-            self.szorny_x, self.szorny_y = -1, -1
             return
         print("A harc elkezdődött!")
         self.ui.btn_harcinditas.setEnabled(False) 
@@ -246,36 +286,43 @@ class JatekAblak(QMainWindow):
 
     def auto_harc_kor(self):
         if self.hos_kore:
-            #TESZT: hős támadás
-            sebzes = 15
-            valos_sebzes = int(random.uniform(0.8,1) * sebzes)
-            print(f"A hős lecsapott: {valos_sebzes} sebzés!")
+            #hős tamadasa valos adatokkal
+            sebzes = self.hos.adatok.damage
+            valos_sebzes = int(random.uniform(0.8, 1.0) * sebzes)
+            print(f"{self.hos.adatok.name} lecsapott: {valos_sebzes} sebzés!")
             
-            #szörny hp bar frissitése
-            jelenlegi_szorny_hp = self.ui.pb_szorny_hp.value()
-            uj_hp = max(0, jelenlegi_szorny_hp - valos_sebzes)
-            self.ui.pb_szorny_hp.setValue(uj_hp)
+            #szorny sebzodes
+            self.aktualis_harcolt_szorny.adatok.takedamage(valos_sebzes)
+            self.ui.pb_szorny_hp.setValue(self.aktualis_harcolt_szorny.adatok.current_hp)
             
-            if uj_hp <= 0:
-                print("A szörny halott!")
+            #gyozelem ellenorzes
+            if not self.aktualis_harcolt_szorny.adatok.alive():
+                print(f"A {self.aktualis_harcolt_szorny.adatok.name} halott!")
+                self.hos.adatok.gain_xp(5)
                 self.harc_timer.stop()
                 self.ui.btn_harcinditas.setText("Tovább a térképre")
                 self.ui.btn_harcinditas.setEnabled(True)
+                
+                #hallott szorny eltavolitasa a szobabol
+                if self.aktualis_harcolt_szorny in self.aktualis_szoba.szornyek:
+                    self.aktualis_szoba.szornyek.remove(self.aktualis_harcolt_szorny)
+                self.aktualis_szoba.removeItem(self.aktualis_harcolt_szorny)
                 return
             
             self.hos_kore = False
         else:
-            #TESZT: szörny támad
-            szorny_sebzes = 8
-            valos_sebzes = int(random.uniform(0.8,1) * szorny_sebzes)
+            #szorny tamadasa valos adatokkal
+            szorny_sebzes = self.aktualis_harcolt_szorny.adatok.damage
+            #szorny sebzes
+            valos_sebzes = max(0, int(random.uniform(0.8, 1.0) * szorny_sebzes) - self.hos.adatok.defense)
             print(f"A szörny visszatámadt: {valos_sebzes} sebzés!")
             
-            jelenlegi_hos_hp = self.ui.pb_hos_hp.value()
-            uj_hos_hp = max(0, jelenlegi_hos_hp - valos_sebzes)
-            self.ui.pb_hos_hp.setValue(uj_hos_hp)
+            #hos sebzodes
+            self.hos.adatok.takedamage(valos_sebzes)
+            self.ui.pb_hos_hp.setValue(self.hos.adatok.current_hp)
 
-            # Vereség ellenőrzése
-            if uj_hos_hp <= 0:
+            #halál ellenőrzés
+            if not self.hos.adatok.alive():
                 print("Meghaltál, a Szörny megölt.")
                 self.harc_timer.stop()
                 self.ui.btn_harcinditas.setText("Vége a játéknak")

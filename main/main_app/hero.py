@@ -137,7 +137,7 @@ class Hero:
         self._xp = 0
 
 #csak a kép miatt kell
-class Hos(QGraphicsPixmapItem):
+class GraphicalHero(QGraphicsPixmapItem):
     def __init__(self, kep_utvonal, x, y, hero_adatok):
         super().__init__()
         
