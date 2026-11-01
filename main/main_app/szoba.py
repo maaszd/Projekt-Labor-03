@@ -1,7 +1,7 @@
 import os
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QGraphicsScene, QGraphicsPixmapItem, QGraphicsRectItem
-from PySide6.QtGui import QPixmap, QBrush
+from PySide6.QtGui import QPixmap, QBrush, QPen
 from monster import Monster, GraphicalMonster
 class Szoba(QGraphicsScene):
     def __init__(self, nev, hatter_kep_utvonal):
@@ -25,7 +25,8 @@ class Szoba(QGraphicsScene):
 
     def ajto_hozzadasa(self, x, y, szelesseg, magassag, cel_szoba_nev, cel_x, cel_y):
         ajto = QGraphicsRectItem(x, y, szelesseg, magassag)
-        ajto.setBrush(QBrush(Qt.blue)) #egyelore zöld
+        ajto.setBrush(Qt.NoBrush)
+        ajto.setPen(Qt.NoPen)
         
         #setdataval elteszunk plusz infokat az ajtoba
         ajto.setData(1, cel_szoba_nev) # 1 - hova visz?
