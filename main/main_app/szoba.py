@@ -4,9 +4,10 @@ from PySide6.QtWidgets import QGraphicsScene, QGraphicsPixmapItem, QGraphicsRect
 from PySide6.QtGui import QPixmap, QBrush, QPen
 from monster import Monster, GraphicalMonster
 class Szoba(QGraphicsScene):
-    def __init__(self, nev, hatter_kep_utvonal):
+    def __init__(self, nev, hatter_kep_utvonal, db=None):
         super().__init__(0, 0, 800, 600)
         self.nev = nev
+        self.db = db #adatbazis (szornyek betoltesehez)
         
         projekt_mappa = os.path.dirname(os.path.abspath(__file__))
         teljes_kep_utvonal = os.path.normpath(os.path.join(projekt_mappa, hatter_kep_utvonal))
@@ -35,9 +36,12 @@ class Szoba(QGraphicsScene):
         self.ajtok.append(ajto)
         self.addItem(ajto)
 
-    def szorny_hozzadasa(self, x, y):
+    def szorny_hozzadasa(self, x, y, szorny_id=1):
         #letrehozzuk a szornyet
-        szorny_statok = Monster(name="Goblin", current_hp=30, max_hp=30, damage=8, defense=2)
+        if self.db is not None:
+            szorny_statok = self.db.szorny_betoltes(szorny_id)
+        else:
+            szorny_statok = Monster(name="Goblin", current_hp=30, max_hp=30, damage=8, defense=2)
         
         szorny = GraphicalMonster("assets/monster.png", x, y, szorny_statok)
         
