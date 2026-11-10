@@ -1,4 +1,4 @@
-﻿from random import randrange
+from random import randrange
 import random
 import sys
 import os
@@ -6,6 +6,8 @@ import json
 from szoba import Szoba
 from hero import Hero, GraphicalHero
 from monster import Monster, GraphicalMonster
+from user import User
+from user_db import UserDatabaseManager
 from PySide6.QtCore import Qt, QSize, QObject, Signal, QTimer
 from PySide6.QtWidgets import QApplication, QMainWindow, QListWidget, QListWidgetItem, QAbstractItemView, QListView, QGraphicsScene, QGraphicsPixmapItem, QGraphicsRectItem, QGraphicsItem
 from PySide6.QtGui import QIcon, QPixmap, QBrush, QColor, QPen
@@ -34,6 +36,10 @@ class JatekAblak(QMainWindow):
         super().__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
+        
+        # --- FELHASZNÁLÓ ADATBÁZIS KEZELÉS ---
+        self.userdb = UserDatabaseManager()
+        self.aktualis_felhasznalo = None
         
         # --- FŐMENÜ BEÁLLÍTÁSA INDULÁSKOR ---
         self.ui.stackedWidget.setCurrentIndex(0)
@@ -135,6 +141,24 @@ class JatekAblak(QMainWindow):
     
     def frissit_text_browser(self, szoveg):
         self.ui.textBrowser.append(szoveg)
+
+    def felhasznalo_regisztracio(self, nev: str, jelszo: str):
+        siker, uzenet, uj_user = self.userdb.regisztracio(nev, jelszo)
+        print(uzenet)
+        if siker:
+            self.aktualis_felhasznalo = uj_user
+
+    def felhasznalo_bejelentkezes(self, nev: str, jelszo: str):
+        siker, uzenet, user = self.userdb.bejelentkezes(nev, jelszo)
+        print(uzenet)
+        if siker and user:
+            self.aktualis_felhasznalo = user
+            if hasattr(self, 'hos'):
+                self.hos.adatok.name = user.name
+
+    def felhasznalo_kijelentkezes(self):
+        self.aktualis_felhasznalo = None
+        print("Sikeresen kijelentkeztél.")
 			
     def jatek_folytatasa(self):
         self.ui.frame_3.show()
