@@ -4,9 +4,10 @@ from PySide6.QtWidgets import QGraphicsScene, QGraphicsPixmapItem, QGraphicsRect
 from PySide6.QtGui import QPixmap, QBrush, QPen, QColor
 from monster import Monster, GraphicalMonster
 class Szoba(QGraphicsScene):
-    def __init__(self, nev, hatter_kep_utvonal):
+    def __init__(self, nev, hatter_kep_utvonal, db=None):
         super().__init__(0, 0, 800, 600)
         self.nev = nev
+        self.db = db #adatbazis (szornyek betoltesehez)
         
         projekt_mappa = os.path.dirname(os.path.abspath(__file__))
         teljes_kep_utvonal = os.path.normpath(os.path.join(projekt_mappa, hatter_kep_utvonal))
@@ -35,9 +36,12 @@ class Szoba(QGraphicsScene):
         self.ajtok.append(ajto)
         self.addItem(ajto)
 
-    def szorny_hozzadasa(self, x, y, nev="Goblin", hp=30, damage=8, defense=2):
+    def szorny_hozzadasa(self, x, y, nev="Goblin", hp=30, damage=8, defense=2, szorny_id=1):
         ##json-ből jön a szorny
-        szorny_statok = Monster(name=nev, current_hp=hp, max_hp=hp, damage=damage, defense=defense)
+        if self.db is not None:
+            szorny_statok = self.db.szorny_betoltes(szorny_id)
+        else:
+            szorny_statok = Monster(name=nev, current_hp=hp, max_hp=hp, damage=damage, defense=defense)
         kep = "assets/boss.png" if "BOSS" in nev else "assets/monster.png"
         szorny = GraphicalMonster(kep, x, y, szorny_statok)
         szorny.setData(3, "szorny")

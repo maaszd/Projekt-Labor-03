@@ -6,11 +6,14 @@ import json
 from szoba import Szoba
 from hero import Hero, GraphicalHero
 from monster import Monster, GraphicalMonster
+from user import User
+from user_db import UserDatabaseManager
 from PySide6.QtCore import Qt, QSize, QObject, Signal, QTimer
 from PySide6.QtWidgets import QApplication, QMainWindow, QListWidget, QListWidgetItem, QAbstractItemView, QListView, QGraphicsScene, QGraphicsPixmapItem, QGraphicsRectItem, QGraphicsItem
 from PySide6.QtGui import QIcon, QPixmap, QBrush, QColor, QPen
 
 from ui_menu import Ui_MainWindow
+from db import Adatbazis
 
 
 #textBrowserbe kiiratas miatt kell
@@ -33,6 +36,10 @@ class JatekAblak(QMainWindow):
         super().__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
+        
+        # --- FELHASZNÁLÓ ADATBÁZIS KEZELÉS ---
+        self.userdb = UserDatabaseManager()
+        self.aktualis_felhasznalo = None
         
         # --- FŐMENÜ BEÁLLÍTÁSA INDULÁSKOR ---
         self.ui.stackedWidget.setCurrentIndex(0)
@@ -57,16 +64,21 @@ class JatekAblak(QMainWindow):
         self.ui.btn_expedicio.clicked.connect(lambda: self.ui.stackedWidget.setCurrentIndex(1))
         self.ui.btn_dungeon_soteterdo.clicked.connect(self.belepes_soteterdobe)
 
+        #ADATBAZIS: hős + mentett állás betöltése (ha nincs mentés, új hős jön létre)
+        self.db = Adatbazis()
+        self.jatekos_id, hos_statok = self.db.jatekos_betoltes_vagy_letrehozas("Kalandor")
+        mentes = self.db.jatekmezo_betoltes(self.jatekos_id)
+
         #TÉRKÉP
+        map_adat = self.db.map_lekeres("Sötét erdő")
+        self.map_id = map_adat["id"]
         self.szobak = {}
         self.palya_betoltese("palya_1.json")
         self.aktualis_szoba = self.szobak.get("Szoba_1")
         if self.aktualis_szoba:
             self.ui.graphicsView.setScene(self.aktualis_szoba)
             self.ui.graphicsView.fitInView(self.aktualis_szoba.sceneRect(), Qt.IgnoreAspectRatio)
-            #MINTA ADAT
-            kezdo_statok = Hero(name="Kalandor", current_hp=100, max_hp=100, damage=15, defense=5)
-            self.hos = GraphicalHero("assets/hero.png", 400, 300, kezdo_statok) 
+            self.hos = GraphicalHero("assets/hero.png", hos_x, hos_y, hos_statok)
             self.aktualis_szoba.addItem(self.hos)
         
         
@@ -89,32 +101,16 @@ class JatekAblak(QMainWindow):
         self.projekt_mappa = os.path.dirname(os.path.abspath(__file__))
         self.assets_mappa = os.path.join(self.projekt_mappa, "assets")
         
-        teszt_targyak = [
-            {"nev": "Kard", "info": "Sebzés: +5\nRitkaság: Gyakori", "kep": "sword.png"},
-            {"nev": "Mellvért", "info": "Védelem: +10\nRitkaság: Gyakori", "kep": "chestplate.png"},
-            {"nev": "Sisak", "info": "Védelem: +15\n", "kep": "helmet.png"},
-            {"nev": "Pajzs", "info": "Védelem: +15\n","kep": "shield.png"},
-            {"nev": "Kesztyű", "info": "Ügyesség: +3\nVédelem: +2", "kep": "gloves.png"},
-            {"nev": "Csizma", "info": "Sebesség: +2\nVédelem: +1", "kep": "boots.png"},
-        ]
+        #felszerelés slotok: a slot neve = btn_<slot> gomb (Item.slot az adatbázisban)
+        self.slotok = ["kard", "mellvert", "sisak", "pajzs", "kesztyu", "cipo", "nadrag", "gyuru"]
+        self.slot_alap_szoveg = {}
+        for slot in self.slotok:
+            gomb = getattr(self.ui, f"btn_{slot}")
+            self.slot_alap_szoveg[slot] = gomb.text()
+            #a felszerelt tárgyra kattintva levesszük
+            gomb.clicked.connect(lambda checked=False, s=slot: self.levesz(s))
 
-        for targy in teszt_targyak:
-            item = QListWidgetItem() 
-            item.setToolTip(f"<b>{targy['nev']}</b><br>{targy['info']}")
-            item.setData(Qt.UserRole, targy["nev"])
-            
-            teljes_utvonal = os.path.join(self.assets_mappa, targy["kep"])
-            pixmap = QPixmap(teljes_utvonal)
-            if pixmap.isNull():
-              print(f"HIBA: Még mindig null ez a kép: {teljes_utvonal}")
-            
-            #képek átméretezése fix 64x64-re
-            atmeretezett_kep = pixmap.scaled(64, 64, Qt.KeepAspectRatio, Qt.SmoothTransformation)
-  
-            item.setIcon(QIcon(atmeretezett_kep))
-            
-            #icon betöltése assets/ mappából
-            self.ui.listWidget.addItem(item)
+        self.inventory_frissites()
         
         self.ui.listWidget.itemDoubleClicked.connect(self.targyra_kattintott)
 
@@ -132,12 +128,30 @@ class JatekAblak(QMainWindow):
         self.mozgas_timer = QTimer(self)
         self.mozgas_timer.timeout.connect(self.folyamatos_mozgas)
         self.mozgas_timer.start(16)
-        self.szobavaltas_alatt = False
+        self.szobavaltas_alatt = True  #amíg le nem lép az ajtóról, nincs szobaváltás
 		
 #----------------------__init__(self): VÉGE ---------------------------------
     
     def frissit_text_browser(self, szoveg):
         self.ui.textBrowser.append(szoveg)
+
+    def felhasznalo_regisztracio(self, nev: str, jelszo: str):
+        siker, uzenet, uj_user = self.userdb.regisztracio(nev, jelszo)
+        print(uzenet)
+        if siker:
+            self.aktualis_felhasznalo = uj_user
+
+    def felhasznalo_bejelentkezes(self, nev: str, jelszo: str):
+        siker, uzenet, user = self.userdb.bejelentkezes(nev, jelszo)
+        print(uzenet)
+        if siker and user:
+            self.aktualis_felhasznalo = user
+            if hasattr(self, 'hos'):
+                self.hos.adatok.name = user.name
+
+    def felhasznalo_kijelentkezes(self):
+        self.aktualis_felhasznalo = None
+        print("Sikeresen kijelentkeztél.")
 			
     def jatek_folytatasa(self):
         self.ui.frame_3.show()
@@ -146,6 +160,7 @@ class JatekAblak(QMainWindow):
         print("Üdv újra a játékban!")
 
     def vissza_a_fomenube(self):    
+        self.mentes()
         self.ui.frame_3.hide()       
         self.ui.textBrowser.hide()   
         self.ui.stackedWidget.setCurrentIndex(0) 
@@ -215,6 +230,9 @@ class JatekAblak(QMainWindow):
             #szorny hp bar frissitese
             self.ui.pb_szorny_hp.setMaximum(self.aktualis_harcolt_szorny.adatok.max_hp)
             self.ui.pb_szorny_hp.setValue(self.aktualis_harcolt_szorny.adatok.current_hp)
+            #hős hp bar frissitese
+            self.ui.pb_hos_hp.setMaximum(self.hos.adatok.max_hp)
+            self.ui.pb_hos_hp.setValue(self.hos.adatok.current_hp)
             
             #harci kepernyore valtas
             self.ui.stackedWidget.setCurrentIndex(4)
@@ -246,26 +264,21 @@ class JatekAblak(QMainWindow):
             self.ui.graphicsView.fitInView(self.aktualis_szoba.sceneRect(), Qt.IgnoreAspectRatio)
             
             print(f"Átléptél ide: {cel_szoba_nev}")
+            self.mentes()
             self.lenyomott_gombok.clear()
     
     def ajto_engedelyezese(self):
         self.szobavaltas_alatt = False
 
-    def targyra_kattintott(self, item):
-        targy_neve = item.data(Qt.UserRole)
-        print(f"Duplán kattintottál erre a tárgyra: {targy_neve}")
-        #TODO: equip logika normálisan
-
-        #teszt equip frontend szinten
-        if "kard" in targy_neve.lower():
-        
-            self.ui.btn_kard.setIcon(item.icon())
-            self.ui.btn_kard.setIconSize(QSize(64, 64))
-            self.ui.btn_kard.setText("")
-        
-            row = self.ui.listWidget.row(item)
-            self.ui.listWidget.takeItem(row)
-            print(f"Felszerelve: {targy_neve}")
+    def targyra_kattintott(self, lista_elem):
+        item_id = lista_elem.data(Qt.UserRole)
+        nev = lista_elem.data(Qt.UserRole + 1)
+        if self.db.felszerel(self.jatekos_id, item_id):
+            print(f"Felszerelve: {nev}")
+        else:
+            print(f"Ez a tárgy nem szerelhető fel: {nev}")
+        #a listát csak a jelzés lefutása után építjük újra (az elem, amire kattintottunk, törlődik)
+        QTimer.singleShot(0, self.inventory_frissites)
 
     def harc_inditasa(self):
         if self.ui.btn_harcinditas.text() == "Tovább a térképre":
@@ -299,6 +312,7 @@ class JatekAblak(QMainWindow):
             if not self.aktualis_harcolt_szorny.adatok.alive():
                 print(f"A {self.aktualis_harcolt_szorny.adatok.name} halott!")
                 self.hos.adatok.gain_xp(5)
+                self.mentes()
                 self.harc_timer.stop()
                 self.ui.btn_harcinditas.setText("Tovább a térképre")
                 self.ui.btn_harcinditas.setEnabled(True)
@@ -339,7 +353,7 @@ class JatekAblak(QMainWindow):
             palya_adatok = json.load(f)
         #vegig iteralunk a szobakon betoltjuk oket
         for szoba_nev, adatok in palya_adatok.items():
-            uj_szoba = Szoba(szoba_nev, adatok["hatter"])
+            uj_szoba = Szoba(szoba_nev, adatok["hatter"], self.db)
             
             #ajtok generalasa
             for ajto in adatok.get("ajtok", []):
@@ -374,6 +388,67 @@ class JatekAblak(QMainWindow):
            print("Beléptél a Sötét erdőbe")
         self.hos.setFocus()
     
+    # ADATBÁZIS
+
+    def mentes(self):
+        #halott hőst nem mentünk, így a "Folytatás" az utolsó élő állapotról indul
+        if not hasattr(self, "hos") or not self.hos.adatok.alive():
+            return
+        self.db.jatekos_mentes(self.jatekos_id, self.hos.adatok)
+        self.db.jatekmezo_mentes(self.jatekos_id, self.map_id, self.aktualis_szoba.nev,
+                                 self.hos.x(), self.hos.y(), self.hos.adatok.current_hp)
+
+    def targy_leiras(self, sor):
+        item = sor.item
+        reszek = [f"<b>{item.name}</b>"]
+        if item.bonus_attack:
+            reszek.append(f"Sebzés: +{item.bonus_attack}")
+        if item.bonus_defense:
+            reszek.append(f"Védelem: +{item.bonus_defense}")
+        reszek.append(f"Ritkaság: {item.rarity.get_name_hungarian()}")
+        reszek.append(f"Érték: {item.gold_value} arany")
+        if sor.mennyiseg > 1:
+            reszek.append(f"Darab: {sor.mennyiseg}")
+        return "<br>".join(reszek)
+
+    def inventory_frissites(self):
+        #a lista és a felszerelés-gombok újraépítése az adatbázis alapján
+        self.ui.listWidget.clear()
+        for slot in self.slotok:
+            gomb = getattr(self.ui, f"btn_{slot}")
+            gomb.setIcon(QIcon())
+            gomb.setText(self.slot_alap_szoveg[slot])
+
+        for sor in self.db.inventory(self.jatekos_id):
+            item = sor.item
+            pixmap = QPixmap(os.path.join(self.projekt_mappa, item.image_path))
+            if pixmap.isNull():
+                print(f"HIBA: Nem található a tárgy képe: {item.image_path}")
+            ikon = QIcon(pixmap.scaled(64, 64, Qt.KeepAspectRatio, Qt.SmoothTransformation))
+
+            if sor.fel_van_szerelve and sor.slot in self.slot_alap_szoveg:
+                gomb = getattr(self.ui, f"btn_{sor.slot}")
+                gomb.setIcon(ikon)
+                gomb.setIconSize(QSize(64, 64))
+                gomb.setText("")
+                continue
+
+            lista_elem = QListWidgetItem()
+            lista_elem.setIcon(ikon)
+            lista_elem.setToolTip(self.targy_leiras(sor))
+            lista_elem.setData(Qt.UserRole, item.item_id)
+            lista_elem.setData(Qt.UserRole + 1, item.name)
+            self.ui.listWidget.addItem(lista_elem)
+
+    def levesz(self, slot):
+        if self.db.levesz(self.jatekos_id, slot):
+            print(f"Levéve: {slot}")
+            self.inventory_frissites()
+
+    def closeEvent(self, event):
+        self.mentes()
+        self.db.close()
+        super().closeEvent(event)
     def resizeEvent(self, event):
         #qt elvegzi az atmeretezest a layoutokon
         super().resizeEvent(event)
