@@ -60,7 +60,7 @@ class JatekAblak(QMainWindow):
         #TÉRKÉP
         self.szobak = {}
         self.palya_betoltese("palya_1.json")
-        self.aktualis_szoba = self.szobak.get("Kezdo")
+        self.aktualis_szoba = self.szobak.get("Szoba_1")
         if self.aktualis_szoba:
             self.ui.graphicsView.setScene(self.aktualis_szoba)
             self.ui.graphicsView.fitInView(self.aktualis_szoba.sceneRect(), Qt.IgnoreAspectRatio)
@@ -350,7 +350,14 @@ class JatekAblak(QMainWindow):
                 
             #szornyek generalasa
             for szorny in adatok.get("szornyek", []):
-                uj_szoba.szorny_hozzadasa(szorny["x"], szorny["y"])
+                uj_szoba.szorny_hozzadasa(
+                szorny["x"], 
+                szorny["y"], 
+                szorny.get("nev", "Goblin"), 
+                szorny.get("hp", 30), 
+                szorny.get("sebzes", 8), 
+                szorny.get("vedelem", 2)
+        )
                 
             #bekerul memoriaba
             self.szobak[szoba_nev] = uj_szoba
@@ -378,6 +385,16 @@ class JatekAblak(QMainWindow):
 #---------------------------JÁTÉKABLAK VÉGE-------------------------		
 if __name__ == "__main__":
     app = QApplication(sys.argv)
+    
+    projekt_mappa = os.path.dirname(os.path.abspath(__file__))
+    qss_utvonal = os.path.join(projekt_mappa, "style.qss")
+    if os.path.exists(qss_utvonal):
+        with open(qss_utvonal, "r", encoding="utf-8") as f:
+            app.setStyleSheet(f.read())
+    else:
+        print(f"HIBA: Nem találom a style.qss fájlt itt: {qss_utvonal}")
+
+    
     ablak = JatekAblak()
     ablak.show()
     sys.exit(app.exec())

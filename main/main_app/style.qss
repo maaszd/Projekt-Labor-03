@@ -1,0 +1,37 @@
+QPushButton {
+    
+    border-image: url(assets/gomb_alap.png) 5 5 5 5 stretch stretch;
+        
+    background-color: transparent; 
+    border: none;
+    
+    color: black;
+    font-weight: bold;
+    font-size: 16px;
+    padding: 10px;
+}
+
+
+QPushButton:hover {
+    border-image: url(assets/gomb_hover.png) 5 5 5 5 stretch stretch;
+}
+
+
+QPushButton:pressed {
+    border-image: url(assets/gomb_lenyomva.png) 5 5 5 5 stretch stretch;
+    
+    /* Kis trükk: rákattintáskor a szöveget 2 pixellel lejjebb toljuk, 
+       így olyan, mintha a felirat is süllyedne a gombbal! */
+    padding-top: 12px; 
+    padding-bottom: 8px;
+}
+
+
+QWidget#page_harc {
+    border-image: url("assets/harc_bg.png") 0 0 0 0 stretch stretch;
+}
+
+
+QWidget#centralwidget {
+    border-image: url("assets/harc_bg.png") 0 0 0 0 stretch stretch;
+}

@@ -1,37 +1,162 @@
 {
-  "Kezdo": {
-    "hatter": "assets/szoba_1.png",
+  "Szoba_1": {
+    "hatter": "assets/dungeon_bg.png",
     "ajtok": [
       {
-        "x": 350,
-        "y": 0,
-        "szelesseg": 100,
-        "magassag": 20,
-        "cel_szoba": "Folyoso",
-        "cel_x": 350,
-        "cel_y": 540
+        "x": 0, "y": 250, "szelesseg": 20, "magassag": 100,
+        "cel_szoba": "Szoba_2", "cel_x": 680, "cel_y": 300
       }
     ],
     "szornyek": []
   },
-  "Folyoso": {
-    "hatter": "assets/szoba_2.png",
+  "Szoba_2": {
+    "hatter": "assets/dungeon_bg.png",
     "ajtok": [
       {
-        "x": 350,
-        "y": 580,
-        "szelesseg": 100,
-        "magassag": 20,
-        "cel_szoba": "Kezdo",
-        "cel_x": 350,
-        "cel_y": 50
+        "x": 780, "y": 250, "szelesseg": 20, "magassag": 100,
+        "cel_szoba": "Szoba_1", "cel_x": 100, "cel_y": 300
+      },
+      {
+        "x": 0, "y": 250, "szelesseg": 20, "magassag": 100,
+        "cel_szoba": "Szoba_3", "cel_x": 680, "cel_y": 300
+      },
+      {
+        "x": 350, "y": 580, "szelesseg": 100, "magassag": 20,
+        "cel_szoba": "Szoba_5", "cel_x": 400, "cel_y": 100
       }
     ],
     "szornyek": [
+      { "x": 400, "y": 300, "nev": "Goblin", "hp": 30, "sebzes": 8, "vedelem": 2 }
+    ]
+  },
+  "Szoba_3": {
+    "hatter": "assets/dungeon_bg.png",
+    "ajtok": [
       {
-        "x": 400,
-        "y": 300
+        "x": 780, "y": 250, "szelesseg": 20, "magassag": 100,
+        "cel_szoba": "Szoba_2", "cel_x": 100, "cel_y": 300
+      },
+      {
+        "x": 350, "y": 580, "szelesseg": 100, "magassag": 20,
+        "cel_szoba": "Szoba_4", "cel_x": 400, "cel_y": 100
       }
+    ],
+    "szornyek": []
+  },
+  "Szoba_4": {
+    "hatter": "assets/dungeon_bg.png",
+    "ajtok": [
+      {
+        "x": 350, "y": 0, "szelesseg": 100, "magassag": 20,
+        "cel_szoba": "Szoba_3", "cel_x": 400, "cel_y": 480
+      },
+      {
+        "x": 780, "y": 250, "szelesseg": 20, "magassag": 100,
+        "cel_szoba": "Szoba_5", "cel_x": 100, "cel_y": 300
+      }
+    ],
+    "szornyek": [
+      { "x": 400, "y": 300, "nev": "Zombi", "hp": 45, "sebzes": 10, "vedelem": 1 }
+    ]
+  },
+  "Szoba_5": {
+    "hatter": "assets/dungeon_bg.png",
+    "ajtok": [
+      {
+        "x": 350, "y": 0, "szelesseg": 100, "magassag": 20,
+        "cel_szoba": "Szoba_2", "cel_x": 400, "cel_y": 480
+      },
+      {
+        "x": 0, "y": 250, "szelesseg": 20, "magassag": 100,
+        "cel_szoba": "Szoba_4", "cel_x": 680, "cel_y": 300
+      },
+      {
+        "x": 780, "y": 250, "szelesseg": 20, "magassag": 100,
+        "cel_szoba": "Szoba_6", "cel_x": 100, "cel_y": 300
+      },
+      {
+        "x": 350, "y": 580, "szelesseg": 100, "magassag": 20,
+        "cel_szoba": "Szoba_7", "cel_x": 400, "cel_y": 100
+      }
+    ],
+    "szornyek": [
+      { "x": 400, "y": 300, "nev": "Csontváz Harcos", "hp": 40, "sebzes": 12, "vedelem": 4 }
+    ]
+  },
+  "Szoba_6": {
+    "hatter": "assets/dungeon_bg.png",
+    "ajtok": [
+      {
+        "x": 0, "y": 250, "szelesseg": 20, "magassag": 100,
+        "cel_szoba": "Szoba_5", "cel_x": 680, "cel_y": 300
+      },
+      {
+        "x": 350, "y": 580, "szelesseg": 100, "magassag": 20,
+        "cel_szoba": "Szoba_8", "cel_x": 400, "cel_y": 100
+      }
+    ],
+    "szornyek": []
+  },
+  "Szoba_7": {
+    "hatter": "assets/dungeon_bg.png",
+    "ajtok": [
+      {
+        "x": 350, "y": 0, "szelesseg": 100, "magassag": 20,
+        "cel_szoba": "Szoba_5", "cel_x": 400, "cel_y": 480
+      },
+      {
+        "x": 780, "y": 250, "szelesseg": 20, "magassag": 100,
+        "cel_szoba": "Szoba_8", "cel_x": 100, "cel_y": 300
+      }
+    ],
+    "szornyek": [
+      { "x": 400, "y": 300, "nev": "Pók", "hp": 25, "sebzes": 14, "vedelem": 0 }
+    ]
+  },
+  "Szoba_8": {
+    "hatter": "assets/dungeon_bg.png",
+    "ajtok": [
+      {
+        "x": 350, "y": 0, "szelesseg": 100, "magassag": 20,
+        "cel_szoba": "Szoba_6", "cel_x": 400, "cel_y": 480
+      },
+      {
+        "x": 0, "y": 250, "szelesseg": 20, "magassag": 100,
+        "cel_szoba": "Szoba_7", "cel_x": 680, "cel_y": 300
+      },
+      {
+        "x": 780, "y": 250, "szelesseg": 20, "magassag": 100,
+        "cel_szoba": "Szoba_9", "cel_x": 100, "cel_y": 300
+      }
+    ],
+    "szornyek": [
+      { "x": 400, "y": 300, "nev": "Árnyék", "hp": 50, "sebzes": 11, "vedelem": 3 }
+    ]
+  },
+  "Szoba_9": {
+    "hatter": "assets/dungeon_bg.png",
+    "ajtok": [
+      {
+        "x": 0, "y": 250, "szelesseg": 20, "magassag": 100,
+        "cel_szoba": "Szoba_8", "cel_x": 680, "cel_y": 300
+      },
+      {
+        "x": 350, "y": 0, "szelesseg": 100, "magassag": 20,
+        "cel_szoba": "Szoba_10", "cel_x": 400, "cel_y": 480
+      }
+    ],
+    "szornyek": []
+  },
+  "Szoba_10": {
+    "hatter": "assets/dungeon_bg.png",
+    "ajtok": [
+      {
+        "x": 350, "y": 580, "szelesseg": 100, "magassag": 20,
+        "cel_szoba": "Szoba_9", "cel_x": 400, "cel_y": 100
+      }
+    ],
+    "szornyek": [
+      { "x": 400, "y": 300, "nev": "BOSS: Demonic Overlord", "hp": 250, "sebzes": 25, "vedelem": 8 }
     ]
   }
 }

@@ -135,6 +135,7 @@ class Hero:
         self.heal_to_max()
         self._initiative = self._initiative * 1.1
         self._xp = 0
+        print("Szintet léptél! Új szint: ", self._level)
 
 #csak a kép miatt kell
 class GraphicalHero(QGraphicsPixmapItem):
