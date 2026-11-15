@@ -8,14 +8,13 @@ from hero import Hero, GraphicalHero
 from monster import Monster, GraphicalMonster
 from user import User
 from user_db import UserDatabaseManager
-from PySide6.QtCore import Qt, QSize, QObject, Signal, QTimer
-from PySide6.QtWidgets import QApplication, QMainWindow, QListWidget, QListWidgetItem, QAbstractItemView, QListView, QGraphicsScene, QGraphicsPixmapItem, QGraphicsRectItem, QGraphicsItem
-from PySide6.QtGui import QIcon, QPixmap, QBrush, QColor, QPen
-
+from PySide6.QtCore import Qt, QSize, QObject, Signal, QTimer, QRect
+from PySide6.QtWidgets import QApplication, QLabel, QFrame, QMainWindow, QListWidget, QListWidgetItem, QAbstractItemView, QListView, QGraphicsScene, QGraphicsPixmapItem,  QGraphicsBlurEffect, QGraphicsRectItem, QGraphicsItem
+from PySide6.QtGui import QIcon, QPixmap, QBrush, QColor, QPen, QImage, QPainter
 from ui_menu import Ui_MainWindow
 from db import Adatbazis
 
-
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
 #textBrowserbe kiiratas miatt kell
 class ConsoleRedirector(QObject):
     output_written = Signal(str)
@@ -74,13 +73,20 @@ class JatekAblak(QMainWindow):
         self.map_id = map_adat["id"]
         self.szobak = {}
         self.palya_betoltese("palya_1.json")
-        self.aktualis_szoba = self.szobak.get("Szoba_1")
+        kezdo_szoba = "Szoba_1"
+        hos_x, hos_y = 400, 300
+        if mentes and mentes.get("aktualis_szoba") in self.szobak:
+            kezdo_szoba = mentes["aktualis_szoba"]
+            if mentes.get("hos_x") is not None and mentes.get("hos_y") is not None:
+                hos_x, hos_y = float(mentes["hos_x"]), float(mentes["hos_y"])
+
+        self.aktualis_szoba = self.szobak.get(kezdo_szoba)
         if self.aktualis_szoba:
             self.ui.graphicsView.setScene(self.aktualis_szoba)
             self.ui.graphicsView.fitInView(self.aktualis_szoba.sceneRect(), Qt.IgnoreAspectRatio)
             self.hos = GraphicalHero("assets/hero.png", hos_x, hos_y, hos_statok)
+            self.hos.setZValue(20)
             self.aktualis_szoba.addItem(self.hos)
-        
         
         #inventory beallitasai   
         self.ui.listWidget.setDragDropMode(QAbstractItemView.NoDragDrop)
@@ -129,6 +135,24 @@ class JatekAblak(QMainWindow):
         self.mozgas_timer.timeout.connect(self.folyamatos_mozgas)
         self.mozgas_timer.start(16)
         self.szobavaltas_alatt = True  #amíg le nem lép az ajtóról, nincs szobaváltás
+
+        label_stilus = """
+            QLabel {
+                background-color: #1e1b24;
+                border: 2px solid #8c7853;
+                border-radius: 6px;
+                color: #f5eedc;
+                padding: 5px 10px;
+                font-size: 14px;
+                font-weight: bold;
+            }
+        """
+        for oldal in (self.ui.page3_karakter, self.ui.page4_harc):
+            for lbl in oldal.findChildren(QLabel):
+                if lbl.objectName() not in ("lbl_hos_img", "lbl_szorn_img"):
+                    lbl.setFrameShape(QFrame.Shape.Box)
+                    lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
+                    lbl.setStyleSheet(label_stilus)
 		
 #----------------------__init__(self): VÉGE ---------------------------------
     
@@ -211,20 +235,27 @@ class JatekAblak(QMainWindow):
             self.lenyomott_gombok.clear()
             
             #hos kepet es nevet frissitjuk a harci menuben
-            self.ui.lbl_hos_img.setPixmap(self.hos.pixmap().scaled(100, 100, Qt.KeepAspectRatio, Qt.SmoothTransformation))
-            self.ui.lbl_hos_nev.setText(self.hos.adatok.name)
+            self.ui.lbl_hos_img.setMinimumSize(QSize(180, 180))
+            self.ui.lbl_hos_img.setPixmap(self.hos.pixmap().scaled(180, 180, Qt.KeepAspectRatio, Qt.SmoothTransformation))
+            self.ui.lbl_hos_nev.setText(f"{self.hos.adatok.name} - {self.hos.adatok.level}. szint")
             
             #szorny kepet es nevet frissitjuk a harci menuben
-            self.ui.lbl_szorn_img.setPixmap(self.aktualis_harcolt_szorny.pixmap().scaled(100, 100, Qt.KeepAspectRatio, Qt.SmoothTransformation))
+            szorny_harci_meret = 220 if self.aktualis_harcolt_szorny.adatok.is_boss else 180
+            self.ui.lbl_szorn_img.setMinimumSize(QSize(szorny_harci_meret, szorny_harci_meret))
+            self.ui.lbl_szorn_img.setPixmap(self.aktualis_harcolt_szorny.pixmap().scaled(szorny_harci_meret, szorny_harci_meret, Qt.KeepAspectRatio, Qt.SmoothTransformation))
             self.ui.lbl_szorny_nev.setText(self.aktualis_harcolt_szorny.adatok.name)
             
+            
             #hos es szorny statok frissitese a harci menuben
-            self.ui.lbl_hos_ero_ertek.setText(str(self.hos.adatok.damage))
-            self.ui.lbl_hos_vedekezes_ertek.setText(str(self.hos.adatok.defense))
+            
+            bonus_dmg, bonus_def = self.hos_bonus_statok()
+            self.ui.lbl_hos_ero_ertek.setText(str(self.hos.adatok.damage + bonus_dmg))
+            self.ui.lbl_hos_vedekezes_ertek.setText(str(self.hos.adatok.defense + bonus_def))
+            
             self.ui.lbl_szorny_ero_ertek.setText(str(self.aktualis_harcolt_szorny.adatok.damage))
             self.ui.lbl_szorn_vedekezes_ertek.setText(str(self.aktualis_harcolt_szorny.adatok.defense))
-            self.ui.lbl_hos_kezdemenyezes_ertek.setText(str(self.hos.adatok.initiative))
-            self.ui.lbl_szorny_kezdemenyezes_ertek.setText(str(self.aktualis_harcolt_szorny.adatok.initiative))
+            self.ui.lbl_hos_kezdemenyezes_ertek.setText(f"{self.hos.adatok.initiative:.2f}")
+            self.ui.lbl_szorny_kezdemenyezes_ertek.setText(f"{self.aktualis_harcolt_szorny.adatok.initiative:.2f}")
             
             
             #szorny hp bar frissitese
@@ -288,61 +319,98 @@ class JatekAblak(QMainWindow):
                 self.ui.graphicsView.fitInView(self.aktualis_szoba.sceneRect(), Qt.IgnoreAspectRatio)
             self.hos.setFocus()
             self.ui.btn_harcinditas.setText("Harc indítása")
-            
             return
+
+        if self.ui.btn_harcinditas.text() == "Vége a játéknak":
+            
+            self.hos.adatok.heal_to_max()
+            self.szobak.clear()
+            self.palya_betoltese("palya_1.json")
+            self.aktualis_szoba = self.szobak.get("Szoba_1")
+            if self.aktualis_szoba:
+                self.ui.graphicsView.setScene(self.aktualis_szoba)
+                self.aktualis_szoba.addItem(self.hos)
+                self.hos.setPos(200, 300)
+            self.mentes()
+            self.ui.btn_harcinditas.setText("Harc indítása")
+            self.ui.stackedWidget.setCurrentIndex(1)
+            print("Újraéledtél! Válassz kazamatát a folytatáshoz.")
+            return
+
         print("A harc elkezdődött!")
         self.ui.btn_harcinditas.setEnabled(False) 
             
-        #1000ms = 1sec ütések között
+        # 1000ms = 1sec ütések között
         self.hos_kore = True
         self.harc_timer.start(1000)
 
     def auto_harc_kor(self):
+        bonus_dmg, bonus_def = self.hos_bonus_statok()
+        alap_dmg = self.hos.adatok.damage
+        alap_def = self.hos.adatok.defense
+        hos_ossz_dmg = alap_dmg + bonus_dmg
+        hos_ossz_def = alap_def + bonus_def
+
+        szorny_nev = self.aktualis_harcolt_szorny.adatok.name
+        szorny_dmg = self.aktualis_harcolt_szorny.adatok.damage
+        szorny_def = self.aktualis_harcolt_szorny.adatok.defense
+
         if self.hos_kore:
-            #hős tamadasa valos adatokkal
-            sebzes = self.hos.adatok.damage
-            valos_sebzes = int(random.uniform(0.8, 1.0) * sebzes)
-            print(f"{self.hos.adatok.name} lecsapott: {valos_sebzes} sebzés!")
-            
-            #szorny sebzodes
+            szorzo = random.uniform(0.8, 1.0)
+            nyers_sebzes = int(szorzo * hos_ossz_dmg)
+            valos_sebzes = max(1, nyers_sebzes - szorny_def)
+
+            print(
+                f"[HŐS TÁMADÁS] {self.hos.adatok.name}: "
+                f"((Alap erő: {alap_dmg} + Bónusz: {bonus_dmg}) * {szorzo:.2f} = {nyers_sebzes}) "
+                f"- {szorny_nev} védelme ({szorny_def}) => {valos_sebzes} sebzés!"
+            )
+
+            # szorny sebzodes
             self.aktualis_harcolt_szorny.adatok.takedamage(valos_sebzes)
             self.ui.pb_szorny_hp.setValue(self.aktualis_harcolt_szorny.adatok.current_hp)
-            
-            #gyozelem ellenorzes
+
+            # gyozelem ellenorzes
             if not self.aktualis_harcolt_szorny.adatok.alive():
-                print(f"A {self.aktualis_harcolt_szorny.adatok.name} halott!")
+                print(f"A(z) {self.aktualis_harcolt_szorny.adatok.name} halott!")
                 self.hos.adatok.gain_xp(5)
+                self.ui.lbl_hos_nev.setText(f"{self.hos.adatok.name} - {self.hos.adatok.level}. szint")
+                self.karakter_statok_frissitese()
                 self.mentes()
                 self.harc_timer.stop()
                 self.ui.btn_harcinditas.setText("Tovább a térképre")
                 self.ui.btn_harcinditas.setEnabled(True)
-                
-                #hallott szorny eltavolitasa a szobabol
+
+                # halott szorny eltavolitasa a szobabol
                 if self.aktualis_harcolt_szorny in self.aktualis_szoba.szornyek:
                     self.aktualis_szoba.szornyek.remove(self.aktualis_harcolt_szorny)
                 self.aktualis_szoba.removeItem(self.aktualis_harcolt_szorny)
                 return
-            
+
             self.hos_kore = False
         else:
-            #szorny tamadasa valos adatokkal
-            szorny_sebzes = self.aktualis_harcolt_szorny.adatok.damage
-            #szorny sebzes
-            valos_sebzes = max(0, int(random.uniform(0.8, 1.0) * szorny_sebzes) - self.hos.adatok.defense)
-            print(f"A szörny visszatámadt: {valos_sebzes} sebzés!")
-            
-            #hos sebzodes
+            szorzo = random.uniform(0.8, 1.0)
+            nyers_sebzes = int(szorzo * szorny_dmg)
+            valos_sebzes = max(0, nyers_sebzes - hos_ossz_def)
+
+            print(
+                f"[SZÖRNY TÁMADÁS] {szorny_nev}: "
+                f"(Erő: {szorny_dmg} * {szorzo:.2f} = {nyers_sebzes}) "
+                f"- Hős védelme ({alap_def} + {bonus_def} = {hos_ossz_def}) => {valos_sebzes} sebzés!"
+            )
+
+            # hos sebzodes
             self.hos.adatok.takedamage(valos_sebzes)
             self.ui.pb_hos_hp.setValue(self.hos.adatok.current_hp)
 
-            #halál ellenőrzés
+            # halal ellenorzes
             if not self.hos.adatok.alive():
                 print("Meghaltál, a Szörny megölt.")
                 self.harc_timer.stop()
                 self.ui.btn_harcinditas.setText("Vége a játéknak")
                 self.ui.btn_harcinditas.setEnabled(True)
                 return
-            
+
             self.hos_kore = True
 
     def palya_betoltese(self, json_utvonal):
@@ -439,6 +507,7 @@ class JatekAblak(QMainWindow):
             lista_elem.setData(Qt.UserRole, item.item_id)
             lista_elem.setData(Qt.UserRole + 1, item.name)
             self.ui.listWidget.addItem(lista_elem)
+            self.karakter_statok_frissitese()
 
     def levesz(self, slot):
         if self.db.levesz(self.jatekos_id, slot):
@@ -456,6 +525,29 @@ class JatekAblak(QMainWindow):
         #ha epp a jatekteren vagyok akkor rateszi a kamerat az ujra
         if self.ui.stackedWidget.currentIndex() == 2 and hasattr(self, 'aktualis_szoba'):
             self.ui.graphicsView.fitInView(self.aktualis_szoba.sceneRect(), Qt.IgnoreAspectRatio)
+
+    def hos_bonus_statok(self):
+      bonus_dmg, bonus_def = 0, 0
+      for sor in self.db.inventory(self.jatekos_id):
+          if sor.fel_van_szerelve:
+              bonus_dmg += sor.item.bonus_attack
+              bonus_def += sor.item.bonus_defense
+      return bonus_dmg, bonus_def
+
+    def karakter_statok_frissitese(self):
+        if not hasattr(self, "hos"):
+            return
+        alap_dmg, alap_def, alap_init = self.hos.adatok.damage, self.hos.adatok.defense, self.hos.adatok.initiative
+        bonus_dmg, bonus_def = self.hos_bonus_statok()  
+        self.ui.label_12.setText(str(alap_dmg))
+        self.ui.label_16.setText(str(alap_def))
+        self.ui.label_82.setText(f"{alap_init:.2f}")
+        self.ui.label_83.setText(f"+{bonus_dmg}")
+        self.ui.label_85.setText(f"+{bonus_def}")
+        self.ui.label_87.setText("+0.00")
+        self.ui.label_89.setText(str(alap_dmg + bonus_dmg))
+        self.ui.label_92.setText(str(alap_def + bonus_def))
+        self.ui.label_93.setText(f"{alap_init:.2f}")
 
 #---------------------------JÁTÉKABLAK VÉGE-------------------------		
 if __name__ == "__main__":

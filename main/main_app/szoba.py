@@ -17,34 +17,35 @@ class Szoba(QGraphicsScene):
             print(f"HIBA: A Qt nem találja a képet ezen az útvonalon: {teljes_kep_utvonal}")
             self.setBackgroundBrush(QBrush(Qt.darkGray)) #sotetszurke lesz
         else:
-            self.hatter = QGraphicsPixmapItem(pixmap)
+            skalazott_hatter = pixmap.scaled(800, 600, Qt.IgnoreAspectRatio, Qt.SmoothTransformation)
+            self.hatter = QGraphicsPixmapItem(skalazott_hatter)
+            self.hatter.setZValue(0)
             self.addItem(self.hatter)
 
         self.ajtok = []
+        self.vizualis_ajtok = []
         self.szornyek = []
         self.akadalyok = []
 
-    def ajto_hozzadasa(self, x, y, szelesseg, magassag, cel_szoba_nev, cel_x, cel_y):
-        ajto = QGraphicsRectItem(x, y, szelesseg, magassag)
-        ajto.setBrush(Qt.NoBrush)
-        ajto.setPen(Qt.NoPen)
+    def szorny_hozzadasa(self, x, y, nev="Goblin", hp=30, damage=8, defense=2):
+        is_boss = "BOSS" in nev.upper()
+        szorny_statok = Monster(name=nev, current_hp=hp, max_hp=hp, damage=damage, defense=defense, is_boss=is_boss)
         
-        #setdataval elteszunk plusz infokat az ajtoba
-        ajto.setData(1, cel_szoba_nev) # 1 - hova visz?
-        ajto.setData(2, (cel_x, cel_y)) # 2- milyen x,y-ra dobja a host
+        #szorny kep valasztasa a nev alapjan
+        szorny_kepek = {
+            "Goblin": "assets/goblin.png",
+            "Zombi": "assets/zombi.png",
+            "Csontváz Harcos": "assets/csontvaz.png",
+            "Pók": "assets/pok.png",
+            "Árnyék": "assets/arnyek.png",
+            "BOSS: Demonic Overlord": "assets/boss.png"
+        }
         
-        self.ajtok.append(ajto)
-        self.addItem(ajto)
-
-    def szorny_hozzadasa(self, x, y, nev="Goblin", hp=30, damage=8, defense=2, szorny_id=1):
-        ##json-ből jön a szorny
-        if self.db is not None:
-            szorny_statok = self.db.szorny_betoltes(szorny_id)
-        else:
-            szorny_statok = Monster(name=nev, current_hp=hp, max_hp=hp, damage=damage, defense=defense)
-        kep = "assets/boss.png" if "BOSS" in nev else "assets/monster.png"
+        kep = szorny_kepek.get(nev, "assets/boss.png" if is_boss else "assets/monster.png")
+        
         szorny = GraphicalMonster(kep, x, y, szorny_statok)
         szorny.setData(3, "szorny")
+        szorny.setZValue(10)
         
         self.szornyek.append(szorny)
         self.addItem(szorny)
@@ -90,12 +91,12 @@ class Szoba(QGraphicsScene):
                 
             elif x == 0:  
                 #bal
-                vizualis_ajto.setPos(0, y + (magassag / 2) - 50)
+                vizualis_ajto.setPos(10, y + (magassag / 2) - 50)
                 vizualis_ajto.setRotation(-90)
                 
             elif x > 600:  
                 #jobb
-                vizualis_ajto.setPos(x + szelesseg - 80, y + (magassag / 2) - 50)
+                vizualis_ajto.setPos(800 - 90, y + (magassag / 2) - 50)
                 vizualis_ajto.setRotation(90) 
 
             self.addItem(vizualis_ajto)

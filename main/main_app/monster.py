@@ -114,10 +114,20 @@ class GraphicalMonster(QGraphicsPixmapItem):
         teljes_utvonal = os.path.normpath(os.path.join(projekt_mappa, kep_utvonal))
         pixmap = QPixmap(teljes_utvonal)
         
+        if pixmap.isNull() and "boss" in kep_utvonal.lower():
+            tartalek_utvonal = os.path.normpath(os.path.join(projekt_mappa, "assets/monster.png"))
+            pixmap = QPixmap(tartalek_utvonal)
+        
         if pixmap.isNull():
             print(f"HIBA: Nem található a szörny képe: {teljes_utvonal}")
         else:
-            self.setPixmap(pixmap.scaled(50, 50, Qt.KeepAspectRatio, Qt.SmoothTransformation))
+            #sima szorny: 80x80, Boss: 130x130 a terkepen
+            meret = 130 if self.adatok.is_boss else 80
+            self.setPixmap(pixmap.scaled(meret, meret, Qt.KeepAspectRatio, Qt.SmoothTransformation))
+            #kozepre helyezes a terkepen
+            eltolas = (meret - 50) // 2
+            x = max(0, x - eltolas)
+            y = max(0, y - eltolas)
             
         self.setPos(x, y)
         #azonositas

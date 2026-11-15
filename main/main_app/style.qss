@@ -1,37 +1,111 @@
-QPushButton {
-    
-    border-image: url(assets/gomb_alap.png) 5 5 5 5 stretch stretch;
-        
-    background-color: transparent; 
-    border: none;
-    
-    color: black;
-    font-weight: bold;
-    font-size: 16px;
-    padding: 10px;
+
+QWidget#centralwidget {
+    border-image: url("assets/bg.png") 0 0 0 0 stretch stretch;
+    background-color: #16151a;
 }
 
+
+QPushButton {
+    border-image: url("assets/gomb_alap.png") 15 15 15 15 stretch stretch;
+    background-color: transparent;
+    border: none;
+    color: #f5eedc;
+    font-weight: bold;
+    font-size: 15px;
+    padding: 10px 18px;
+    min-height: 28px;
+    max-width: 280px;
+}
 
 QPushButton:hover {
-    border-image: url(assets/gomb_hover.png) 5 5 5 5 stretch stretch;
+    border-image: url("assets/gomb_hover.png") 15 15 15 15 stretch stretch;
+    color: #ffffff;
 }
 
-
 QPushButton:pressed {
-    border-image: url(assets/gomb_lenyomva.png) 5 5 5 5 stretch stretch;
-    
-    /* Kis trükk: rákattintáskor a szöveget 2 pixellel lejjebb toljuk, 
-       így olyan, mintha a felirat is süllyedne a gombbal! */
-    padding-top: 12px; 
+    border-image: url("assets/gomb_lenyomva.png") 15 15 15 15 stretch stretch;
+    padding-top: 12px;
     padding-bottom: 8px;
 }
 
-
-QWidget#page_harc {
-    border-image: url("assets/harc_bg.png") 0 0 0 0 stretch stretch;
+QPushButton:disabled {
+    color: #777777;
 }
 
 
-QWidget#centralwidget {
-    border-image: url("assets/harc_bg.png") 0 0 0 0 stretch stretch;
+QFrame#frame_3, QFrame#frame, QFrame#frame_2 {
+    background-color: rgba(28, 26, 34, 230);
+    border: 2px solid #4a4255;
+    border-radius: 8px;
+    padding: 8px;
+}
+
+
+QWidget#page4_harc QLabel, QWidget#page3_karakter QLabel {
+    background-color: rgba(20, 18, 26, 210);
+    border: 1px solid #5a4f66;
+    border-radius: 5px;
+    color: #e6dfd5;
+    padding: 6px 10px;
+    font-size: 14px;
+    font-weight: bold;
+}
+QWidget#page4_harc {
+    border-image: url("assets/dungeon_bg_blur.png") 0 0 0 0 stretch stretch;
+}
+
+
+QLabel#lbl_hos_img, QLabel#lbl_szorn_img {
+    background-color: transparent;
+    border: none;
+}
+
+
+QListWidget, QTextBrowser {
+    background-color: #121116;
+    border: 2px solid #4a4255;
+    border-radius: 6px;
+    color: #d8d0c5;
+    font-size: 13px;
+    padding: 5px;
+}
+
+QListWidget::item {
+    background-color: #221f29;
+    border: 1px solid #4a4255;
+    border-radius: 4px;
+}
+
+QListWidget::item:hover {
+    border: 1px solid #c9a55c;
+    background-color: #2d2936;
+}
+
+QLabel#label_95, QLabel#label_96, QLabel#label_98,
+QLabel#label_203, QLabel#label_205, QLabel#label_207,
+QLabel#lbl_hos_ero_ertek, QLabel#lbl_hos_vedekezes_ertek, QLabel#lbl_hos_kezdemenyezes_ertek,
+QLabel#lbl_szorny_ero_ertek, QLabel#lbl_szorn_vedekezes_ertek, QLabel#lbl_szorny_kezdemenyezes_ertek,
+QLabel#lbl_hos_nev, QLabel#lbl_szorny_nev,
+QLabel#label_94, QLabel#label_12, QLabel#label_13, QLabel#label_16,
+QLabel#label_14, QLabel#label_82, QLabel#label_15, QLabel#label_83,
+QLabel#label_84, QLabel#label_85, QLabel#label_86, QLabel#label_87,
+QLabel#label_88, QLabel#label_89, QLabel#label_90, QLabel#label_92,
+QLabel#label_91, QLabel#label_93 {
+    background-color: #1e1b24;
+    border: 2px solid #7a6a8a;
+    border-radius: 6px;
+    color: #f5eedc;
+    padding: 6px 12px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+QStackedWidget,
+QWidget#page0_fomenu,
+QWidget#page1_terkep,
+QWidget#page2_soteterdo,
+QWidget#page3_karakter,
+QWidget#page4_harc,
+QWidget#widget {
+    background: transparent;
 }

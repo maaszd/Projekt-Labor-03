@@ -151,8 +151,7 @@ class GraphicalHero(QGraphicsPixmapItem):
         if pixmap.isNull():
             print("HIBA: Nem található a hős képe!")
         else:
-            #fix 50x50 meretu
-            self.setPixmap(pixmap.scaled(50, 50, Qt.KeepAspectRatio, Qt.SmoothTransformation))
+            self.setPixmap(pixmap.scaled(75, 75, Qt.KeepAspectRatio, Qt.SmoothTransformation))
             
         self.setPos(x, y)
         self.sebesseg = 15 #mennyit tud lepni egy gombnyomasra
