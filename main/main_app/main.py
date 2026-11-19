@@ -35,7 +35,13 @@ class JatekAblak(QMainWindow):
         super().__init__()
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
-        
+
+        self.setWindowTitle("Projekt Labor 03 - RPG Játék")  
+        self.ui.statusbar.hide()  
+        self.ui.menubar.hide()    
+        self.ui.verticalLayout_7.setContentsMargins(0, 0, 0, 0)
+        self.ui.btn_dungeon_soteterdo.setText("Kripta")
+        self.ui.btn_dungeon_kripta.setText("Sötét erdő")
         # --- FELHASZNÁLÓ ADATBÁZIS KEZELÉS ---
         self.userdb = UserDatabaseManager()
         self.aktualis_felhasznalo = None
@@ -233,6 +239,8 @@ class JatekAblak(QMainWindow):
             
             self.aktualis_harcolt_szorny = erintett_szornyek[0]
             self.lenyomott_gombok.clear()
+
+            
             
             #hos kepet es nevet frissitjuk a harci menuben
             self.ui.lbl_hos_img.setMinimumSize(QSize(180, 180))
@@ -312,7 +320,9 @@ class JatekAblak(QMainWindow):
         QTimer.singleShot(0, self.inventory_frissites)
 
     def harc_inditasa(self):
-        if self.ui.btn_harcinditas.text() == "Tovább a térképre":
+        gomb_szoveg = self.ui.btn_harcinditas.text()
+        
+        if gomb_szoveg == "Tovább a térképre":
             self.ui.stackedWidget.setCurrentIndex(2)
             QApplication.processEvents() 
             if hasattr(self, 'aktualis_szoba') and self.aktualis_szoba:
@@ -321,20 +331,22 @@ class JatekAblak(QMainWindow):
             self.ui.btn_harcinditas.setText("Harc indítása")
             return
 
-        if self.ui.btn_harcinditas.text() == "Vége a játéknak":
+        if gomb_szoveg == "Vége a játéknak":
             
             self.hos.adatok.heal_to_max()
-            self.szobak.clear()
-            self.palya_betoltese("palya_1.json")
+            self.ui.pb_hos_hp.setValue(self.hos.adatok.current_hp)
+            
             self.aktualis_szoba = self.szobak.get("Szoba_1")
             if self.aktualis_szoba:
                 self.ui.graphicsView.setScene(self.aktualis_szoba)
                 self.aktualis_szoba.addItem(self.hos)
                 self.hos.setPos(200, 300)
+            
             self.mentes()
             self.ui.btn_harcinditas.setText("Harc indítása")
+            
+            self.centralWidget().setStyleSheet("QWidget#centralwidget { border-image: url('assets/alap_bg_blur.png') 0 0 0 0 stretch stretch; }")
             self.ui.stackedWidget.setCurrentIndex(1)
-            print("Újraéledtél! Válassz kazamatát a folytatáshoz.")
             return
 
         print("A harc elkezdődött!")
@@ -453,7 +465,7 @@ class JatekAblak(QMainWindow):
         #radobjuk a kepet
         if hasattr(self, 'aktualis_szoba'):
            self.ui.graphicsView.fitInView(self.aktualis_szoba.sceneRect(), Qt.IgnoreAspectRatio)
-           print("Beléptél a Sötét erdőbe")
+           print("Beléptél a Kriptába")
         self.hos.setFocus()
     
     # ADATBÁZIS

@@ -80,7 +80,7 @@
       }
     ],
     "szornyek": [
-      { "x": 400, "y": 300, "nev": "Csontváz Harcos", "hp": 40, "sebzes": 12, "vedelem": 4 }
+      { "x": 400, "y": 300, "nev": "Csontváz Harcos", "hp": 40, "sebzes": 14, "vedelem": 4 }
     ]
   },
   "Szoba_6": {
