@@ -1004,6 +1004,17 @@ QProgressBar::chunk {
              </layout>
             </item>
            </layout>
+           <widget class="QLabel" name="sebzes_lbl">
+            <property name="styleSheet">
+             <string notr="true">color: #ff3b3b; font-size: 26px; font-weight: bold; background: transparent; border: none;</string>
+            </property>
+            <property name="text">
+             <string>-0</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignmentFlag::AlignCenter</set>
+            </property>
+           </widget>
           </widget>
          </widget>
         </item>
