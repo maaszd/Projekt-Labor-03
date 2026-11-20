@@ -11,7 +11,7 @@ from user_db import UserDatabaseManager
 from PySide6.QtCore import Qt, QSize, QObject, Signal, QTimer, QRect, QPoint, QPropertyAnimation, QParallelAnimationGroup, QEasingCurve, QUrl
 from PySide6.QtWidgets import QApplication, QLabel, QFrame, QMainWindow, QListWidget, QListWidgetItem, QAbstractItemView, QListView, QGraphicsScene, QGraphicsPixmapItem,  QGraphicsBlurEffect, QGraphicsRectItem, QGraphicsItem, QGraphicsOpacityEffect
 from PySide6.QtGui import QIcon, QPixmap, QBrush, QColor, QPen, QImage, QPainter
-from PySide6.QtMultimedia import QSoundEffect
+from PySide6.QtMultimedia import QSoundEffect, QMediaPlayer, QAudioOutput
 from ui_menu import Ui_MainWindow
 from db import Adatbazis
 
@@ -60,13 +60,33 @@ class JatekAblak(QMainWindow):
         self.sebzes_anim.addAnimation(self.sebzes_fade_anim)
 
         
-        #hangok
+        #hangok 
         self.hangero = 0.7
+        self.zene_hangero = 0.7
+        self.beallitasok_fajl = os.path.join(os.path.dirname(os.path.abspath(__file__)), "beallitasok.json")
+        hang_mappa = os.path.join(os.path.dirname(os.path.abspath(__file__)), "assets", "sounds")
+
         self.hangok = {}
-        kard_hang = QSoundEffect(self)
-        kard_hang.setSource(QUrl.fromLocalFile(os.path.join(os.path.dirname(os.path.abspath(__file__)), "assets", "sounds", "sword.wav")))
-        kard_hang.setVolume(self.hangero)
-        self.hangok["sword"] = kard_hang
+        hang_fajlok = {"sword": "sword.wav", "potion": "potion.wav"}
+        for nev, fajl in hang_fajlok.items():
+            hang = QSoundEffect(self)
+            hang.setSource(QUrl.fromLocalFile(os.path.join(hang_mappa, fajl)))
+            hang.setVolume(self.hangero)
+            self.hangok[nev] = hang
+
+        #háttérzenék
+        self.zene_kimenet = QAudioOutput(self)
+        self.zene_kimenet.setVolume(self.zene_hangero)
+        self.zene_lejatszo = QMediaPlayer(self)
+        self.zene_lejatszo.setAudioOutput(self.zene_kimenet)
+        self.zene_lejatszo.setLoops(QMediaPlayer.Infinite)
+        self.aktualis_zene = None
+        self.zenek = {
+            "menu": QUrl.fromLocalFile(os.path.join(hang_mappa, "menu.mp3")),
+            "kocsma": QUrl.fromLocalFile(os.path.join(hang_mappa, "kocsma.mp3")),
+            "campfire": QUrl.fromLocalFile(os.path.join(hang_mappa, "campfire.mp3")),
+            "kovacs": QUrl.fromLocalFile(os.path.join(hang_mappa, "Blacksmith.mp3")),
+        }
 
         # --- FELHASZNÁLÓ ADATBÁZIS KEZELÉS ---
         self.userdb = UserDatabaseManager()
@@ -77,11 +97,22 @@ class JatekAblak(QMainWindow):
         #bal oszlop gombok meg a text doboz elrejtése 
         self.ui.frame_3.hide()       
         self.ui.textBrowser.hide()
+        #hangerö beállitás betöltése és menü zene inditás
+        self.beallitasok_betoltese()
+        self.zene_inditasa("menu")
         
         #fomenu gomb fuggvenyei
         self.ui.btn_folytatas.clicked.connect(self.jatek_folytatasa)
+        self.ui.btn_beallitasok.clicked.connect(self.beallitasok_megnyitasa)
         self.ui.btn_kilepes.clicked.connect(self.close)
         self.ui.btn_kilepes_2.clicked.connect(self.vissza_a_fomenube)
+
+        #beallitasok menu gombjai es sliderei
+        self.ui.slider_hangeffektek.valueChanged.connect(self.hangeffekt_hangero_valtozott)
+        self.ui.slider_hatterzene.valueChanged.connect(self.hatterzene_hangero_valtozott)
+        self.ui.btn_beallitasok_mentes.clicked.connect(self.beallitasok_mentese)
+        self.ui.btn_beallitasok_vissza.clicked.connect(self.vissza_a_fomenube)
+
         
         #text dobozba terminál szöveg kiiras
         self.console_redirector = ConsoleRedirector()
@@ -209,17 +240,88 @@ class JatekAblak(QMainWindow):
         self.aktualis_felhasznalo = None
         print("Sikeresen kijelentkeztél.")
 			
+    def zene_inditasa(self, zene_nev):
+        if zene_nev not in self.zenek:
+            return
+        if self.aktualis_zene == zene_nev and self.zene_lejatszo.playbackState() == QMediaPlayer.PlayingState:
+            return
+        self.aktualis_zene = zene_nev
+        self.zene_lejatszo.setSource(self.zenek[zene_nev])
+        self.zene_lejatszo.play()
+
+    def zene_leallitasa(self):
+        self.zene_lejatszo.stop()
+        self.aktualis_zene = None
+
     def jatek_folytatasa(self):
+        self.zene_leallitasa()
         self.ui.frame_3.show()
         self.ui.textBrowser.show()
         self.ui.stackedWidget.setCurrentIndex(1)
         print("Üdv újra a játékban!")
+
+    def beallitasok_megnyitasa(self):
+        self.beallitasok_ui_frissites()
+        self.ui.stackedWidget.setCurrentWidget(self.ui.page6_beallitasok)
+
+    def beallitasok_ui_frissites(self):
+        hangeffekt_szazalek = int(round(self.hangero * 100))
+        hatterzene_szazalek = int(round(self.zene_hangero * 100))
+        self.ui.slider_hangeffektek.setValue(hangeffekt_szazalek)
+        self.ui.lbl_hangeffektek_ertek.setText(f"{hangeffekt_szazalek}%")
+        self.ui.slider_hatterzene.setValue(hatterzene_szazalek)
+        self.ui.lbl_hatterzene_ertek.setText(f"{hatterzene_szazalek}%")
+
+    def hangeffekt_hangero_valtozott(self, ertek):
+        self.ui.lbl_hangeffektek_ertek.setText(f"{ertek}%")
+
+    def hatterzene_hangero_valtozott(self, ertek):
+        self.ui.lbl_hatterzene_ertek.setText(f"{ertek}%")
+
+    def beallitasok_betoltese(self):
+        adatok = {"hangeffektek": 70,"hatterzene": 70}
+        if os.path.exists(self.beallitasok_fajl):
+            try:
+                with open(self.beallitasok_fajl, "r", encoding="utf-8") as f:
+                    betoltott = json.load(f)
+                if isinstance(betoltott, dict):
+                    adatok.update(betoltott)
+            except (json.JSONDecodeError, OSError) as e:
+                print(f"Nem sikerült betölteni a beállításokat: {e}")
+
+        self.hangero = adatok["hangeffektek"] / 100.0
+        self.zene_hangero = adatok["hatterzene"] / 100.0
+
+        for hang in self.hangok.values():
+            hang.setVolume(self.hangero)
+        self.zene_kimenet.setVolume(self.zene_hangero)
+
+        self.beallitasok_ui_frissites()
+
+    def beallitasok_mentese(self):
+        hangeffektek = self.ui.slider_hangeffektek.value()
+        hatterzene = self.ui.slider_hatterzene.value()
+        
+        self.hangero = hangeffektek / 100.0
+        self.zene_hangero = hatterzene / 100.0
+        for hang in self.hangok.values():
+            hang.setVolume(self.hangero)
+        self.zene_kimenet.setVolume(self.zene_hangero)
+
+        adatok = {"hangeffektek": hangeffektek, "hatterzene": hatterzene}
+        try:
+            with open(self.beallitasok_fajl, "w", encoding="utf-8") as f:
+                json.dump(adatok, f, indent=4, ensure_ascii=False)
+            print("Beállítások sikeresen elmentve!")
+        except OSError as e:
+            print(f"Hiba a beállítások mentésekor: {e}")
 
     def vissza_a_fomenube(self):    
         self.mentes()
         self.ui.frame_3.hide()       
         self.ui.textBrowser.hide()   
         self.ui.stackedWidget.setCurrentIndex(0) 
+        self.zene_inditasa("menu")
         print("Visszatértél a főmenübe.")
     
     def keyPressEvent(self, event):

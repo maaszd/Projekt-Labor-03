@@ -101,7 +101,7 @@
         <item>
          <widget class="QStackedWidget" name="stackedWidget">
           <property name="currentIndex">
-           <number>4</number>
+           <number>5</number>
           </property>
           <widget class="QWidget" name="page0_fomenu">
            <property name="sizePolicy">
@@ -165,7 +165,7 @@
                 <item>
                  <widget class="QPushButton" name="btn_beallitasok">
                   <property name="text">
-                   <string>Beállítások(Coming Soon!)</string>
+                   <string>Beállítások</string>
                   </property>
                  </widget>
                 </item>
@@ -1005,6 +1005,14 @@ QProgressBar::chunk {
             </item>
            </layout>
            <widget class="QLabel" name="sebzes_lbl">
+            <property name="geometry">
+             <rect>
+              <x>0</x>
+              <y>0</y>
+              <width>100</width>
+              <height>30</height>
+             </rect>
+            </property>
             <property name="styleSheet">
              <string notr="true">color: #ff3b3b; font-size: 26px; font-weight: bold; background: transparent; border: none;</string>
             </property>
@@ -1015,6 +1023,229 @@ QProgressBar::chunk {
              <set>Qt::AlignmentFlag::AlignCenter</set>
             </property>
            </widget>
+          </widget>
+          <widget class="QWidget" name="page6_beallitasok">
+           <layout class="QVBoxLayout" name="verticalLayout_beallitasok_kulso">
+            <item>
+             <spacer name="verticalSpacer_beallitasok_felso">
+              <property name="orientation">
+               <enum>Qt::Orientation::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_beallitasok_kozep">
+              <item>
+               <spacer name="horizontalSpacer_beallitasok_bal">
+                <property name="orientation">
+                 <enum>Qt::Orientation::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QFrame" name="frame_beallitasok">
+                <property name="minimumSize">
+                 <size>
+                  <width>480</width>
+                  <height>260</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>560</width>
+                  <height>320</height>
+                 </size>
+                </property>
+                <property name="frameShape">
+                 <enum>QFrame::Shape::StyledPanel</enum>
+                </property>
+                <property name="frameShadow">
+                 <enum>QFrame::Shadow::Raised</enum>
+                </property>
+                <layout class="QVBoxLayout" name="verticalLayout_beallitasok_belso">
+                 <property name="spacing">
+                  <number>18</number>
+                 </property>
+                 <property name="leftMargin">
+                  <number>30</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>24</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>30</number>
+                 </property>
+                 <property name="bottomMargin">
+                  <number>24</number>
+                 </property>
+                 <item>
+                  <widget class="QLabel" name="lbl_beallitasok_cim">
+                   <property name="text">
+                    <string>Beállítások</string>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignmentFlag::AlignCenter</set>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QFrame" name="line_beallitasok_1">
+                   <property name="frameShape">
+                    <enum>QFrame::Shape::HLine</enum>
+                   </property>
+                   <property name="frameShadow">
+                    <enum>QFrame::Shadow::Sunken</enum>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <layout class="QGridLayout" name="gridLayout_hang">
+                   <property name="horizontalSpacing">
+                    <number>14</number>
+                   </property>
+                   <property name="verticalSpacing">
+                    <number>16</number>
+                   </property>
+                   <item row="0" column="0">
+                    <widget class="QLabel" name="lbl_hangeffektek">
+                     <property name="text">
+                      <string>Hang effektek:</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="1">
+                    <widget class="QSlider" name="slider_hangeffektek">
+                     <property name="maximum">
+                      <number>100</number>
+                     </property>
+                     <property name="value">
+                      <number>70</number>
+                     </property>
+                     <property name="orientation">
+                      <enum>Qt::Orientation::Horizontal</enum>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="2">
+                    <widget class="QLabel" name="lbl_hangeffektek_ertek">
+                     <property name="text">
+                      <string>70%</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="0">
+                    <widget class="QLabel" name="lbl_hatterzene">
+                     <property name="text">
+                      <string>Háttérzene:</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="1">
+                    <widget class="QSlider" name="slider_hatterzene">
+                     <property name="maximum">
+                      <number>100</number>
+                     </property>
+                     <property name="value">
+                      <number>70</number>
+                     </property>
+                     <property name="orientation">
+                      <enum>Qt::Orientation::Horizontal</enum>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="2">
+                    <widget class="QLabel" name="lbl_hatterzene_ertek">
+                     <property name="text">
+                      <string>70%</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                 <item>
+                  <spacer name="verticalSpacer_beallitasok_gombok">
+                   <property name="orientation">
+                    <enum>Qt::Orientation::Vertical</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>20</width>
+                     <height>10</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                 <item>
+                  <layout class="QHBoxLayout" name="horizontalLayout_beallitasok_gombok">
+                   <property name="spacing">
+                    <number>16</number>
+                   </property>
+                   <item>
+                    <widget class="QPushButton" name="btn_beallitasok_vissza">
+                     <property name="text">
+                      <string>Vissza a menübe</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QPushButton" name="btn_beallitasok_mentes">
+                     <property name="text">
+                      <string>Mentés</string>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_beallitasok_jobb">
+                <property name="orientation">
+                 <enum>Qt::Orientation::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <spacer name="verticalSpacer_beallitasok_also">
+              <property name="orientation">
+               <enum>Qt::Orientation::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
           </widget>
          </widget>
         </item>
@@ -1065,7 +1296,7 @@ QProgressBar::chunk {
      <x>0</x>
      <y>0</y>
      <width>1020</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuPROJEKT_LABOR_RPG_J_T_K">

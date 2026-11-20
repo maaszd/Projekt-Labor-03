@@ -106,6 +106,67 @@ QWidget#page1_terkep,
 QWidget#page2_soteterdo,
 QWidget#page3_karakter,
 QWidget#page4_harc,
+QWidget#page6_beallitasok,
 QWidget#widget {
     background: transparent;
+}
+
+
+QFrame#frame_beallitasok {
+    background-color: rgba(28, 26, 34, 235);
+    border: 2px solid #4a4255;
+    border-radius: 10px;
+}
+
+QFrame#frame_beallitasok QLabel {
+    color: #f5eedc;
+    font-size: 14px;
+    font-weight: bold;
+    background: transparent;
+    border: none;
+}
+
+QLabel#lbl_beallitasok_cim {
+    color: #c9a55c;
+    font-size: 24px;
+    font-weight: bold;
+    padding-bottom: 6px;
+}
+
+QLabel#lbl_hangeffektek_ertek,
+QLabel#lbl_hatterzene_ertek {
+    color: #c9a55c;
+    min-width: 42px;
+}
+
+QFrame#frame_beallitasok QSlider {
+    min-height: 26px;
+}
+
+QFrame#frame_beallitasok QSlider::groove:horizontal {
+    border: 1px solid #4a4255;
+    height: 8px;
+    background: #121116;
+    border-radius: 4px;
+}
+
+QFrame#frame_beallitasok QSlider::sub-page:horizontal {
+    background: #c9a55c;
+    border: 1px solid #a88743;
+    height: 8px;
+    border-radius: 4px;
+}
+
+QFrame#frame_beallitasok QSlider::handle:horizontal {
+    background: #f5eedc;
+    border: 2px solid #4a4255;
+    width: 18px;
+    height: 18px;
+    margin: -6px 0;
+    border-radius: 9px;
+}
+
+QFrame#frame_beallitasok QSlider::handle:horizontal:hover {
+    background: #ffffff;
+    border: 2px solid #c9a55c;
 }

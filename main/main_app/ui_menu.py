@@ -19,8 +19,9 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
 from PySide6.QtWidgets import (QApplication, QFrame, QGraphicsView, QGridLayout,
     QHBoxLayout, QLabel, QListWidget, QListWidgetItem,
     QMainWindow, QMenu, QMenuBar, QProgressBar,
-    QPushButton, QSizePolicy, QSpacerItem, QStackedWidget,
-    QStatusBar, QTextBrowser, QVBoxLayout, QWidget)
+    QPushButton, QSizePolicy, QSlider, QSpacerItem,
+    QStackedWidget, QStatusBar, QTextBrowser, QVBoxLayout,
+    QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -464,6 +465,7 @@ class Ui_MainWindow(object):
         self.page4_harc.setObjectName(u"page4_harc")
         self.sebzes_lbl = QLabel(self.page4_harc)
         self.sebzes_lbl.setObjectName(u"sebzes_lbl")
+        self.sebzes_lbl.setGeometry(QRect(0, 0, 100, 30))
         self.sebzes_lbl.setStyleSheet(u"color: #ff3b3b; font-size: 26px; font-weight: bold; background: transparent; border: none;")
         self.sebzes_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.verticalLayout_8 = QVBoxLayout(self.page4_harc)
@@ -632,6 +634,123 @@ class Ui_MainWindow(object):
         self.verticalLayout_8.addLayout(self.gridLayout_4)
 
         self.stackedWidget.addWidget(self.page4_harc)
+        self.page6_beallitasok = QWidget()
+        self.page6_beallitasok.setObjectName(u"page6_beallitasok")
+        self.verticalLayout_beallitasok_kulso = QVBoxLayout(self.page6_beallitasok)
+        self.verticalLayout_beallitasok_kulso.setObjectName(u"verticalLayout_beallitasok_kulso")
+        self.verticalSpacer_beallitasok_felso = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.verticalLayout_beallitasok_kulso.addItem(self.verticalSpacer_beallitasok_felso)
+
+        self.horizontalLayout_beallitasok_kozep = QHBoxLayout()
+        self.horizontalLayout_beallitasok_kozep.setObjectName(u"horizontalLayout_beallitasok_kozep")
+        self.horizontalSpacer_beallitasok_bal = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout_beallitasok_kozep.addItem(self.horizontalSpacer_beallitasok_bal)
+
+        self.frame_beallitasok = QFrame(self.page6_beallitasok)
+        self.frame_beallitasok.setObjectName(u"frame_beallitasok")
+        self.frame_beallitasok.setMinimumSize(QSize(480, 260))
+        self.frame_beallitasok.setMaximumSize(QSize(560, 320))
+        self.frame_beallitasok.setFrameShape(QFrame.Shape.StyledPanel)
+        self.frame_beallitasok.setFrameShadow(QFrame.Shadow.Raised)
+        self.verticalLayout_beallitasok_belso = QVBoxLayout(self.frame_beallitasok)
+        self.verticalLayout_beallitasok_belso.setSpacing(18)
+        self.verticalLayout_beallitasok_belso.setObjectName(u"verticalLayout_beallitasok_belso")
+        self.verticalLayout_beallitasok_belso.setContentsMargins(30, 24, 30, 24)
+        self.lbl_beallitasok_cim = QLabel(self.frame_beallitasok)
+        self.lbl_beallitasok_cim.setObjectName(u"lbl_beallitasok_cim")
+        self.lbl_beallitasok_cim.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.verticalLayout_beallitasok_belso.addWidget(self.lbl_beallitasok_cim)
+
+        self.line_beallitasok_1 = QFrame(self.frame_beallitasok)
+        self.line_beallitasok_1.setObjectName(u"line_beallitasok_1")
+        self.line_beallitasok_1.setFrameShape(QFrame.Shape.HLine)
+        self.line_beallitasok_1.setFrameShadow(QFrame.Shadow.Sunken)
+
+        self.verticalLayout_beallitasok_belso.addWidget(self.line_beallitasok_1)
+
+        self.gridLayout_hang = QGridLayout()
+        self.gridLayout_hang.setObjectName(u"gridLayout_hang")
+        self.gridLayout_hang.setHorizontalSpacing(14)
+        self.gridLayout_hang.setVerticalSpacing(16)
+        self.lbl_hangeffektek = QLabel(self.frame_beallitasok)
+        self.lbl_hangeffektek.setObjectName(u"lbl_hangeffektek")
+
+        self.gridLayout_hang.addWidget(self.lbl_hangeffektek, 0, 0, 1, 1)
+
+        self.slider_hangeffektek = QSlider(self.frame_beallitasok)
+        self.slider_hangeffektek.setObjectName(u"slider_hangeffektek")
+        self.slider_hangeffektek.setMaximum(100)
+        self.slider_hangeffektek.setValue(70)
+        self.slider_hangeffektek.setOrientation(Qt.Orientation.Horizontal)
+
+        self.gridLayout_hang.addWidget(self.slider_hangeffektek, 0, 1, 1, 1)
+
+        self.lbl_hangeffektek_ertek = QLabel(self.frame_beallitasok)
+        self.lbl_hangeffektek_ertek.setObjectName(u"lbl_hangeffektek_ertek")
+        self.lbl_hangeffektek_ertek.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
+
+        self.gridLayout_hang.addWidget(self.lbl_hangeffektek_ertek, 0, 2, 1, 1)
+
+        self.lbl_hatterzene = QLabel(self.frame_beallitasok)
+        self.lbl_hatterzene.setObjectName(u"lbl_hatterzene")
+
+        self.gridLayout_hang.addWidget(self.lbl_hatterzene, 1, 0, 1, 1)
+
+        self.slider_hatterzene = QSlider(self.frame_beallitasok)
+        self.slider_hatterzene.setObjectName(u"slider_hatterzene")
+        self.slider_hatterzene.setMaximum(100)
+        self.slider_hatterzene.setValue(70)
+        self.slider_hatterzene.setOrientation(Qt.Orientation.Horizontal)
+
+        self.gridLayout_hang.addWidget(self.slider_hatterzene, 1, 1, 1, 1)
+
+        self.lbl_hatterzene_ertek = QLabel(self.frame_beallitasok)
+        self.lbl_hatterzene_ertek.setObjectName(u"lbl_hatterzene_ertek")
+        self.lbl_hatterzene_ertek.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
+
+        self.gridLayout_hang.addWidget(self.lbl_hatterzene_ertek, 1, 2, 1, 1)
+
+
+        self.verticalLayout_beallitasok_belso.addLayout(self.gridLayout_hang)
+
+        self.verticalSpacer_beallitasok_gombok = QSpacerItem(20, 10, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.verticalLayout_beallitasok_belso.addItem(self.verticalSpacer_beallitasok_gombok)
+
+        self.horizontalLayout_beallitasok_gombok = QHBoxLayout()
+        self.horizontalLayout_beallitasok_gombok.setSpacing(16)
+        self.horizontalLayout_beallitasok_gombok.setObjectName(u"horizontalLayout_beallitasok_gombok")
+        self.btn_beallitasok_vissza = QPushButton(self.frame_beallitasok)
+        self.btn_beallitasok_vissza.setObjectName(u"btn_beallitasok_vissza")
+
+        self.horizontalLayout_beallitasok_gombok.addWidget(self.btn_beallitasok_vissza)
+
+        self.btn_beallitasok_mentes = QPushButton(self.frame_beallitasok)
+        self.btn_beallitasok_mentes.setObjectName(u"btn_beallitasok_mentes")
+
+        self.horizontalLayout_beallitasok_gombok.addWidget(self.btn_beallitasok_mentes)
+
+
+        self.verticalLayout_beallitasok_belso.addLayout(self.horizontalLayout_beallitasok_gombok)
+
+
+        self.horizontalLayout_beallitasok_kozep.addWidget(self.frame_beallitasok)
+
+        self.horizontalSpacer_beallitasok_jobb = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout_beallitasok_kozep.addItem(self.horizontalSpacer_beallitasok_jobb)
+
+
+        self.verticalLayout_beallitasok_kulso.addLayout(self.horizontalLayout_beallitasok_kozep)
+
+        self.verticalSpacer_beallitasok_also = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.verticalLayout_beallitasok_kulso.addItem(self.verticalSpacer_beallitasok_also)
+
+        self.stackedWidget.addWidget(self.page6_beallitasok)
 
         self.verticalLayout_5.addWidget(self.stackedWidget)
 
@@ -666,7 +785,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 1020, 21))
+        self.menubar.setGeometry(QRect(0, 0, 1020, 22))
         self.menuPROJEKT_LABOR_RPG_J_T_K = QMenu(self.menubar)
         self.menuPROJEKT_LABOR_RPG_J_T_K.setObjectName(u"menuPROJEKT_LABOR_RPG_J_T_K")
         self.menu03 = QMenu(self.menubar)
@@ -681,7 +800,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.stackedWidget.setCurrentIndex(4)
+        self.stackedWidget.setCurrentIndex(5)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -697,7 +816,7 @@ class Ui_MainWindow(object):
         self.btn_folytatas.setText(QCoreApplication.translate("MainWindow", u"Folytat\u00e1s", None))
         self.btn_ujjatek.setText(QCoreApplication.translate("MainWindow", u"\u00daj J\u00e1t\u00e9k(Coming Soon!)", None))
         self.btn_betoltes.setText(QCoreApplication.translate("MainWindow", u"Bet\u00f6lt\u00e9s(Coming Soon!)", None))
-        self.btn_beallitasok.setText(QCoreApplication.translate("MainWindow", u"Be\u00e1ll\u00edt\u00e1sok(Coming Soon!)", None))
+        self.btn_beallitasok.setText(QCoreApplication.translate("MainWindow", u"Be\u00e1ll\u00edt\u00e1sok", None))
         self.btn_kilepes.setText(QCoreApplication.translate("MainWindow", u"Kil\u00e9p\u00e9s", None))
         self.btn_dungeon_soteterdo.setText(QCoreApplication.translate("MainWindow", u"S\u00f6t\u00e9t erd\u0151", None))
         self.btn_dungeon_kripta.setText(QCoreApplication.translate("MainWindow", u"Kripta", None))
@@ -747,6 +866,13 @@ class Ui_MainWindow(object):
         self.lbl_szorn_img.setText(QCoreApplication.translate("MainWindow", u"Sz\u00f6rnyImg", None))
         self.pb_szorny_hp.setFormat(QCoreApplication.translate("MainWindow", u"%v / %m", None))
         self.lbl_szorny_nev.setText(QCoreApplication.translate("MainWindow", u"Sz\u00f6rny - Level 1", None))
+        self.lbl_beallitasok_cim.setText(QCoreApplication.translate("MainWindow", u"Be\u00e1ll\u00edt\u00e1sok", None))
+        self.lbl_hangeffektek.setText(QCoreApplication.translate("MainWindow", u"Hang effektek:", None))
+        self.lbl_hangeffektek_ertek.setText(QCoreApplication.translate("MainWindow", u"70%", None))
+        self.lbl_hatterzene.setText(QCoreApplication.translate("MainWindow", u"H\u00e1tt\u00e9rzene:", None))
+        self.lbl_hatterzene_ertek.setText(QCoreApplication.translate("MainWindow", u"70%", None))
+        self.btn_beallitasok_vissza.setText(QCoreApplication.translate("MainWindow", u"Vissza a men\u00fcbe", None))
+        self.btn_beallitasok_mentes.setText(QCoreApplication.translate("MainWindow", u"Ment\u00e9s", None))
         self.menuPROJEKT_LABOR_RPG_J_T_K.setTitle(QCoreApplication.translate("MainWindow", u"PROJEKT LABOR - RPG J\u00c1T\u00c9K", None))
         self.menu03.setTitle(QCoreApplication.translate("MainWindow", u"03", None))
     # retranslateUi
