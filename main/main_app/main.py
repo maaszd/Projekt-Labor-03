@@ -9,8 +9,8 @@ from monster import Monster, GraphicalMonster
 from user import User
 from user_db import UserDatabaseManager
 from PySide6.QtCore import Qt, QSize, QObject, Signal, QTimer, QRect
-from PySide6.QtWidgets import QApplication, QLabel, QFrame, QMainWindow, QListWidget, QListWidgetItem, QAbstractItemView, QListView, QGraphicsScene, QGraphicsPixmapItem,  QGraphicsBlurEffect, QGraphicsRectItem, QGraphicsItem
-from PySide6.QtGui import QIcon, QPixmap, QBrush, QColor, QPen, QImage, QPainter
+from PySide6.QtWidgets import QApplication, QHBoxLayout, QLabel, QFrame, QMainWindow, QListWidget, QListWidgetItem, QAbstractItemView, QListView, QGraphicsScene, QGraphicsPixmapItem,  QGraphicsBlurEffect, QGraphicsRectItem, QGraphicsItem, QVBoxLayout, QWidget
+from PySide6.QtGui import QIcon, QPixmap, QBrush, QColor, QPen, QImage, QPainter, QRadialGradient
 from ui_menu import Ui_MainWindow
 from db import Adatbazis
 
@@ -47,15 +47,39 @@ class JatekAblak(QMainWindow):
         self.aktualis_felhasznalo = None
         
         # --- FŐMENÜ BEÁLLÍTÁSA INDULÁSKOR ---
-        self.ui.stackedWidget.setCurrentIndex(0)
+        
+        #login / reg frame
+        self.ui.stackedWidget.setCurrentIndex(7)
         #bal oszlop gombok meg a text doboz elrejtése 
         self.ui.frame_3.hide()       
         self.ui.textBrowser.hide()
+
+        #placeholder text a mezokben
+        for mezo, szoveg in [
+            (self.ui.le_login_nev, "Felhasználónév"),
+            (self.ui.le_login_jelszo, "Jelszó"),
+            (self.ui.le_reg_nev, "Új felhasználónév"),
+            (self.ui.le_reg_jelszo, "Jelszó"),
+            (self.ui.le_reg_jelszo2, "Jelszó újra"),
+        ]:
+            mezo.clear()
+            mezo.setPlaceholderText(szoveg)
+
+        #regisztráció vagy login gomb bekötése
+        self.ui.btn_login.clicked.connect(self.login_gomb_nyomas)
+        self.ui.btn_reg.clicked.connect(self.reg_gomb_nyomas)
         
         #fomenu gomb fuggvenyei
         self.ui.btn_folytatas.clicked.connect(self.jatek_folytatasa)
         self.ui.btn_kilepes.clicked.connect(self.close)
         self.ui.btn_kilepes_2.clicked.connect(self.vissza_a_fomenube)
+        self.ui.btn_beallitasok.clicked.connect(lambda: self.ui.stackedWidget.setCurrentIndex(6))
+        
+        self.ui.btn_mentes_es_betoltes.clicked.connect(self.mentes_oldal_megnyitasa)
+        #mentes es betoltes gombjai
+        self.ui.btn_mentes_vegleges.clicked.connect(self.page6_mentes_gomb)
+        self.ui.btn_betoltes.clicked.connect(self.page6_betoltes_gomb)
+        self.ui.btn_mentes_vissza.clicked.connect(lambda: self.ui.stackedWidget.setCurrentIndex(0))
         
         #text dobozba terminál szöveg kiiras
         self.console_redirector = ConsoleRedirector()
@@ -63,7 +87,7 @@ class JatekAblak(QMainWindow):
         sys.stdout = self.console_redirector
         
         # Gombok összekötése stacked widgetnek az indexei alapján: 0 - főmenü, 1 - térkép, 2 - sötét erdő, 3 - karakter + hátizsák, 
-        #                                                          4 - harc,
+        #                                                          4 - harc, 5 - mentés és betöltés, 6 - beállítások, 7 - login/regisztráció
         
         self.ui.btn_karakter.clicked.connect(lambda: self.ui.stackedWidget.setCurrentIndex(3))
         self.ui.btn_expedicio.clicked.connect(lambda: self.ui.stackedWidget.setCurrentIndex(1))
@@ -142,23 +166,6 @@ class JatekAblak(QMainWindow):
         self.mozgas_timer.start(16)
         self.szobavaltas_alatt = True  #amíg le nem lép az ajtóról, nincs szobaváltás
 
-        label_stilus = """
-            QLabel {
-                background-color: #1e1b24;
-                border: 2px solid #8c7853;
-                border-radius: 6px;
-                color: #f5eedc;
-                padding: 5px 10px;
-                font-size: 14px;
-                font-weight: bold;
-            }
-        """
-        for oldal in (self.ui.page3_karakter, self.ui.page4_harc):
-            for lbl in oldal.findChildren(QLabel):
-                if lbl.objectName() not in ("lbl_hos_img", "lbl_szorn_img"):
-                    lbl.setFrameShape(QFrame.Shape.Box)
-                    lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
-                    lbl.setStyleSheet(label_stilus)
 		
 #----------------------__init__(self): VÉGE ---------------------------------
     
@@ -231,6 +238,8 @@ class JatekAblak(QMainWindow):
         y = max(0, min(y, 550))
         #megortenik a lepes
         self.hos.setPos(x, y)
+        if hasattr(self, 'aktualis_szoba') and self.aktualis_szoba:
+            self.aktualis_szoba.kod_frissites(x, y, self.hos.adatok.level)
 
         #ha a hos ralepett egy szornyre akkor harc kezdodik
         erintett_szornyek = [item for item in self.hos.collidingItems() if item.data(3) == "szorny"]
@@ -333,22 +342,13 @@ class JatekAblak(QMainWindow):
 
         if gomb_szoveg == "Vége a játéknak":
             
-            self.hos.adatok.heal_to_max()
-            self.ui.pb_hos_hp.setValue(self.hos.adatok.current_hp)
-            
-            self.aktualis_szoba = self.szobak.get("Szoba_1")
-            if self.aktualis_szoba:
-                self.ui.graphicsView.setScene(self.aktualis_szoba)
-                self.aktualis_szoba.addItem(self.hos)
-                self.hos.setPos(200, 300)
-            
-            self.mentes()
-            self.ui.btn_harcinditas.setText("Harc indítása")
-            
-            self.centralWidget().setStyleSheet("QWidget#centralwidget { border-image: url('assets/alap_bg_blur.png') 0 0 0 0 stretch stretch; }")
-            self.ui.stackedWidget.setCurrentIndex(1)
-            return
-
+            if gomb_szoveg == "Vége a játéknak":
+                self.ui.pb_hos_hp.setValue(self.hos.adatok.current_hp)
+                self.ui.btn_harcinditas.setText("Harc indítása")
+                self.centralWidget().setStyleSheet("QWidget#centralwidget { border-image: url('assets/alap_bg_blur.png') 0 0 0 0 stretch stretch; }")
+                self.ui.stackedWidget.setCurrentIndex(1)
+                return
+        
         print("A harc elkezdődött!")
         self.ui.btn_harcinditas.setEnabled(False) 
             
@@ -417,14 +417,35 @@ class JatekAblak(QMainWindow):
 
             # halal ellenorzes
             if not self.hos.adatok.alive():
-                print("Meghaltál, a Szörny megölt.")
+                print("Meghaltál, a Szörny megölt. A dungeon alaphelyzetbe állt!")
                 self.harc_timer.stop()
+
+                #hos healelese es dungeon reset
+                self.hos.adatok.heal_to_max()
+                self.karakter_statok_frissitese()
+                self.dungeon_reset()
+                self.mentes()
+
                 self.ui.btn_harcinditas.setText("Vége a játéknak")
                 self.ui.btn_harcinditas.setEnabled(True)
                 return
 
             self.hos_kore = True
 
+    def dungeon_reset(self):
+        if self.hos.scene():
+            self.hos.scene().removeItem(self.hos)
+
+        self.szobak = {}
+        self.palya_betoltese("palya_1.json")
+        self.aktualis_szoba = self.szobak.get("Szoba_1")
+
+        if self.aktualis_szoba:
+            self.ui.graphicsView.setScene(self.aktualis_szoba)
+            self.aktualis_szoba.addItem(self.hos)
+            self.hos.setPos(400, 300)
+    
+    
     def palya_betoltese(self, json_utvonal):
         #lekerjuk a main.py helyet es osszefuzzuk a json_utvonallal
         projekt_mappa = os.path.dirname(os.path.abspath(__file__))
@@ -467,8 +488,9 @@ class JatekAblak(QMainWindow):
            self.ui.graphicsView.fitInView(self.aktualis_szoba.sceneRect(), Qt.IgnoreAspectRatio)
            print("Beléptél a Kriptába")
         self.hos.setFocus()
-    
-    # ADATBÁZIS
+
+        if hasattr(self, 'aktualis_szoba') and self.aktualis_szoba:
+            self.aktualis_szoba.kod_frissites(self.hos.x(), self.hos.y(), self.hos.adatok.level)
 
     def mentes(self):
         #halott hőst nem mentünk, így a "Folytatás" az utolsó élő állapotról indul
@@ -560,6 +582,149 @@ class JatekAblak(QMainWindow):
         self.ui.label_89.setText(str(alap_dmg + bonus_dmg))
         self.ui.label_92.setText(str(alap_def + bonus_def))
         self.ui.label_93.setText(f"{alap_init:.2f}")
+
+    def login_gomb_nyomas(self):
+        nev = self.ui.le_login_nev.text().strip()
+        jelszo = self.ui.le_login_jelszo.text()
+
+        if not nev or not jelszo:
+            self.glass_popup("Hiba", "Add meg a felhasználónevet és a jelszót!")
+            return
+
+        siker, uzenet, user = self.userdb.bejelentkezes(nev, jelszo)
+        if siker and user:
+            self.aktualis_felhasznalo = user
+            self.allas_betoltese(user.name)
+            self.ui.le_login_nev.clear()
+            self.ui.le_login_jelszo.clear()
+            self.glass_popup("Siker", uzenet)
+            self.ui.stackedWidget.setCurrentIndex(0)
+        else:
+            self.glass_popup("Hiba", uzenet)
+
+    def reg_gomb_nyomas(self):
+        nev = self.ui.le_reg_nev.text().strip()
+        jelszo = self.ui.le_reg_jelszo.text()
+        jelszo2 = self.ui.le_reg_jelszo2.text()
+
+        if not nev or not jelszo:
+            self.glass_popup("Hiba", "Minden mező kitöltése kötelező!")
+            return
+        if jelszo != jelszo2:
+            self.glass_popup("Hiba", "A két jelszó nem egyezik!")
+            return
+
+        siker, uzenet, uj_user = self.userdb.regisztracio(nev, jelszo)
+        if siker:
+            self.glass_popup("Siker", uzenet)
+            self.ui.le_reg_nev.clear()
+            self.ui.le_reg_jelszo.clear()
+            self.ui.le_reg_jelszo2.clear()
+        else:
+            self.glass_popup("Hiba", uzenet)
+    def glass_popup(self, cim, szoveg):
+        from PySide6.QtWidgets import QDialog, QVBoxLayout, QFrame, QLabel, QPushButton
+
+        dialog = QDialog(self)
+        dialog.setObjectName("glass_popup")
+        dialog.setWindowFlags(Qt.FramelessWindowHint | Qt.Dialog)
+        dialog.setAttribute(Qt.WA_TranslucentBackground)
+        dialog.setMinimumWidth(340)
+
+        kulso = QVBoxLayout(dialog)
+        kulso.setContentsMargins(0, 0, 0, 0)
+
+        keret = QFrame()
+        keret.setObjectName("glass_popup_keret")
+        belso = QVBoxLayout(keret)
+        belso.setSpacing(14)
+
+        lbl_cim = QLabel(cim)
+        lbl_cim.setObjectName("popup_cim")
+        lbl_cim.setAlignment(Qt.AlignCenter)
+
+        lbl_szoveg = QLabel(szoveg)
+        lbl_szoveg.setObjectName("popup_szoveg")
+        lbl_szoveg.setAlignment(Qt.AlignCenter)
+        lbl_szoveg.setWordWrap(True)
+
+        gomb = QPushButton("Rendben")
+        gomb.clicked.connect(dialog.accept)
+
+        belso.addWidget(lbl_cim)
+        belso.addWidget(lbl_szoveg)
+        belso.addWidget(gomb, alignment=Qt.AlignCenter)
+        kulso.addWidget(keret)
+
+        dialog.exec()
+
+    def felhasznalo_kijelentkezes(self):
+        self.aktualis_felhasznalo = None
+        self.ui.frame_3.hide()
+        self.ui.textBrowser.hide()
+        self.ui.stackedWidget.setCurrentIndex(7)
+        
+    
+    def mentes_oldal_megnyitasa(self):
+        if hasattr(self.ui, 'lbl_mentes_info'):
+            szoba_nev = self.aktualis_szoba.nev if hasattr(self, 'aktualis_szoba') and self.aktualis_szoba else "Ismeretlen"
+            self.ui.lbl_mentes_info.setText(
+                f"Hős: {self.hos.adatok.name} ({self.hos.adatok.level}. szint)\n"
+                f"Életerő: {self.hos.adatok.current_hp} / {self.hos.adatok.max_hp}\n"
+                f"Jelenlegi szoba: {szoba_nev}"
+            )
+        self.ui.stackedWidget.setCurrentIndex(5)
+
+    def page6_mentes_gomb(self):
+        if not self.aktualis_felhasznalo:
+            self.glass_popup("Hiba", "Nincs bejelentkezett felhasználó!")
+            return
+        self.mentes()
+        self.mentes_oldal_megnyitasa()
+        self.glass_popup("Mentés", f"{self.aktualis_felhasznalo.name} játékállása sikeresen elmentve!")
+
+    def page6_betoltes_gomb(self):
+        if not self.aktualis_felhasznalo:
+            self.glass_popup("Hiba", "Nincs bejelentkezett felhasználó!")
+            return
+        self.allas_betoltese(self.aktualis_felhasznalo.name)
+        self.glass_popup("Betöltés", f"{self.aktualis_felhasznalo.name} utolsó mentése betöltve!")
+
+        # Belépés a játékba (oldalsáv és napló megjelenítése, váltás a térképre)
+        self.ui.frame_3.show()
+        self.ui.textBrowser.show()
+        self.ui.stackedWidget.setCurrentIndex(1)
+    
+    def allas_betoltese(self, felhasznalo_nev):
+        self.jatekos_id, hos_statok = self.db.jatekos_betoltes_vagy_letrehozas(felhasznalo_nev)
+        mentes = self.db.jatekmezo_betoltes(self.jatekos_id)
+
+        if hasattr(self, 'hos') and self.hos.scene():
+            self.hos.scene().removeItem(self.hos)
+
+        self.szobak = {}
+        self.palya_betoltese("palya_1.json")
+
+        kezdo_szoba = "Szoba_1"
+        hos_x, hos_y = 400, 300
+        if mentes and mentes.get("aktualis_szoba") in self.szobak:
+            kezdo_szoba = mentes["aktualis_szoba"]
+            if mentes.get("hos_x") is not None and mentes.get("hos_y") is not None:
+                hos_x, hos_y = float(mentes["hos_x"]), float(mentes["hos_y"])
+
+        self.aktualis_szoba = self.szobak.get(kezdo_szoba)
+        if self.aktualis_szoba:
+            self.ui.graphicsView.setScene(self.aktualis_szoba)
+            self.hos = GraphicalHero("assets/hero.png", hos_x, hos_y, hos_statok)
+            self.hos.setZValue(20)
+            self.aktualis_szoba.addItem(self.hos)
+
+        self.inventory_frissites()
+        self.karakter_statok_frissitese()
+        self.ui.pb_hos_hp.setMaximum(self.hos.adatok.max_hp)
+        self.ui.pb_hos_hp.setValue(self.hos.adatok.current_hp)
+        if hasattr(self, 'aktualis_szoba') and self.aktualis_szoba:
+            self.aktualis_szoba.kod_frissites(self.hos.x(), self.hos.y(), self.hos.adatok.level)
 
 #---------------------------JÁTÉKABLAK VÉGE-------------------------		
 if __name__ == "__main__":

@@ -33,9 +33,10 @@ class Adatbazis:
 
     # Játékos
     def jatekos_betoltes_vagy_letrehozas(self, nev="Kalandor", slot=1):
-        """-> (jatekos_id, Hero). Ha a slotban nincs mentés, új játékost hoz létre."""
+        """-> (jatekos_id, Hero). Felhasználónév és slot alapján keres, ha nincs, létrehozza."""
         sor = self.conn.execute(
-            "SELECT * FROM Jatekos WHERE mentes_slot = ? ORDER BY id LIMIT 1", (slot,)
+            "SELECT * FROM Jatekos WHERE nev = ? AND mentes_slot = ? ORDER BY id LIMIT 1",
+            (nev, slot)
         ).fetchone()
         if sor is None:
             return self._uj_jatekos(nev, slot)

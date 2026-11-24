@@ -17,10 +17,11 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
     QPainter, QPalette, QPixmap, QRadialGradient,
     QTransform)
 from PySide6.QtWidgets import (QApplication, QFrame, QGraphicsView, QGridLayout,
-    QHBoxLayout, QLabel, QListWidget, QListWidgetItem,
-    QMainWindow, QMenu, QMenuBar, QProgressBar,
-    QPushButton, QSizePolicy, QSpacerItem, QStackedWidget,
-    QStatusBar, QTextBrowser, QVBoxLayout, QWidget)
+    QHBoxLayout, QLabel, QLineEdit, QListWidget,
+    QListWidgetItem, QMainWindow, QMenu, QMenuBar,
+    QProgressBar, QPushButton, QSizePolicy, QSlider,
+    QSpacerItem, QStackedWidget, QStatusBar, QTextBrowser,
+    QVBoxLayout, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -32,8 +33,8 @@ class Ui_MainWindow(object):
         MainWindow.setBaseSize(QSize(0, 0))
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
-        self.verticalLayout_7 = QVBoxLayout(self.centralwidget)
-        self.verticalLayout_7.setObjectName(u"verticalLayout_7")
+        self.verticalLayout_11 = QVBoxLayout(self.centralwidget)
+        self.verticalLayout_11.setObjectName(u"verticalLayout_11")
         self.horizontalLayout_3 = QHBoxLayout()
         self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
         self.frame_3 = QFrame(self.centralwidget)
@@ -114,10 +115,10 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_2.addWidget(self.btn_ujjatek)
 
-        self.btn_betoltes = QPushButton(self.page0_fomenu)
-        self.btn_betoltes.setObjectName(u"btn_betoltes")
+        self.btn_mentes_es_betoltes = QPushButton(self.page0_fomenu)
+        self.btn_mentes_es_betoltes.setObjectName(u"btn_mentes_es_betoltes")
 
-        self.verticalLayout_2.addWidget(self.btn_betoltes)
+        self.verticalLayout_2.addWidget(self.btn_mentes_es_betoltes)
 
         self.btn_beallitasok = QPushButton(self.page0_fomenu)
         self.btn_beallitasok.setObjectName(u"btn_beallitasok")
@@ -473,105 +474,45 @@ class Ui_MainWindow(object):
 
         self.gridLayout_8 = QGridLayout()
         self.gridLayout_8.setObjectName(u"gridLayout_8")
-        self.label_203 = QLabel(self.page4_harc)
-        self.label_203.setObjectName(u"label_203")
+        self.label_96 = QLabel(self.page4_harc)
+        self.label_96.setObjectName(u"label_96")
 
-        self.gridLayout_8.addWidget(self.label_203, 0, 3, 1, 1)
-
-        self.lbl_hos_vedekezes_ertek = QLabel(self.page4_harc)
-        self.lbl_hos_vedekezes_ertek.setObjectName(u"lbl_hos_vedekezes_ertek")
-
-        self.gridLayout_8.addWidget(self.lbl_hos_vedekezes_ertek, 1, 2, 1, 1)
+        self.gridLayout_8.addWidget(self.label_96, 2, 1, 1, 1)
 
         self.label_98 = QLabel(self.page4_harc)
         self.label_98.setObjectName(u"label_98")
 
-        self.gridLayout_8.addWidget(self.label_98, 2, 1, 1, 1)
-
-        self.label_96 = QLabel(self.page4_harc)
-        self.label_96.setObjectName(u"label_96")
-
-        self.gridLayout_8.addWidget(self.label_96, 1, 1, 1, 1)
-
-        self.label_205 = QLabel(self.page4_harc)
-        self.label_205.setObjectName(u"label_205")
-
-        self.gridLayout_8.addWidget(self.label_205, 1, 3, 1, 1)
-
-        self.label_95 = QLabel(self.page4_harc)
-        self.label_95.setObjectName(u"label_95")
-
-        self.gridLayout_8.addWidget(self.label_95, 0, 1, 1, 1)
-
-        self.lbl_szorny_kezdemenyezes_ertek = QLabel(self.page4_harc)
-        self.lbl_szorny_kezdemenyezes_ertek.setObjectName(u"lbl_szorny_kezdemenyezes_ertek")
-
-        self.gridLayout_8.addWidget(self.lbl_szorny_kezdemenyezes_ertek, 2, 4, 1, 1)
-
-        self.lbl_hos_kezdemenyezes_ertek = QLabel(self.page4_harc)
-        self.lbl_hos_kezdemenyezes_ertek.setObjectName(u"lbl_hos_kezdemenyezes_ertek")
-
-        self.gridLayout_8.addWidget(self.lbl_hos_kezdemenyezes_ertek, 2, 2, 1, 1)
-
-        self.lbl_hos_ero_ertek = QLabel(self.page4_harc)
-        self.lbl_hos_ero_ertek.setObjectName(u"lbl_hos_ero_ertek")
-
-        self.gridLayout_8.addWidget(self.lbl_hos_ero_ertek, 0, 2, 1, 1)
+        self.gridLayout_8.addWidget(self.label_98, 3, 1, 1, 1)
 
         self.label_207 = QLabel(self.page4_harc)
         self.label_207.setObjectName(u"label_207")
 
-        self.gridLayout_8.addWidget(self.label_207, 2, 3, 1, 1)
+        self.gridLayout_8.addWidget(self.label_207, 3, 3, 1, 1)
 
-        self.lbl_szorny_ero_ertek = QLabel(self.page4_harc)
-        self.lbl_szorny_ero_ertek.setObjectName(u"lbl_szorny_ero_ertek")
+        self.lbl_szorny_kezdemenyezes_ertek = QLabel(self.page4_harc)
+        self.lbl_szorny_kezdemenyezes_ertek.setObjectName(u"lbl_szorny_kezdemenyezes_ertek")
 
-        self.gridLayout_8.addWidget(self.lbl_szorny_ero_ertek, 0, 4, 1, 1)
-
-        self.frame = QFrame(self.page4_harc)
-        self.frame.setObjectName(u"frame")
-        self.frame.setFrameShape(QFrame.Shape.StyledPanel)
-        self.frame.setFrameShadow(QFrame.Shadow.Raised)
-        self.gridLayout_9 = QGridLayout(self.frame)
-        self.gridLayout_9.setObjectName(u"gridLayout_9")
-        self.lbl_hos_img = QLabel(self.frame)
-        self.lbl_hos_img.setObjectName(u"lbl_hos_img")
-        self.lbl_hos_img.setAlignment(Qt.AlignmentFlag.AlignCenter)
-
-        self.gridLayout_9.addWidget(self.lbl_hos_img, 0, 0, 1, 1)
-
-        self.lbl_hos_nev = QLabel(self.frame)
-        self.lbl_hos_nev.setObjectName(u"lbl_hos_nev")
-        self.lbl_hos_nev.setAlignment(Qt.AlignmentFlag.AlignCenter)
-
-        self.gridLayout_9.addWidget(self.lbl_hos_nev, 2, 0, 1, 1)
-
-        self.pb_hos_hp = QProgressBar(self.frame)
-        self.pb_hos_hp.setObjectName(u"pb_hos_hp")
-        self.pb_hos_hp.setStyleSheet(u"QProgressBar {\n"
-"    border: 2px solid #555;\n"
-"    border-radius: 5px;\n"
-"    background-color: #222;\n"
-"    text-align: center;\n"
-"    color: white;\n"
-"    font-weight: bold;\n"
-"}\n"
-"\n"
-"QProgressBar::chunk {\n"
-"    background-color: #d32f2f; \n"
-"    border-radius: 3px;\n"
-"}")
-        self.pb_hos_hp.setValue(100)
-
-        self.gridLayout_9.addWidget(self.pb_hos_hp, 1, 0, 1, 1)
-
-
-        self.gridLayout_8.addWidget(self.frame, 0, 0, 3, 1)
+        self.gridLayout_8.addWidget(self.lbl_szorny_kezdemenyezes_ertek, 3, 4, 1, 1)
 
         self.lbl_szorn_vedekezes_ertek = QLabel(self.page4_harc)
         self.lbl_szorn_vedekezes_ertek.setObjectName(u"lbl_szorn_vedekezes_ertek")
 
-        self.gridLayout_8.addWidget(self.lbl_szorn_vedekezes_ertek, 1, 4, 1, 1)
+        self.gridLayout_8.addWidget(self.lbl_szorn_vedekezes_ertek, 2, 4, 1, 1)
+
+        self.lbl_hos_vedekezes_ertek = QLabel(self.page4_harc)
+        self.lbl_hos_vedekezes_ertek.setObjectName(u"lbl_hos_vedekezes_ertek")
+
+        self.gridLayout_8.addWidget(self.lbl_hos_vedekezes_ertek, 2, 2, 1, 1)
+
+        self.lbl_hos_kezdemenyezes_ertek = QLabel(self.page4_harc)
+        self.lbl_hos_kezdemenyezes_ertek.setObjectName(u"lbl_hos_kezdemenyezes_ertek")
+
+        self.gridLayout_8.addWidget(self.lbl_hos_kezdemenyezes_ertek, 3, 2, 1, 1)
+
+        self.lbl_szorny_ero_ertek = QLabel(self.page4_harc)
+        self.lbl_szorny_ero_ertek.setObjectName(u"lbl_szorny_ero_ertek")
+
+        self.gridLayout_8.addWidget(self.lbl_szorny_ero_ertek, 1, 4, 1, 1)
 
         self.frame_2 = QFrame(self.page4_harc)
         self.frame_2.setObjectName(u"frame_2")
@@ -611,7 +552,75 @@ class Ui_MainWindow(object):
         self.verticalLayout_3.addWidget(self.lbl_szorny_nev)
 
 
-        self.gridLayout_8.addWidget(self.frame_2, 0, 5, 3, 1)
+        self.gridLayout_8.addWidget(self.frame_2, 1, 5, 3, 1)
+
+        self.label_203 = QLabel(self.page4_harc)
+        self.label_203.setObjectName(u"label_203")
+
+        self.gridLayout_8.addWidget(self.label_203, 1, 3, 1, 1)
+
+        self.lbl_hos_ero_ertek = QLabel(self.page4_harc)
+        self.lbl_hos_ero_ertek.setObjectName(u"lbl_hos_ero_ertek")
+
+        self.gridLayout_8.addWidget(self.lbl_hos_ero_ertek, 1, 2, 1, 1)
+
+        self.verticalSpacer_11 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.gridLayout_8.addItem(self.verticalSpacer_11, 0, 1, 1, 1)
+
+        self.frame = QFrame(self.page4_harc)
+        self.frame.setObjectName(u"frame")
+        self.frame.setFrameShape(QFrame.Shape.StyledPanel)
+        self.frame.setFrameShadow(QFrame.Shadow.Raised)
+        self.gridLayout_9 = QGridLayout(self.frame)
+        self.gridLayout_9.setObjectName(u"gridLayout_9")
+        self.pb_hos_hp = QProgressBar(self.frame)
+        self.pb_hos_hp.setObjectName(u"pb_hos_hp")
+        self.pb_hos_hp.setStyleSheet(u"QProgressBar {\n"
+"    border: 2px solid #555;\n"
+"    border-radius: 5px;\n"
+"    background-color: #222;\n"
+"    text-align: center;\n"
+"    color: white;\n"
+"    font-weight: bold;\n"
+"}\n"
+"\n"
+"QProgressBar::chunk {\n"
+"    background-color: #d32f2f; \n"
+"    border-radius: 3px;\n"
+"}")
+        self.pb_hos_hp.setValue(100)
+
+        self.gridLayout_9.addWidget(self.pb_hos_hp, 1, 0, 1, 1)
+
+        self.lbl_hos_img = QLabel(self.frame)
+        self.lbl_hos_img.setObjectName(u"lbl_hos_img")
+        self.lbl_hos_img.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.gridLayout_9.addWidget(self.lbl_hos_img, 0, 0, 1, 1)
+
+        self.lbl_hos_nev = QLabel(self.frame)
+        self.lbl_hos_nev.setObjectName(u"lbl_hos_nev")
+        self.lbl_hos_nev.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.gridLayout_9.addWidget(self.lbl_hos_nev, 2, 0, 1, 1)
+
+
+        self.gridLayout_8.addWidget(self.frame, 1, 0, 3, 1)
+
+        self.label_95 = QLabel(self.page4_harc)
+        self.label_95.setObjectName(u"label_95")
+
+        self.gridLayout_8.addWidget(self.label_95, 1, 1, 1, 1)
+
+        self.label_205 = QLabel(self.page4_harc)
+        self.label_205.setObjectName(u"label_205")
+
+        self.gridLayout_8.addWidget(self.label_205, 2, 3, 1, 1)
+
+        self.verticalSpacer_12 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.gridLayout_8.addItem(self.verticalSpacer_12, 4, 1, 1, 1)
 
 
         self.gridLayout_4.addLayout(self.gridLayout_8, 0, 1, 1, 1)
@@ -627,7 +636,278 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_8.addLayout(self.gridLayout_4)
 
+        self.sebzes_lbl = QLabel(self.page4_harc)
+        self.sebzes_lbl.setObjectName(u"sebzes_lbl")
+        self.sebzes_lbl.setStyleSheet(u"color: #ff3b3b; font-size: 26px; font-weight: bold; background: transparent; border: none;")
+        self.sebzes_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.verticalLayout_8.addWidget(self.sebzes_lbl)
+
         self.stackedWidget.addWidget(self.page4_harc)
+        self.page7_mentes = QWidget()
+        self.page7_mentes.setObjectName(u"page7_mentes")
+        self.horizontalLayout_11 = QHBoxLayout(self.page7_mentes)
+        self.horizontalLayout_11.setObjectName(u"horizontalLayout_11")
+        self.horizontalSpacer_5 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout_11.addItem(self.horizontalSpacer_5)
+
+        self.frame_mentes = QFrame(self.page7_mentes)
+        self.frame_mentes.setObjectName(u"frame_mentes")
+        self.frame_mentes.setMaximumSize(QSize(16777215, 420))
+        self.frame_mentes.setFrameShape(QFrame.Shape.StyledPanel)
+        self.frame_mentes.setFrameShadow(QFrame.Shadow.Raised)
+        self.verticalLayout_10 = QVBoxLayout(self.frame_mentes)
+        self.verticalLayout_10.setSpacing(15)
+        self.verticalLayout_10.setObjectName(u"verticalLayout_10")
+        self.verticalLayout_10.setContentsMargins(30, -1, 30, -1)
+        self.verticalSpacer_8 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.verticalLayout_10.addItem(self.verticalSpacer_8)
+
+        self.lbl_mentes_cim = QLabel(self.frame_mentes)
+        self.lbl_mentes_cim.setObjectName(u"lbl_mentes_cim")
+        self.lbl_mentes_cim.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.verticalLayout_10.addWidget(self.lbl_mentes_cim)
+
+        self.lbl_mentes_info = QLabel(self.frame_mentes)
+        self.lbl_mentes_info.setObjectName(u"lbl_mentes_info")
+        self.lbl_mentes_info.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.verticalLayout_10.addWidget(self.lbl_mentes_info)
+
+        self.btn_mentes_vegleges = QPushButton(self.frame_mentes)
+        self.btn_mentes_vegleges.setObjectName(u"btn_mentes_vegleges")
+
+        self.verticalLayout_10.addWidget(self.btn_mentes_vegleges)
+
+        self.btn_betoltes = QPushButton(self.frame_mentes)
+        self.btn_betoltes.setObjectName(u"btn_betoltes")
+
+        self.verticalLayout_10.addWidget(self.btn_betoltes)
+
+        self.btn_mentes_vissza = QPushButton(self.frame_mentes)
+        self.btn_mentes_vissza.setObjectName(u"btn_mentes_vissza")
+
+        self.verticalLayout_10.addWidget(self.btn_mentes_vissza)
+
+        self.verticalSpacer_7 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.verticalLayout_10.addItem(self.verticalSpacer_7)
+
+
+        self.horizontalLayout_11.addWidget(self.frame_mentes)
+
+        self.horizontalSpacer_6 = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout_11.addItem(self.horizontalSpacer_6)
+
+        self.stackedWidget.addWidget(self.page7_mentes)
+        self.page6_beallitasok = QWidget()
+        self.page6_beallitasok.setObjectName(u"page6_beallitasok")
+        self.verticalLayout_12 = QVBoxLayout(self.page6_beallitasok)
+        self.verticalLayout_12.setObjectName(u"verticalLayout_12")
+        self.verticalSpacer_beallitasok_felso = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.verticalLayout_12.addItem(self.verticalSpacer_beallitasok_felso)
+
+        self.horizontalLayout_beallitasok_kozep = QHBoxLayout()
+        self.horizontalLayout_beallitasok_kozep.setObjectName(u"horizontalLayout_beallitasok_kozep")
+        self.horizontalSpacer_beallitasok_bal = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout_beallitasok_kozep.addItem(self.horizontalSpacer_beallitasok_bal)
+
+        self.frame_beallitasok = QFrame(self.page6_beallitasok)
+        self.frame_beallitasok.setObjectName(u"frame_beallitasok")
+        self.frame_beallitasok.setMinimumSize(QSize(480, 260))
+        self.frame_beallitasok.setMaximumSize(QSize(560, 320))
+        self.frame_beallitasok.setFrameShape(QFrame.Shape.StyledPanel)
+        self.frame_beallitasok.setFrameShadow(QFrame.Shadow.Raised)
+        self.verticalLayout_beallitasok_belso = QVBoxLayout(self.frame_beallitasok)
+        self.verticalLayout_beallitasok_belso.setSpacing(18)
+        self.verticalLayout_beallitasok_belso.setObjectName(u"verticalLayout_beallitasok_belso")
+        self.verticalLayout_beallitasok_belso.setContentsMargins(30, 24, 30, 24)
+        self.lbl_beallitasok_cim = QLabel(self.frame_beallitasok)
+        self.lbl_beallitasok_cim.setObjectName(u"lbl_beallitasok_cim")
+        self.lbl_beallitasok_cim.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.verticalLayout_beallitasok_belso.addWidget(self.lbl_beallitasok_cim)
+
+        self.line_beallitasok_1 = QFrame(self.frame_beallitasok)
+        self.line_beallitasok_1.setObjectName(u"line_beallitasok_1")
+        self.line_beallitasok_1.setFrameShape(QFrame.Shape.HLine)
+        self.line_beallitasok_1.setFrameShadow(QFrame.Shadow.Sunken)
+
+        self.verticalLayout_beallitasok_belso.addWidget(self.line_beallitasok_1)
+
+        self.gridLayout_hang = QGridLayout()
+        self.gridLayout_hang.setObjectName(u"gridLayout_hang")
+        self.gridLayout_hang.setHorizontalSpacing(14)
+        self.gridLayout_hang.setVerticalSpacing(16)
+        self.lbl_hangeffektek = QLabel(self.frame_beallitasok)
+        self.lbl_hangeffektek.setObjectName(u"lbl_hangeffektek")
+
+        self.gridLayout_hang.addWidget(self.lbl_hangeffektek, 0, 0, 1, 1)
+
+        self.slider_hangeffektek = QSlider(self.frame_beallitasok)
+        self.slider_hangeffektek.setObjectName(u"slider_hangeffektek")
+        self.slider_hangeffektek.setMaximum(100)
+        self.slider_hangeffektek.setValue(70)
+        self.slider_hangeffektek.setOrientation(Qt.Orientation.Horizontal)
+
+        self.gridLayout_hang.addWidget(self.slider_hangeffektek, 0, 1, 1, 1)
+
+        self.lbl_hangeffektek_ertek = QLabel(self.frame_beallitasok)
+        self.lbl_hangeffektek_ertek.setObjectName(u"lbl_hangeffektek_ertek")
+        self.lbl_hangeffektek_ertek.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
+
+        self.gridLayout_hang.addWidget(self.lbl_hangeffektek_ertek, 0, 2, 1, 1)
+
+        self.lbl_hatterzene = QLabel(self.frame_beallitasok)
+        self.lbl_hatterzene.setObjectName(u"lbl_hatterzene")
+
+        self.gridLayout_hang.addWidget(self.lbl_hatterzene, 1, 0, 1, 1)
+
+        self.slider_hatterzene = QSlider(self.frame_beallitasok)
+        self.slider_hatterzene.setObjectName(u"slider_hatterzene")
+        self.slider_hatterzene.setMaximum(100)
+        self.slider_hatterzene.setValue(70)
+        self.slider_hatterzene.setOrientation(Qt.Orientation.Horizontal)
+
+        self.gridLayout_hang.addWidget(self.slider_hatterzene, 1, 1, 1, 1)
+
+        self.lbl_hatterzene_ertek = QLabel(self.frame_beallitasok)
+        self.lbl_hatterzene_ertek.setObjectName(u"lbl_hatterzene_ertek")
+        self.lbl_hatterzene_ertek.setAlignment(Qt.AlignmentFlag.AlignRight|Qt.AlignmentFlag.AlignTrailing|Qt.AlignmentFlag.AlignVCenter)
+
+        self.gridLayout_hang.addWidget(self.lbl_hatterzene_ertek, 1, 2, 1, 1)
+
+
+        self.verticalLayout_beallitasok_belso.addLayout(self.gridLayout_hang)
+
+        self.verticalSpacer_beallitasok_gombok = QSpacerItem(20, 10, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.verticalLayout_beallitasok_belso.addItem(self.verticalSpacer_beallitasok_gombok)
+
+        self.horizontalLayout_beallitasok_gombok = QHBoxLayout()
+        self.horizontalLayout_beallitasok_gombok.setSpacing(16)
+        self.horizontalLayout_beallitasok_gombok.setObjectName(u"horizontalLayout_beallitasok_gombok")
+        self.btn_beallitasok_vissza = QPushButton(self.frame_beallitasok)
+        self.btn_beallitasok_vissza.setObjectName(u"btn_beallitasok_vissza")
+
+        self.horizontalLayout_beallitasok_gombok.addWidget(self.btn_beallitasok_vissza)
+
+        self.btn_beallitasok_mentes = QPushButton(self.frame_beallitasok)
+        self.btn_beallitasok_mentes.setObjectName(u"btn_beallitasok_mentes")
+
+        self.horizontalLayout_beallitasok_gombok.addWidget(self.btn_beallitasok_mentes)
+
+
+        self.verticalLayout_beallitasok_belso.addLayout(self.horizontalLayout_beallitasok_gombok)
+
+
+        self.horizontalLayout_beallitasok_kozep.addWidget(self.frame_beallitasok)
+
+        self.horizontalSpacer_beallitasok_jobb = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout_beallitasok_kozep.addItem(self.horizontalSpacer_beallitasok_jobb)
+
+
+        self.verticalLayout_12.addLayout(self.horizontalLayout_beallitasok_kozep)
+
+        self.verticalSpacer_beallitasok_also = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.verticalLayout_12.addItem(self.verticalSpacer_beallitasok_also)
+
+        self.stackedWidget.addWidget(self.page6_beallitasok)
+        self.page5_auth = QWidget()
+        self.page5_auth.setObjectName(u"page5_auth")
+        self.horizontalLayout_10 = QHBoxLayout(self.page5_auth)
+        self.horizontalLayout_10.setObjectName(u"horizontalLayout_10")
+        self.frame_login = QFrame(self.page5_auth)
+        self.frame_login.setObjectName(u"frame_login")
+        self.frame_login.setFrameShape(QFrame.Shape.StyledPanel)
+        self.frame_login.setFrameShadow(QFrame.Shadow.Raised)
+        self.verticalLayout_7 = QVBoxLayout(self.frame_login)
+        self.verticalLayout_7.setObjectName(u"verticalLayout_7")
+        self.verticalSpacer_3 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.verticalLayout_7.addItem(self.verticalSpacer_3)
+
+        self.label = QLabel(self.frame_login)
+        self.label.setObjectName(u"label")
+        self.label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.verticalLayout_7.addWidget(self.label)
+
+        self.le_login_nev = QLineEdit(self.frame_login)
+        self.le_login_nev.setObjectName(u"le_login_nev")
+
+        self.verticalLayout_7.addWidget(self.le_login_nev)
+
+        self.le_login_jelszo = QLineEdit(self.frame_login)
+        self.le_login_jelszo.setObjectName(u"le_login_jelszo")
+        self.le_login_jelszo.setEchoMode(QLineEdit.EchoMode.Password)
+
+        self.verticalLayout_7.addWidget(self.le_login_jelszo)
+
+        self.btn_login = QPushButton(self.frame_login)
+        self.btn_login.setObjectName(u"btn_login")
+
+        self.verticalLayout_7.addWidget(self.btn_login)
+
+        self.verticalSpacer_4 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.verticalLayout_7.addItem(self.verticalSpacer_4)
+
+
+        self.horizontalLayout_10.addWidget(self.frame_login)
+
+        self.frame_reg = QFrame(self.page5_auth)
+        self.frame_reg.setObjectName(u"frame_reg")
+        self.frame_reg.setFrameShape(QFrame.Shape.StyledPanel)
+        self.frame_reg.setFrameShadow(QFrame.Shadow.Raised)
+        self.verticalLayout_9 = QVBoxLayout(self.frame_reg)
+        self.verticalLayout_9.setObjectName(u"verticalLayout_9")
+        self.verticalSpacer_6 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.verticalLayout_9.addItem(self.verticalSpacer_6)
+
+        self.label_2 = QLabel(self.frame_reg)
+        self.label_2.setObjectName(u"label_2")
+        self.label_2.setAlignment(Qt.AlignmentFlag.AlignCenter)
+
+        self.verticalLayout_9.addWidget(self.label_2)
+
+        self.le_reg_nev = QLineEdit(self.frame_reg)
+        self.le_reg_nev.setObjectName(u"le_reg_nev")
+
+        self.verticalLayout_9.addWidget(self.le_reg_nev)
+
+        self.le_reg_jelszo = QLineEdit(self.frame_reg)
+        self.le_reg_jelszo.setObjectName(u"le_reg_jelszo")
+
+        self.verticalLayout_9.addWidget(self.le_reg_jelszo)
+
+        self.le_reg_jelszo2 = QLineEdit(self.frame_reg)
+        self.le_reg_jelszo2.setObjectName(u"le_reg_jelszo2")
+
+        self.verticalLayout_9.addWidget(self.le_reg_jelszo2)
+
+        self.btn_reg = QPushButton(self.frame_reg)
+        self.btn_reg.setObjectName(u"btn_reg")
+
+        self.verticalLayout_9.addWidget(self.btn_reg)
+
+        self.verticalSpacer_5 = QSpacerItem(20, 40, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.verticalLayout_9.addItem(self.verticalSpacer_5)
+
+
+        self.horizontalLayout_10.addWidget(self.frame_reg)
+
+        self.stackedWidget.addWidget(self.page5_auth)
 
         self.verticalLayout_5.addWidget(self.stackedWidget)
 
@@ -657,12 +937,12 @@ class Ui_MainWindow(object):
         self.horizontalLayout_3.addLayout(self.verticalLayout_5)
 
 
-        self.verticalLayout_7.addLayout(self.horizontalLayout_3)
+        self.verticalLayout_11.addLayout(self.horizontalLayout_3)
 
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
-        self.menubar.setGeometry(QRect(0, 0, 1020, 21))
+        self.menubar.setGeometry(QRect(0, 0, 1020, 23))
         self.menuPROJEKT_LABOR_RPG_J_T_K = QMenu(self.menubar)
         self.menuPROJEKT_LABOR_RPG_J_T_K.setObjectName(u"menuPROJEKT_LABOR_RPG_J_T_K")
         self.menu03 = QMenu(self.menubar)
@@ -677,7 +957,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.stackedWidget.setCurrentIndex(4)
+        self.stackedWidget.setCurrentIndex(5)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -691,8 +971,8 @@ class Ui_MainWindow(object):
         self.btn_karakter.setText(QCoreApplication.translate("MainWindow", u"Karakter", None))
         self.btn_kilepes_2.setText(QCoreApplication.translate("MainWindow", u"Kil\u00e9p\u00e9s", None))
         self.btn_folytatas.setText(QCoreApplication.translate("MainWindow", u"Folytat\u00e1s", None))
-        self.btn_ujjatek.setText(QCoreApplication.translate("MainWindow", u"\u00daj J\u00e1t\u00e9k(Coming Soon!)", None))
-        self.btn_betoltes.setText(QCoreApplication.translate("MainWindow", u"Bet\u00f6lt\u00e9s(Coming Soon!)", None))
+        self.btn_ujjatek.setText(QCoreApplication.translate("MainWindow", u"\u00daj J\u00e1t\u00e9k", None))
+        self.btn_mentes_es_betoltes.setText(QCoreApplication.translate("MainWindow", u"Ment\u00e9s \u00e9s Bet\u00f6lt\u00e9s", None))
         self.btn_beallitasok.setText(QCoreApplication.translate("MainWindow", u"Be\u00e1ll\u00edt\u00e1sok(Coming Soon!)", None))
         self.btn_kilepes.setText(QCoreApplication.translate("MainWindow", u"Kil\u00e9p\u00e9s", None))
         self.btn_dungeon_soteterdo.setText(QCoreApplication.translate("MainWindow", u"S\u00f6t\u00e9t erd\u0151", None))
@@ -724,24 +1004,46 @@ class Ui_MainWindow(object):
         self.label_89.setText("")
         self.label_94.setText(QCoreApplication.translate("MainWindow", u"Er\u0151:", None))
         self.btn_harcinditas.setText(QCoreApplication.translate("MainWindow", u"Harc ind\u00edt\u00e1sa", None))
-        self.label_203.setText(QCoreApplication.translate("MainWindow", u"Er\u0151:", None))
-        self.lbl_hos_vedekezes_ertek.setText(QCoreApplication.translate("MainWindow", u"N/A", None))
-        self.label_98.setText(QCoreApplication.translate("MainWindow", u"Kezdem\u00e9nyez\u00e9s:", None))
         self.label_96.setText(QCoreApplication.translate("MainWindow", u"V\u00e9dekez\u00e9s:", None))
-        self.label_205.setText(QCoreApplication.translate("MainWindow", u"V\u00e9dekez\u00e9s:", None))
-        self.label_95.setText(QCoreApplication.translate("MainWindow", u"Er\u0151:", None))
-        self.lbl_szorny_kezdemenyezes_ertek.setText(QCoreApplication.translate("MainWindow", u"N/A", None))
-        self.lbl_hos_kezdemenyezes_ertek.setText(QCoreApplication.translate("MainWindow", u"N/A", None))
-        self.lbl_hos_ero_ertek.setText(QCoreApplication.translate("MainWindow", u"N/A", None))
+        self.label_98.setText(QCoreApplication.translate("MainWindow", u"Kezdem\u00e9nyez\u00e9s:", None))
         self.label_207.setText(QCoreApplication.translate("MainWindow", u"Kezdem\u00e9nyez\u00e9s:", None))
-        self.lbl_szorny_ero_ertek.setText(QCoreApplication.translate("MainWindow", u"N/A", None))
-        self.lbl_hos_img.setText(QCoreApplication.translate("MainWindow", u"H\u0151sImg", None))
-        self.lbl_hos_nev.setText(QCoreApplication.translate("MainWindow", u"H\u0151s - Level 1", None))
-        self.pb_hos_hp.setFormat(QCoreApplication.translate("MainWindow", u"%v / %m", None))
+        self.lbl_szorny_kezdemenyezes_ertek.setText(QCoreApplication.translate("MainWindow", u"N/A", None))
         self.lbl_szorn_vedekezes_ertek.setText(QCoreApplication.translate("MainWindow", u"N/A", None))
+        self.lbl_hos_vedekezes_ertek.setText(QCoreApplication.translate("MainWindow", u"N/A", None))
+        self.lbl_hos_kezdemenyezes_ertek.setText(QCoreApplication.translate("MainWindow", u"N/A", None))
+        self.lbl_szorny_ero_ertek.setText(QCoreApplication.translate("MainWindow", u"N/A", None))
         self.lbl_szorn_img.setText(QCoreApplication.translate("MainWindow", u"Sz\u00f6rnyImg", None))
         self.pb_szorny_hp.setFormat(QCoreApplication.translate("MainWindow", u"%v / %m", None))
         self.lbl_szorny_nev.setText(QCoreApplication.translate("MainWindow", u"Sz\u00f6rny - Level 1", None))
+        self.label_203.setText(QCoreApplication.translate("MainWindow", u"Er\u0151:", None))
+        self.lbl_hos_ero_ertek.setText(QCoreApplication.translate("MainWindow", u"N/A", None))
+        self.pb_hos_hp.setFormat(QCoreApplication.translate("MainWindow", u"%v / %m", None))
+        self.lbl_hos_img.setText(QCoreApplication.translate("MainWindow", u"H\u0151sImg", None))
+        self.lbl_hos_nev.setText(QCoreApplication.translate("MainWindow", u"H\u0151s - Level 1", None))
+        self.label_95.setText(QCoreApplication.translate("MainWindow", u"Er\u0151:", None))
+        self.label_205.setText(QCoreApplication.translate("MainWindow", u"V\u00e9dekez\u00e9s:", None))
+        self.sebzes_lbl.setText(QCoreApplication.translate("MainWindow", u"-0", None))
+        self.lbl_mentes_cim.setText(QCoreApplication.translate("MainWindow", u"J\u00e1t\u00e9k ment\u00e9se", None))
+        self.lbl_mentes_info.setText(QCoreApplication.translate("MainWindow", u"Jelenlegi \u00e1ll\u00e1s...", None))
+        self.btn_mentes_vegleges.setText(QCoreApplication.translate("MainWindow", u"Ment\u00e9s most", None))
+        self.btn_betoltes.setText(QCoreApplication.translate("MainWindow", u"Utols\u00f3 ment\u00e9s bet\u00f6lt\u00e9se", None))
+        self.btn_mentes_vissza.setText(QCoreApplication.translate("MainWindow", u"Vissza", None))
+        self.lbl_beallitasok_cim.setText(QCoreApplication.translate("MainWindow", u"Be\u00e1ll\u00edt\u00e1sok", None))
+        self.lbl_hangeffektek.setText(QCoreApplication.translate("MainWindow", u"Hang effektek:", None))
+        self.lbl_hangeffektek_ertek.setText(QCoreApplication.translate("MainWindow", u"70%", None))
+        self.lbl_hatterzene.setText(QCoreApplication.translate("MainWindow", u"H\u00e1tt\u00e9rzene:", None))
+        self.lbl_hatterzene_ertek.setText(QCoreApplication.translate("MainWindow", u"70%", None))
+        self.btn_beallitasok_vissza.setText(QCoreApplication.translate("MainWindow", u"Vissza a men\u00fcbe", None))
+        self.btn_beallitasok_mentes.setText(QCoreApplication.translate("MainWindow", u"Ment\u00e9s", None))
+        self.label.setText(QCoreApplication.translate("MainWindow", u"Bejelentkez\u00e9s", None))
+        self.le_login_nev.setText(QCoreApplication.translate("MainWindow", u"Felhaszn\u00e1l\u00f3n\u00e9v", None))
+        self.le_login_jelszo.setText(QCoreApplication.translate("MainWindow", u"Jelsz\u00f3", None))
+        self.btn_login.setText(QCoreApplication.translate("MainWindow", u"Bejelentkez\u00e9s", None))
+        self.label_2.setText(QCoreApplication.translate("MainWindow", u"Regisztr\u00e1ci\u00f3", None))
+        self.le_reg_nev.setText(QCoreApplication.translate("MainWindow", u"\u00daj felhaszn\u00e1l\u00f3n\u00e9v", None))
+        self.le_reg_jelszo.setText(QCoreApplication.translate("MainWindow", u"Jelsz\u00f3", None))
+        self.le_reg_jelszo2.setText(QCoreApplication.translate("MainWindow", u"Jelsz\u00f3 \u00fajra", None))
+        self.btn_reg.setText(QCoreApplication.translate("MainWindow", u"Regisztr\u00e1ci\u00f3", None))
         self.menuPROJEKT_LABOR_RPG_J_T_K.setTitle(QCoreApplication.translate("MainWindow", u"PROJEKT LABOR - RPG J\u00c1T\u00c9K", None))
         self.menu03.setTitle(QCoreApplication.translate("MainWindow", u"03", None))
     # retranslateUi

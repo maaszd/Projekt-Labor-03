@@ -32,7 +32,7 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QVBoxLayout" name="verticalLayout_7">
+   <layout class="QVBoxLayout" name="verticalLayout_11">
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_3">
       <item>
@@ -101,7 +101,7 @@
         <item>
          <widget class="QStackedWidget" name="stackedWidget">
           <property name="currentIndex">
-           <number>4</number>
+           <number>5</number>
           </property>
           <widget class="QWidget" name="page0_fomenu">
            <property name="sizePolicy">
@@ -151,14 +151,14 @@
                 <item>
                  <widget class="QPushButton" name="btn_ujjatek">
                   <property name="text">
-                   <string>Új Játék(Coming Soon!)</string>
+                   <string>Új Játék</string>
                   </property>
                  </widget>
                 </item>
                 <item>
-                 <widget class="QPushButton" name="btn_betoltes">
+                 <widget class="QPushButton" name="btn_mentes_es_betoltes">
                   <property name="text">
-                   <string>Betöltés(Coming Soon!)</string>
+                   <string>Mentés és Betöltés</string>
                   </property>
                  </widget>
                 </item>
@@ -769,148 +769,63 @@ QPushButton:hover {
               </item>
               <item row="0" column="1">
                <layout class="QGridLayout" name="gridLayout_8">
-                <item row="0" column="3">
-                 <widget class="QLabel" name="label_203">
-                  <property name="text">
-                   <string>Erő:</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="2">
-                 <widget class="QLabel" name="lbl_hos_vedekezes_ertek">
-                  <property name="text">
-                   <string>N/A</string>
-                  </property>
-                 </widget>
-                </item>
                 <item row="2" column="1">
-                 <widget class="QLabel" name="label_98">
-                  <property name="text">
-                   <string>Kezdeményezés:</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="1" column="1">
                  <widget class="QLabel" name="label_96">
                   <property name="text">
                    <string>Védekezés:</string>
                   </property>
                  </widget>
                 </item>
-                <item row="1" column="3">
-                 <widget class="QLabel" name="label_205">
+                <item row="3" column="1">
+                 <widget class="QLabel" name="label_98">
                   <property name="text">
-                   <string>Védekezés:</string>
+                   <string>Kezdeményezés:</string>
                   </property>
                  </widget>
                 </item>
-                <item row="0" column="1">
-                 <widget class="QLabel" name="label_95">
-                  <property name="text">
-                   <string>Erő:</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="2" column="4">
-                 <widget class="QLabel" name="lbl_szorny_kezdemenyezes_ertek">
-                  <property name="text">
-                   <string>N/A</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="2" column="2">
-                 <widget class="QLabel" name="lbl_hos_kezdemenyezes_ertek">
-                  <property name="text">
-                   <string>N/A</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="0" column="2">
-                 <widget class="QLabel" name="lbl_hos_ero_ertek">
-                  <property name="text">
-                   <string>N/A</string>
-                  </property>
-                 </widget>
-                </item>
-                <item row="2" column="3">
+                <item row="3" column="3">
                  <widget class="QLabel" name="label_207">
                   <property name="text">
                    <string>Kezdeményezés:</string>
                   </property>
                  </widget>
                 </item>
-                <item row="0" column="4">
-                 <widget class="QLabel" name="lbl_szorny_ero_ertek">
+                <item row="3" column="4">
+                 <widget class="QLabel" name="lbl_szorny_kezdemenyezes_ertek">
                   <property name="text">
                    <string>N/A</string>
                   </property>
                  </widget>
                 </item>
-                <item row="0" column="0" rowspan="3">
-                 <widget class="QFrame" name="frame">
-                  <property name="frameShape">
-                   <enum>QFrame::Shape::StyledPanel</enum>
-                  </property>
-                  <property name="frameShadow">
-                   <enum>QFrame::Shadow::Raised</enum>
-                  </property>
-                  <layout class="QGridLayout" name="gridLayout_9">
-                   <item row="0" column="0">
-                    <widget class="QLabel" name="lbl_hos_img">
-                     <property name="text">
-                      <string>HősImg</string>
-                     </property>
-                     <property name="alignment">
-                      <set>Qt::AlignmentFlag::AlignCenter</set>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="2" column="0">
-                    <widget class="QLabel" name="lbl_hos_nev">
-                     <property name="text">
-                      <string>Hős - Level 1</string>
-                     </property>
-                     <property name="alignment">
-                      <set>Qt::AlignmentFlag::AlignCenter</set>
-                     </property>
-                    </widget>
-                   </item>
-                   <item row="1" column="0">
-                    <widget class="QProgressBar" name="pb_hos_hp">
-                     <property name="styleSheet">
-                      <string notr="true">QProgressBar {
-    border: 2px solid #555;
-    border-radius: 5px;
-    background-color: #222;
-    text-align: center;
-    color: white;
-    font-weight: bold;
-}
-
-QProgressBar::chunk {
-    background-color: #d32f2f; 
-    border-radius: 3px;
-}</string>
-                     </property>
-                     <property name="value">
-                      <number>100</number>
-                     </property>
-                     <property name="format">
-                      <string>%v / %m</string>
-                     </property>
-                    </widget>
-                   </item>
-                  </layout>
-                 </widget>
-                </item>
-                <item row="1" column="4">
+                <item row="2" column="4">
                  <widget class="QLabel" name="lbl_szorn_vedekezes_ertek">
                   <property name="text">
                    <string>N/A</string>
                   </property>
                  </widget>
                 </item>
-                <item row="0" column="5" rowspan="3">
+                <item row="2" column="2">
+                 <widget class="QLabel" name="lbl_hos_vedekezes_ertek">
+                  <property name="text">
+                   <string>N/A</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="3" column="2">
+                 <widget class="QLabel" name="lbl_hos_kezdemenyezes_ertek">
+                  <property name="text">
+                   <string>N/A</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="4">
+                 <widget class="QLabel" name="lbl_szorny_ero_ertek">
+                  <property name="text">
+                   <string>N/A</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="5" rowspan="3">
                  <widget class="QFrame" name="frame_2">
                   <property name="frameShape">
                    <enum>QFrame::Shape::StyledPanel</enum>
@@ -967,6 +882,117 @@ QProgressBar::chunk {
                   </layout>
                  </widget>
                 </item>
+                <item row="1" column="3">
+                 <widget class="QLabel" name="label_203">
+                  <property name="text">
+                   <string>Erő:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="1" column="2">
+                 <widget class="QLabel" name="lbl_hos_ero_ertek">
+                  <property name="text">
+                   <string>N/A</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="0" column="1">
+                 <spacer name="verticalSpacer_11">
+                  <property name="orientation">
+                   <enum>Qt::Orientation::Vertical</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>20</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
+                <item row="1" column="0" rowspan="3">
+                 <widget class="QFrame" name="frame">
+                  <property name="frameShape">
+                   <enum>QFrame::Shape::StyledPanel</enum>
+                  </property>
+                  <property name="frameShadow">
+                   <enum>QFrame::Shadow::Raised</enum>
+                  </property>
+                  <layout class="QGridLayout" name="gridLayout_9">
+                   <item row="1" column="0">
+                    <widget class="QProgressBar" name="pb_hos_hp">
+                     <property name="styleSheet">
+                      <string notr="true">QProgressBar {
+    border: 2px solid #555;
+    border-radius: 5px;
+    background-color: #222;
+    text-align: center;
+    color: white;
+    font-weight: bold;
+}
+
+QProgressBar::chunk {
+    background-color: #d32f2f; 
+    border-radius: 3px;
+}</string>
+                     </property>
+                     <property name="value">
+                      <number>100</number>
+                     </property>
+                     <property name="format">
+                      <string>%v / %m</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="0">
+                    <widget class="QLabel" name="lbl_hos_img">
+                     <property name="text">
+                      <string>HősImg</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignmentFlag::AlignCenter</set>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="2" column="0">
+                    <widget class="QLabel" name="lbl_hos_nev">
+                     <property name="text">
+                      <string>Hős - Level 1</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignmentFlag::AlignCenter</set>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </widget>
+                </item>
+                <item row="1" column="1">
+                 <widget class="QLabel" name="label_95">
+                  <property name="text">
+                   <string>Erő:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="2" column="3">
+                 <widget class="QLabel" name="label_205">
+                  <property name="text">
+                   <string>Védekezés:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item row="4" column="1">
+                 <spacer name="verticalSpacer_12">
+                  <property name="orientation">
+                   <enum>Qt::Orientation::Vertical</enum>
+                  </property>
+                  <property name="sizeHint" stdset="0">
+                   <size>
+                    <width>20</width>
+                    <height>40</height>
+                   </size>
+                  </property>
+                 </spacer>
+                </item>
                </layout>
               </item>
               <item row="0" column="2">
@@ -1002,6 +1028,518 @@ QProgressBar::chunk {
                </spacer>
               </item>
              </layout>
+            </item>
+            <item>
+             <widget class="QLabel" name="sebzes_lbl">
+              <property name="styleSheet">
+               <string notr="true">color: #ff3b3b; font-size: 26px; font-weight: bold; background: transparent; border: none;</string>
+              </property>
+              <property name="text">
+               <string>-0</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignmentFlag::AlignCenter</set>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="page7_mentes">
+           <layout class="QHBoxLayout" name="horizontalLayout_11">
+            <item>
+             <spacer name="horizontalSpacer_5">
+              <property name="orientation">
+               <enum>Qt::Orientation::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <widget class="QFrame" name="frame_mentes">
+              <property name="maximumSize">
+               <size>
+                <width>16777215</width>
+                <height>420</height>
+               </size>
+              </property>
+              <property name="frameShape">
+               <enum>QFrame::Shape::StyledPanel</enum>
+              </property>
+              <property name="frameShadow">
+               <enum>QFrame::Shadow::Raised</enum>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_10">
+               <property name="spacing">
+                <number>15</number>
+               </property>
+               <property name="leftMargin">
+                <number>30</number>
+               </property>
+               <property name="rightMargin">
+                <number>30</number>
+               </property>
+               <item>
+                <spacer name="verticalSpacer_8">
+                 <property name="orientation">
+                  <enum>Qt::Orientation::Vertical</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>20</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item>
+                <widget class="QLabel" name="lbl_mentes_cim">
+                 <property name="text">
+                  <string>Játék mentése</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignmentFlag::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLabel" name="lbl_mentes_info">
+                 <property name="text">
+                  <string>Jelenlegi állás...</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignmentFlag::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="btn_mentes_vegleges">
+                 <property name="text">
+                  <string>Mentés most</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="btn_betoltes">
+                 <property name="text">
+                  <string>Utolsó mentés betöltése</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="btn_mentes_vissza">
+                 <property name="text">
+                  <string>Vissza</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <spacer name="verticalSpacer_7">
+                 <property name="orientation">
+                  <enum>Qt::Orientation::Vertical</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>20</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer_6">
+              <property name="orientation">
+               <enum>Qt::Orientation::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="page6_beallitasok">
+           <layout class="QVBoxLayout" name="verticalLayout_12">
+            <item>
+             <spacer name="verticalSpacer_beallitasok_felso">
+              <property name="orientation">
+               <enum>Qt::Orientation::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_beallitasok_kozep">
+              <item>
+               <spacer name="horizontalSpacer_beallitasok_bal">
+                <property name="orientation">
+                 <enum>Qt::Orientation::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QFrame" name="frame_beallitasok">
+                <property name="minimumSize">
+                 <size>
+                  <width>480</width>
+                  <height>260</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>560</width>
+                  <height>320</height>
+                 </size>
+                </property>
+                <property name="frameShape">
+                 <enum>QFrame::Shape::StyledPanel</enum>
+                </property>
+                <property name="frameShadow">
+                 <enum>QFrame::Shadow::Raised</enum>
+                </property>
+                <layout class="QVBoxLayout" name="verticalLayout_beallitasok_belso">
+                 <property name="spacing">
+                  <number>18</number>
+                 </property>
+                 <property name="leftMargin">
+                  <number>30</number>
+                 </property>
+                 <property name="topMargin">
+                  <number>24</number>
+                 </property>
+                 <property name="rightMargin">
+                  <number>30</number>
+                 </property>
+                 <property name="bottomMargin">
+                  <number>24</number>
+                 </property>
+                 <item>
+                  <widget class="QLabel" name="lbl_beallitasok_cim">
+                   <property name="text">
+                    <string>Beállítások</string>
+                   </property>
+                   <property name="alignment">
+                    <set>Qt::AlignmentFlag::AlignCenter</set>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QFrame" name="line_beallitasok_1">
+                   <property name="frameShape">
+                    <enum>QFrame::Shape::HLine</enum>
+                   </property>
+                   <property name="frameShadow">
+                    <enum>QFrame::Shadow::Sunken</enum>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <layout class="QGridLayout" name="gridLayout_hang">
+                   <property name="horizontalSpacing">
+                    <number>14</number>
+                   </property>
+                   <property name="verticalSpacing">
+                    <number>16</number>
+                   </property>
+                   <item row="0" column="0">
+                    <widget class="QLabel" name="lbl_hangeffektek">
+                     <property name="text">
+                      <string>Hang effektek:</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="1">
+                    <widget class="QSlider" name="slider_hangeffektek">
+                     <property name="maximum">
+                      <number>100</number>
+                     </property>
+                     <property name="value">
+                      <number>70</number>
+                     </property>
+                     <property name="orientation">
+                      <enum>Qt::Orientation::Horizontal</enum>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="0" column="2">
+                    <widget class="QLabel" name="lbl_hangeffektek_ertek">
+                     <property name="text">
+                      <string>70%</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="0">
+                    <widget class="QLabel" name="lbl_hatterzene">
+                     <property name="text">
+                      <string>Háttérzene:</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="1">
+                    <widget class="QSlider" name="slider_hatterzene">
+                     <property name="maximum">
+                      <number>100</number>
+                     </property>
+                     <property name="value">
+                      <number>70</number>
+                     </property>
+                     <property name="orientation">
+                      <enum>Qt::Orientation::Horizontal</enum>
+                     </property>
+                    </widget>
+                   </item>
+                   <item row="1" column="2">
+                    <widget class="QLabel" name="lbl_hatterzene_ertek">
+                     <property name="text">
+                      <string>70%</string>
+                     </property>
+                     <property name="alignment">
+                      <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                 <item>
+                  <spacer name="verticalSpacer_beallitasok_gombok">
+                   <property name="orientation">
+                    <enum>Qt::Orientation::Vertical</enum>
+                   </property>
+                   <property name="sizeHint" stdset="0">
+                    <size>
+                     <width>20</width>
+                     <height>10</height>
+                    </size>
+                   </property>
+                  </spacer>
+                 </item>
+                 <item>
+                  <layout class="QHBoxLayout" name="horizontalLayout_beallitasok_gombok">
+                   <property name="spacing">
+                    <number>16</number>
+                   </property>
+                   <item>
+                    <widget class="QPushButton" name="btn_beallitasok_vissza">
+                     <property name="text">
+                      <string>Vissza a menübe</string>
+                     </property>
+                    </widget>
+                   </item>
+                   <item>
+                    <widget class="QPushButton" name="btn_beallitasok_mentes">
+                     <property name="text">
+                      <string>Mentés</string>
+                     </property>
+                    </widget>
+                   </item>
+                  </layout>
+                 </item>
+                </layout>
+               </widget>
+              </item>
+              <item>
+               <spacer name="horizontalSpacer_beallitasok_jobb">
+                <property name="orientation">
+                 <enum>Qt::Orientation::Horizontal</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>40</width>
+                  <height>20</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <spacer name="verticalSpacer_beallitasok_also">
+              <property name="orientation">
+               <enum>Qt::Orientation::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="page5_auth">
+           <layout class="QHBoxLayout" name="horizontalLayout_10">
+            <item>
+             <widget class="QFrame" name="frame_login">
+              <property name="frameShape">
+               <enum>QFrame::Shape::StyledPanel</enum>
+              </property>
+              <property name="frameShadow">
+               <enum>QFrame::Shadow::Raised</enum>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_7">
+               <item>
+                <spacer name="verticalSpacer_3">
+                 <property name="orientation">
+                  <enum>Qt::Orientation::Vertical</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>20</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item>
+                <widget class="QLabel" name="label">
+                 <property name="text">
+                  <string>Bejelentkezés</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignmentFlag::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLineEdit" name="le_login_nev">
+                 <property name="text">
+                  <string>Felhasználónév</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLineEdit" name="le_login_jelszo">
+                 <property name="text">
+                  <string>Jelszó</string>
+                 </property>
+                 <property name="echoMode">
+                  <enum>QLineEdit::EchoMode::Password</enum>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="btn_login">
+                 <property name="text">
+                  <string>Bejelentkezés</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <spacer name="verticalSpacer_4">
+                 <property name="orientation">
+                  <enum>Qt::Orientation::Vertical</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>20</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </widget>
+            </item>
+            <item>
+             <widget class="QFrame" name="frame_reg">
+              <property name="frameShape">
+               <enum>QFrame::Shape::StyledPanel</enum>
+              </property>
+              <property name="frameShadow">
+               <enum>QFrame::Shadow::Raised</enum>
+              </property>
+              <layout class="QVBoxLayout" name="verticalLayout_9">
+               <item>
+                <spacer name="verticalSpacer_6">
+                 <property name="orientation">
+                  <enum>Qt::Orientation::Vertical</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>20</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item>
+                <widget class="QLabel" name="label_2">
+                 <property name="text">
+                  <string>Regisztráció</string>
+                 </property>
+                 <property name="alignment">
+                  <set>Qt::AlignmentFlag::AlignCenter</set>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLineEdit" name="le_reg_nev">
+                 <property name="text">
+                  <string>Új felhasználónév</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLineEdit" name="le_reg_jelszo">
+                 <property name="text">
+                  <string>Jelszó</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QLineEdit" name="le_reg_jelszo2">
+                 <property name="text">
+                  <string>Jelszó újra</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QPushButton" name="btn_reg">
+                 <property name="text">
+                  <string>Regisztráció</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <spacer name="verticalSpacer_5">
+                 <property name="orientation">
+                  <enum>Qt::Orientation::Vertical</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>20</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+              </layout>
+             </widget>
             </item>
            </layout>
           </widget>
@@ -1054,7 +1592,7 @@ QProgressBar::chunk {
      <x>0</x>
      <y>0</y>
      <width>1020</width>
-     <height>21</height>
+     <height>23</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuPROJEKT_LABOR_RPG_J_T_K">

@@ -1,7 +1,7 @@
 import os
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QGraphicsScene, QGraphicsPixmapItem, QGraphicsRectItem
-from PySide6.QtGui import QPixmap, QBrush, QPen, QColor
+from PySide6.QtGui import QPainter, QPixmap, QBrush, QPen, QColor, QRadialGradient
 from monster import Monster, GraphicalMonster
 class Szoba(QGraphicsScene):
     def __init__(self, nev, hatter_kep_utvonal, db=None):
@@ -26,6 +26,11 @@ class Szoba(QGraphicsScene):
         self.vizualis_ajtok = []
         self.szornyek = []
         self.akadalyok = []
+        
+        #dinamikus köd
+        self.kod_reteg = QGraphicsPixmapItem()
+        self.kod_reteg.setZValue(25)
+        self.addItem(self.kod_reteg)
 
     def szorny_hozzadasa(self, x, y, nev="Goblin", hp=30, damage=8, defense=2):
         is_boss = "BOSS" in nev.upper()
@@ -107,3 +112,29 @@ class Szoba(QGraphicsScene):
             self.vizualis_ajtok.append(vizualis_ajto)
         else:
             print(f"HIBA: Nem találom az ajtó képet: {kep_utvonal}")
+            
+    def kod_frissites(self, hos_x, hos_y, szint=1):
+        # 1. Kisebb kezdeti sugar (160px), szintenkent -18px-szel szukul (minimum 65px)
+        sugar = max(65, 110 + (szint - 1) * 45)
+
+        #a szoba meretu atlatszo vaszon letrehozasa
+        kod_kep = QPixmap(800, 600)
+        kod_kep.fill(Qt.transparent)
+
+        painter = QPainter(kod_kep)
+        painter.setRenderHint(QPainter.Antialiasing)
+
+        # A hos kozepe (75x75-os kepnel +37.5 px)
+        kozep_x = hos_x + 37.5
+        kozep_y = hos_y + 37.5
+
+        #radial gradient a kodhoz: kozep atlatszo, szel atmenettel fekete
+        gradiens = QRadialGradient(kozep_x, kozep_y, sugar)
+        gradiens.setColorAt(0.0, QColor(10, 8, 15, 0))      # Teljesen atlatszo kozep
+        gradiens.setColorAt(0.65, QColor(10, 8, 15, 160))   # Gyors atmenet a kor szelen
+        gradiens.setColorAt(1.0, QColor(10, 8, 15, 255))    # Teljesen atlathatatlan kulso kod
+
+        painter.fillRect(0, 0, 800, 600, gradiens)
+        painter.end()
+
+        self.kod_reteg.setPixmap(kod_kep)

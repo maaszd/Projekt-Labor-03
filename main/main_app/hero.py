@@ -117,8 +117,7 @@ class Hero:
         return self._current_hp - prev_hp #tényleges gyógyítás
 
     def heal_to_max(self):
-        if self.alive():
-            self._current_hp = self._max_hp
+        self._current_hp = self._max_hp
 
     def gain_xp(self, amount: int = 1):
         if amount <= 0:

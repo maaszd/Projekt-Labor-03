@@ -1,103 +1,7 @@
-
+/* --- 1. HÁTTEREK ÉS ÁTLÁTSZÓ OLDALAK --- */
 QWidget#centralwidget {
     border-image: url("assets/bg.png") 0 0 0 0 stretch stretch;
-    background-color: #16151a;
-}
-
-
-QPushButton {
-    border-image: url("assets/gomb_alap.png") 15 15 15 15 stretch stretch;
-    background-color: transparent;
-    border: none;
-    color: #f5eedc;
-    font-weight: bold;
-    font-size: 15px;
-    padding: 10px 18px;
-    min-height: 28px;
-    max-width: 280px;
-}
-
-QPushButton:hover {
-    border-image: url("assets/gomb_hover.png") 15 15 15 15 stretch stretch;
-    color: #ffffff;
-}
-
-QPushButton:pressed {
-    border-image: url("assets/gomb_lenyomva.png") 15 15 15 15 stretch stretch;
-    padding-top: 12px;
-    padding-bottom: 8px;
-}
-
-QPushButton:disabled {
-    color: #777777;
-}
-
-
-QFrame#frame_3, QFrame#frame, QFrame#frame_2 {
-    background-color: rgba(28, 26, 34, 230);
-    border: 2px solid #4a4255;
-    border-radius: 8px;
-    padding: 8px;
-}
-
-
-QWidget#page4_harc QLabel, QWidget#page3_karakter QLabel {
-    background-color: rgba(20, 18, 26, 210);
-    border: 1px solid #5a4f66;
-    border-radius: 5px;
-    color: #e6dfd5;
-    padding: 6px 10px;
-    font-size: 14px;
-    font-weight: bold;
-}
-QWidget#page4_harc {
-    border-image: url("assets/dungeon_bg_blur.png") 0 0 0 0 stretch stretch;
-}
-
-
-QLabel#lbl_hos_img, QLabel#lbl_szorn_img {
-    background-color: transparent;
-    border: none;
-}
-
-
-QListWidget, QTextBrowser {
-    background-color: #121116;
-    border: 2px solid #4a4255;
-    border-radius: 6px;
-    color: #d8d0c5;
-    font-size: 13px;
-    padding: 5px;
-}
-
-QListWidget::item {
-    background-color: #221f29;
-    border: 1px solid #4a4255;
-    border-radius: 4px;
-}
-
-QListWidget::item:hover {
-    border: 1px solid #c9a55c;
-    background-color: #2d2936;
-}
-
-QLabel#label_95, QLabel#label_96, QLabel#label_98,
-QLabel#label_203, QLabel#label_205, QLabel#label_207,
-QLabel#lbl_hos_ero_ertek, QLabel#lbl_hos_vedekezes_ertek, QLabel#lbl_hos_kezdemenyezes_ertek,
-QLabel#lbl_szorny_ero_ertek, QLabel#lbl_szorn_vedekezes_ertek, QLabel#lbl_szorny_kezdemenyezes_ertek,
-QLabel#lbl_hos_nev, QLabel#lbl_szorny_nev,
-QLabel#label_94, QLabel#label_12, QLabel#label_13, QLabel#label_16,
-QLabel#label_14, QLabel#label_82, QLabel#label_15, QLabel#label_83,
-QLabel#label_84, QLabel#label_85, QLabel#label_86, QLabel#label_87,
-QLabel#label_88, QLabel#label_89, QLabel#label_90, QLabel#label_92,
-QLabel#label_91, QLabel#label_93 {
-    background-color: #1e1b24;
-    border: 2px solid #7a6a8a;
-    border-radius: 6px;
-    color: #f5eedc;
-    padding: 6px 12px;
-    font-size: 14px;
-    font-weight: bold;
+    background-color: #121018;
 }
 
 QStackedWidget,
@@ -105,7 +9,172 @@ QWidget#page0_fomenu,
 QWidget#page1_terkep,
 QWidget#page2_soteterdo,
 QWidget#page3_karakter,
-QWidget#page4_harc,
+QWidget#page5_auth,
+QWidget#page6_mentes,
 QWidget#widget {
     background: transparent;
+}
+
+QWidget#page4_harc {
+    border-image: url("assets/dungeon_bg_blur.png") 0 0 0 0 stretch stretch;
+}
+
+/* --- 2. MATT KŐSZÜRKE-SZILVA RPG GOMBOK (LILA HOVER) --- */
+QPushButton {
+    background-color: #211e2b;
+    border: 1px solid #524a66;
+    border-bottom: 3px solid #100e17;
+    border-radius: 6px;
+    color: #e4e0d8;
+    font-weight: bold;
+    font-size: 14px;
+    padding: 10px 18px;
+    min-height: 26px;
+    max-width: 280px;
+}
+
+QPushButton:hover {
+    background-color: #2c273b;
+    border: 1px solid #8c5ba6;
+    border-bottom: 3px solid #513163;
+    color: #ffffff;
+}
+
+QPushButton:pressed {
+    background-color: #17151f;
+    border: 1px solid #754a8c;
+    border-bottom: 1px solid #754a8c;
+    padding-top: 12px;
+    padding-bottom: 8px;
+}
+
+QPushButton:disabled {
+    background-color: #18161f;
+    border: 1px solid #322d3d;
+    color: #676373;
+}
+
+/* --- 3. OLDALSÁV ÉS HARCI KERETEK --- */
+QFrame#frame_3 {
+    background-color: rgba(18, 15, 25, 232);
+    border: 1px solid #443d57;
+    border-radius: 6px;
+    padding: 8px;
+}
+
+QFrame#frame, QFrame#frame_2 {
+    background-color: transparent;
+    border: none;
+}
+
+/* --- 4. MINDEN LABEL MINDEN OLDALON (MATT SÖTÉT + LILA OUTLINE) --- */
+QLabel {
+    background-color: rgba(18, 16, 24, 235);
+    border: 1px solid #754a8c;
+    border-bottom: 2px solid #472a57;
+    border-radius: 5px;
+    color: #e4e0d8;
+    padding: 6px 12px;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+QLabel#lbl_hos_img, QLabel#lbl_szorn_img {
+    background-color: transparent;
+    border: none;
+}
+
+/* --- 5. INVENTORY ÉS HARCI NAPLÓ --- */
+QListWidget, QTextBrowser {
+    background-color: rgba(14, 12, 20, 240);
+    border: 1px solid #443d57;
+    border-radius: 5px;
+    color: #d6d2c9;
+    font-size: 13px;
+    padding: 6px;
+}
+
+QListWidget::item {
+    background-color: #1f1b29;
+    border: 1px solid #3a344a;
+    border-radius: 4px;
+}
+
+QListWidget::item:hover {
+    border: 1px solid #8c5ba6;
+    background-color: #272233;
+}
+
+/* --- 6. BEJELENTKEZÉS, REGISZTRÁCIÓ ÉS MENTÉS KÁRTYÁK --- */
+QWidget#page5_auth QFrame, QFrame#frame_mentes {
+    background-color: rgba(17, 14, 24, 232);
+    border: 1px solid #49415e;
+    border-top: 3px solid #754a8c;
+    border-radius: 6px;
+    padding: 28px 36px;
+}
+
+QWidget#page5_auth QLabel, QLabel#lbl_mentes_cim, QLabel#lbl_mente_cim {
+    color: #e6e2da;
+    font-size: 22px;
+    font-weight: bold;
+    background: transparent;
+    border: none;
+    margin-bottom: 6px;
+}
+
+QLabel#lbl_mentes_info {
+    background-color: rgba(12, 10, 18, 220);
+    border: 1px solid #754a8c;
+    border-radius: 5px;
+    color: #d6d2c9;
+    font-size: 13px;
+    padding: 14px 18px;
+    min-height: 68px;
+    margin-bottom: 12px;
+}
+
+QWidget#page5_auth QLineEdit {
+    background-color: #100e17;
+    border: 1px solid #433b57;
+    border-radius: 5px;
+    color: #e6e2da;
+    padding: 10px 12px;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+QWidget#page5_auth QLineEdit:focus {
+    border: 1px solid #8c5ba6;
+    background-color: #171421;
+}
+
+/* --- 7. POPUP ABLAK --- */
+QDialog#glass_popup {
+    background: transparent;
+}
+
+QDialog#glass_popup QFrame#glass_popup_keret {
+    background-color: rgba(17, 14, 24, 245);
+    border: 1px solid #524a66;
+    border-top: 3px solid #754a8c;
+    border-radius: 6px;
+    padding: 22px 28px;
+}
+
+QDialog#glass_popup QLabel#popup_cim {
+    color: #e6e2da;
+    font-size: 18px;
+    font-weight: bold;
+    background: transparent;
+    border: none;
+    padding: 0px;
+}
+
+QDialog#glass_popup QLabel#popup_szoveg {
+    color: #c2bdd0;
+    font-size: 14px;
+    background: transparent;
+    border: none;
+    padding: 4px 0px;
 }
