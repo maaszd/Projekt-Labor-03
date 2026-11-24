@@ -8,9 +8,10 @@ from hero import Hero, GraphicalHero
 from monster import Monster, GraphicalMonster
 from user import User
 from user_db import UserDatabaseManager
-from PySide6.QtCore import Qt, QSize, QObject, Signal, QTimer, QRect, QPoint, QPropertyAnimation, QParallelAnimationGroup, QEasingCurve, QUrl
-from PySide6.QtWidgets import QApplication, QLabel, QFrame, QMainWindow, QListWidget, QListWidgetItem, QAbstractItemView, QListView, QGraphicsScene, QGraphicsPixmapItem,  QGraphicsBlurEffect, QGraphicsRectItem, QGraphicsItem, QGraphicsOpacityEffect
-from PySide6.QtGui import QIcon, QPixmap, QBrush, QColor, QPen, QImage, QPainter
+from animacio import SebzesAnimacio, KardAnimacio
+from PySide6.QtCore import Qt, QSize, QObject, Signal, QTimer, QRect, QUrl
+from PySide6.QtWidgets import QApplication, QLabel, QFrame, QMainWindow, QListWidget, QListWidgetItem, QAbstractItemView, QListView, QGraphicsScene, QGraphicsPixmapItem,  QGraphicsBlurEffect, QGraphicsRectItem, QGraphicsItem
+from PySide6.QtGui import QIcon, QPixmap
 from PySide6.QtMultimedia import QSoundEffect, QMediaPlayer, QAudioOutput
 from ui_menu import Ui_MainWindow
 from db import Adatbazis
@@ -38,26 +39,9 @@ class JatekAblak(QMainWindow):
         self.ui.setupUi(self)
 
 
-        # sebzés szám animáció
-        self.ui.sebzes_lbl.setAttribute(Qt.WA_TransparentForMouseEvents)
-        self.ui.sebzes_lbl.raise_()
-
-        self.sebzes_opacity = QGraphicsOpacityEffect(self.ui.sebzes_lbl)
-        self.sebzes_opacity.setOpacity(0.0)
-        self.ui.sebzes_lbl.setGraphicsEffect(self.sebzes_opacity)
-
-        self.sebzes_pos_anim = QPropertyAnimation(self.ui.sebzes_lbl, b"pos", self)
-        self.sebzes_pos_anim.setDuration(650)
-        self.sebzes_pos_anim.setEasingCurve(QEasingCurve.OutCubic)
-
-        self.sebzes_fade_anim = QPropertyAnimation(self.sebzes_opacity, b"opacity", self)
-        self.sebzes_fade_anim.setDuration(650)
-        self.sebzes_fade_anim.setStartValue(1.0)
-        self.sebzes_fade_anim.setEndValue(0.0)
-
-        self.sebzes_anim = QParallelAnimationGroup(self)
-        self.sebzes_anim.addAnimation(self.sebzes_pos_anim)
-        self.sebzes_anim.addAnimation(self.sebzes_fade_anim)
+        # harci animációk
+        self.sebzes_anim = SebzesAnimacio(self.ui)
+        self.kard_anim = KardAnimacio(self.ui)
 
         
         #hangok 
@@ -478,24 +462,6 @@ class JatekAblak(QMainWindow):
         self.hos_kore = True
         self.harc_timer.start(1000)
 
-    def sebzes_szam_animacio(self, cel_widget, sebzes_ertek):
-        lbl = self.ui.sebzes_lbl
-        self.sebzes_anim.stop()
-
-        lbl.setText(f"-{sebzes_ertek}")
-        lbl.adjustSize()
-        lbl.resize(lbl.width() + 20, lbl.height() + 10)
-
-        kozpont = cel_widget.mapTo(self.ui.page4_harc, cel_widget.rect().center())
-        start_pos = QPoint(kozpont.x() - lbl.width() // 2, kozpont.y() - 30)
-
-        self.sebzes_pos_anim.setStartValue(start_pos)
-        self.sebzes_pos_anim.setEndValue(QPoint(start_pos.x(), start_pos.y() - 60))
-        self.sebzes_opacity.setOpacity(1.0)
-
-        lbl.move(start_pos)
-        self.sebzes_anim.start()
-
     def auto_harc_kor(self):
         bonus_dmg, bonus_def = self.hos_bonus_statok()
         alap_dmg = self.hos.adatok.damage
@@ -511,66 +477,67 @@ class JatekAblak(QMainWindow):
             szorzo = random.uniform(0.8, 1.0)
             nyers_sebzes = int(szorzo * hos_ossz_dmg)
             valos_sebzes = max(1, nyers_sebzes - szorny_def)
-
-            self.sebzes_szam_animacio(self.ui.lbl_szorn_img, valos_sebzes)
-            self.hangok["sword"].play()
-
-            print(
-                f"[HŐS TÁMADÁS] {self.hos.adatok.name}: "
-                f"((Alap erő: {alap_dmg} + Bónusz: {bonus_dmg}) * {szorzo:.2f} = {nyers_sebzes}) "
-                f"- {szorny_nev} védelme ({szorny_def}) => {valos_sebzes} sebzés!"
-            )
-
-            # szorny sebzodes
-            self.aktualis_harcolt_szorny.adatok.takedamage(valos_sebzes)
-            self.ui.pb_szorny_hp.setValue(self.aktualis_harcolt_szorny.adatok.current_hp)
-
-            # gyozelem ellenorzes
-            if not self.aktualis_harcolt_szorny.adatok.alive():
-                print(f"A(z) {self.aktualis_harcolt_szorny.adatok.name} halott!")
-                self.hos.adatok.gain_xp(5)
-                self.ui.lbl_hos_nev.setText(f"{self.hos.adatok.name} - {self.hos.adatok.level}. szint")
-                self.karakter_statok_frissitese()
-                self.mentes()
-                self.harc_timer.stop()
-                self.ui.btn_harcinditas.setText("Tovább a térképre")
-                self.ui.btn_harcinditas.setEnabled(True)
-
-                # halott szorny eltavolitasa a szobabol
-                if self.aktualis_harcolt_szorny in self.aktualis_szoba.szornyek:
-                    self.aktualis_szoba.szornyek.remove(self.aktualis_harcolt_szorny)
-                self.aktualis_szoba.removeItem(self.aktualis_harcolt_szorny)
-                return
-
             self.hos_kore = False
+
+            def _hos_talalat():
+                self.sebzes_anim.start(self.ui.lbl_szorn_img, valos_sebzes)
+                self.hangok["sword"].play()
+
+                print(
+                    f"[HŐS TÁMADÁS] {self.hos.adatok.name}: "
+                    f"((Alap erő: {alap_dmg} + Bónusz: {bonus_dmg}) * {szorzo:.2f} = {nyers_sebzes}) "
+                    f"- {szorny_nev} védelme ({szorny_def}) => {valos_sebzes} sebzés!"
+                )
+
+                # szorny sebzodes
+                self.aktualis_harcolt_szorny.adatok.takedamage(valos_sebzes)
+                self.ui.pb_szorny_hp.setValue(self.aktualis_harcolt_szorny.adatok.current_hp)
+
+                # gyozelem ellenorzes
+                if not self.aktualis_harcolt_szorny.adatok.alive():
+                    print(f"A(z) {self.aktualis_harcolt_szorny.adatok.name} halott!")
+                    self.hos.adatok.gain_xp(5)
+                    self.ui.lbl_hos_nev.setText(f"{self.hos.adatok.name} - {self.hos.adatok.level}. szint")
+                    self.karakter_statok_frissitese()
+                    self.mentes()
+                    self.harc_timer.stop()
+                    self.ui.btn_harcinditas.setText("Tovább a térképre")
+                    self.ui.btn_harcinditas.setEnabled(True)
+
+                    # halott szorny eltavolitasa a szobabol
+                    if self.aktualis_harcolt_szorny in self.aktualis_szoba.szornyek:
+                        self.aktualis_szoba.szornyek.remove(self.aktualis_harcolt_szorny)
+                    self.aktualis_szoba.removeItem(self.aktualis_harcolt_szorny)
+
+            self.kard_anim.start(True, _hos_talalat)
         else:
             szorzo = random.uniform(0.8, 1.0)
             nyers_sebzes = int(szorzo * szorny_dmg)
             valos_sebzes = max(0, nyers_sebzes - hos_ossz_def)
-            
-
-            self.sebzes_szam_animacio(self.ui.lbl_hos_img, valos_sebzes)
-            self.hangok["sword"].play()
-
-            print(
-                f"[SZÖRNY TÁMADÁS] {szorny_nev}: "
-                f"(Erő: {szorny_dmg} * {szorzo:.2f} = {nyers_sebzes}) "
-                f"- Hős védelme ({alap_def} + {bonus_def} = {hos_ossz_def}) => {valos_sebzes} sebzés!"
-            )
-
-            # hos sebzodes
-            self.hos.adatok.takedamage(valos_sebzes)
-            self.ui.pb_hos_hp.setValue(self.hos.adatok.current_hp)
-
-            # halal ellenorzes
-            if not self.hos.adatok.alive():
-                print("Meghaltál, a Szörny megölt.")
-                self.harc_timer.stop()
-                self.ui.btn_harcinditas.setText("Vége a játéknak")
-                self.ui.btn_harcinditas.setEnabled(True)
-                return
-
             self.hos_kore = True
+
+            def _szorny_talalat():
+                self.sebzes_anim.start(self.ui.lbl_hos_img, valos_sebzes)
+                self.hangok["sword"].play()
+
+                print(
+                    f"[SZÖRNY TÁMADÁS] {szorny_nev}: "
+                    f"(Erő: {szorny_dmg} * {szorzo:.2f} = {nyers_sebzes}) "
+                    f"- Hős védelme ({alap_def} + {bonus_def} = {hos_ossz_def}) => {valos_sebzes} sebzés!"
+                )
+
+                # hos sebzodes
+                self.hos.adatok.takedamage(valos_sebzes)
+                self.ui.pb_hos_hp.setValue(self.hos.adatok.current_hp)
+
+                # halal ellenorzes
+                if not self.hos.adatok.alive():
+                    print("Meghaltál, a Szörny megölt.")
+                    self.harc_timer.stop()
+                    self.ui.btn_harcinditas.setText("Vége a játéknak")
+                    self.ui.btn_harcinditas.setEnabled(True)
+
+            self.kard_anim.start(False, _szorny_talalat)
 
     def palya_betoltese(self, json_utvonal):
         #lekerjuk a main.py helyet es osszefuzzuk a json_utvonallal
@@ -641,6 +608,7 @@ class JatekAblak(QMainWindow):
     def inventory_frissites(self):
         #a lista és a felszerelés-gombok újraépítése az adatbázis alapján
         self.ui.listWidget.clear()
+        self.kard_anim.felszerelt_kard_kep = None
         for slot in self.slotok:
             gomb = getattr(self.ui, f"btn_{slot}")
             gomb.setIcon(QIcon())
@@ -658,6 +626,8 @@ class JatekAblak(QMainWindow):
                 gomb.setIcon(ikon)
                 gomb.setIconSize(QSize(64, 64))
                 gomb.setText("")
+                if sor.slot == "kard":
+                    self.kard_anim.felszerelt_kard_kep = item.image_path
                 continue
 
             lista_elem = QListWidgetItem()
