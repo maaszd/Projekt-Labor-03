@@ -62,6 +62,18 @@ CREATE TABLE IF NOT EXISTS Map (
     palya_fajl          VARCHAR(100)                        -- a pálya szobáit leíró JSON (pl. palya_1.json)
 );
 
+-- Szörny zsákmány (drop): melyik szörny, mekkora eséllyel, milyen tárgyat dobhat
+CREATE TABLE IF NOT EXISTS Szorny_Drop (
+    id                  INTEGER PRIMARY KEY AUTOINCREMENT,
+    szorny_id           INTEGER NOT NULL REFERENCES Szorny(id) ON DELETE CASCADE,
+    item_id             INTEGER NOT NULL REFERENCES Item(id)   ON DELETE CASCADE,
+    esely               REAL    NOT NULL DEFAULT 1.0 CHECK (esely > 0 AND esely <= 1),  -- 0.25 = 25%, 1.0 = biztos
+    min_mennyiseg       INTEGER NOT NULL DEFAULT 1   CHECK (min_mennyiseg >= 1),
+    max_mennyiseg       INTEGER NOT NULL DEFAULT 1,
+    UNIQUE (szorny_id, item_id),
+    CHECK (max_mennyiseg >= min_mennyiseg)
+);
+
 -- Játékmező = mentett játékállás (játékosonként egy sor)
 
 CREATE TABLE IF NOT EXISTS Jatekmezo (
@@ -85,3 +97,4 @@ CREATE INDEX IF NOT EXISTS idx_jatekmezo_jatekos  ON Jatekmezo(jatekos_id);
 CREATE INDEX IF NOT EXISTS idx_jatekmezo_szorny   ON Jatekmezo(szorny_id);
 CREATE INDEX IF NOT EXISTS idx_jatekmezo_kuldetes ON Jatekmezo(kuldetes_id);
 CREATE INDEX IF NOT EXISTS idx_jatekmezo_map      ON Jatekmezo(map_id);
+CREATE INDEX IF NOT EXISTS idx_drop_szorny         ON Szorny_Drop(szorny_id);

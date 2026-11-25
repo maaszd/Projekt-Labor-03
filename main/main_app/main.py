@@ -386,6 +386,12 @@ class JatekAblak(QMainWindow):
             if not self.aktualis_harcolt_szorny.adatok.alive():
                 print(f"A(z) {self.aktualis_harcolt_szorny.adatok.name} halott!")
                 self.hos.adatok.gain_xp(5)
+                #zsákmány: a szörny itemeket dobhat, ezek az inventoryba kerülnek
+                zsakmany = self.db.szorny_zsakmany(self.jatekos_id, szorny_nev)
+                for item, mennyiseg in zsakmany:
+                    print(f"Zsákmány: {item.name} x{mennyiseg} ({item.rarity.get_name_hungarian()})")
+                if zsakmany:
+                    self.inventory_frissites()
                 self.ui.lbl_hos_nev.setText(f"{self.hos.adatok.name} - {self.hos.adatok.level}. szint")
                 self.karakter_statok_frissitese()
                 self.mentes()

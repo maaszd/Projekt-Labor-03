@@ -1,3 +1,4 @@
+import random
 import sqlite3
 from collections import namedtuple
 from pathlib import Path
@@ -8,6 +9,10 @@ from item import Item, ItemType, ItemRarity
 
 PROJEKT_MAPPA = Path(__file__).resolve().parent
 DB_UTVONAL = PROJEKT_MAPPA / "jatek.db"
+
+# A seed.sql verziója (PRAGMA user_version). Ha új alapadatot teszel a seed.sql-be, emeld eggyel:
+# a seed.sql minden sora INSERT OR IGNORE, ezért a meglévő adatbázison is biztonságosan újra lefut.
+SEED_VERZIO = 2
 
 # Új játékos ezeket a tárgyakat kapja (Item.id-k a seed.sql-ből)
 KEZDO_ITEMEK = [1, 2, 3, 4, 5, 6]
@@ -23,10 +28,13 @@ class Adatbazis:
         self._letrehozas()
 
     def _letrehozas(self):
-        """Táblák létrehozása, és ha még üres az Item tábla, az alapadatok betöltése."""
+        """Táblák létrehozása; az alapadatok betöltése/bővítése a seed.sql-ből (verziószám alapján)."""
         self.conn.executescript((PROJEKT_MAPPA / "schema.sql").read_text(encoding="utf-8"))
-        if self.conn.execute("SELECT COUNT(*) FROM Item").fetchone()[0] == 0:
+        verzio = self.conn.execute("PRAGMA user_version").fetchone()[0]
+        if verzio < SEED_VERZIO:
             self.conn.executescript((PROJEKT_MAPPA / "seed.sql").read_text(encoding="utf-8"))
+            self.conn.execute(f"PRAGMA user_version = {SEED_VERZIO}")
+            self.conn.commit()
 
     def close(self):
         self.conn.close()
@@ -204,3 +212,31 @@ class Adatbazis:
             "SELECT * FROM Jatekmezo WHERE jatekos_id = ? ORDER BY id DESC LIMIT 1", (jatekos_id,)
         ).fetchone()
         return dict(sor) if sor else None
+
+    # Zsákmány (drop)
+    def szorny_zsakmany(self, jatekos_id, szorny_nev, rng=random):
+        """A legyőzött szörny zsákmánya. Minden drop-sorra külön dob az esély alapján, a megszerzett
+        tárgyak bekerülnek a játékos inventoryjába (ha már van ilyen, a mennyiség nő).
+        -> [(Item, mennyiseg), ...] (üres lista, ha nem esett semmi, vagy a szörnynek nincs dropja)"""
+        dropok = self.conn.execute(
+            """SELECT i.*, d.esely, d.min_mennyiseg, d.max_mennyiseg
+               FROM Szorny_Drop d
+               JOIN Szorny s ON s.id = d.szorny_id
+               JOIN Item i   ON i.id = d.item_id
+               WHERE s.nev = ? ORDER BY d.id""",
+            (szorny_nev,),
+        ).fetchall()
+        zsakmany = []
+        with self.conn:  # egy tranzakció: vagy minden tárgy bekerül, vagy egyik sem
+            for d in dropok:
+                if rng.random() >= d["esely"]:
+                    continue
+                mennyiseg = rng.randint(d["min_mennyiseg"], d["max_mennyiseg"])
+                self.conn.execute(
+                    """INSERT INTO Inventory (jatekos_id, item_id, mennyiseg) VALUES (?, ?, ?)
+                       ON CONFLICT(jatekos_id, item_id)
+                       DO UPDATE SET mennyiseg = mennyiseg + excluded.mennyiseg""",
+                    (jatekos_id, d["id"], mennyiseg),
+                )
+                zsakmany.append((self._item(d), mennyiseg))
+        return zsakmany
