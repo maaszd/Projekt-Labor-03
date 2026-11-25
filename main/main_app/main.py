@@ -241,6 +241,10 @@ class JatekAblak(QMainWindow):
         if hasattr(self, 'aktualis_szoba') and self.aktualis_szoba:
             self.aktualis_szoba.kod_frissites(x, y, self.hos.adatok.level)
 
+        if hasattr(self, 'aktualis_szoba') and self.aktualis_szoba:
+            for szorny in self.aktualis_szoba.szornyek:
+                szorny.jarorozes()
+
         #ha a hos ralepett egy szornyre akkor harc kezdodik
         erintett_szornyek = [item for item in self.hos.collidingItems() if item.data(3) == "szorny"]
 

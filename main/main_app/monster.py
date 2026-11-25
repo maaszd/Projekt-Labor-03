@@ -1,4 +1,6 @@
 import os
+import random
+import math
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QGraphicsPixmapItem
 from PySide6.QtGui import QPixmap
@@ -132,3 +134,45 @@ class GraphicalMonster(QGraphicsPixmapItem):
         self.setPos(x, y)
         #azonositas
         self.setData(3, "szorny")
+
+        #veletlenszeru jarorozes egy fix koron belul
+        self.spawn_x = x
+        self.spawn_y = y
+        self.zona_sugar = 75
+        self.sebesseg = 1.2
+        self.varakozas = random.randint(0, 30)  # Ne egyszerre induljanak el
+        self.cel_x = x
+        self.cel_y = y
+
+    def _uj_celpont(self):
+        # veletlenszeru pont a zona sugaran belul
+        szog = random.uniform(0, 2 * math.pi)
+        tav = self.zona_sugar * math.sqrt(random.uniform(0, 1))
+        uj_x = self.spawn_x + math.cos(szog) * tav
+        uj_y = self.spawn_y + math.sin(szog) * tav
+
+        #szoba hatarain belul tartas
+        self.cel_x = max(20, min(700, uj_x))
+        self.cel_y = max(20, min(500, uj_y))
+
+    def jarorozes(self):
+        if self.adatok.is_boss:
+            return
+
+        if self.varakozas > 0:
+            self.varakozas -= 1
+            return
+
+        dx = self.cel_x - self.x()
+        dy = self.cel_y - self.y()
+        tav = math.hypot(dx, dy)
+
+        if tav <= self.sebesseg:
+            self.setPos(self.cel_x, self.cel_y)
+            self._uj_celpont()
+            self.varakozas = random.randint(30, 90)  # ~0.5 - 1.5 mp szunet
+        else:
+            self.setPos(
+                self.x() + (dx / tav) * self.sebesseg,
+                self.y() + (dy / tav) * self.sebesseg
+            )
