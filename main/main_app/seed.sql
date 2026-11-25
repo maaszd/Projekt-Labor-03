@@ -15,14 +15,14 @@ INSERT OR IGNORE INTO Item (id, nev, tipus, ritkasag, bonus_tamadas, bonus_vedek
  (8,  'Zombi bőrpáncél',   'ARMOR',  'UNCOMMON',   0, 2,  90, 'assets/uncommon_armor.png',  'mellvert'),
  (9,  'Csontkard',         'WEAPON', 'UNCOMMON',   9, 0, 120, 'assets/uncommon_sword.png',    'kard'),
  (10, 'Pókselyem kesztyű', 'ARMOR',  'UNCOMMON',   0, 2,  90, 'assets/uncommon_gloves.png', 'kesztyu'),
- (11, 'Árnyék csizma',     'ARMOR',  'RARE',       0, 3, 150, 'assets/rare_boots.png',  'cipo'),
+ (11, 'Árnyék nadrág',     'ARMOR',  'RARE',       0, 3, 150, 'assets/rare_pants.png',  'nadrag'),
  (12, 'Démoni kard',       'WEAPON', 'EPIC',      16, 0, 600, 'assets/epic_sword.png',   'kard'),
- (13, 'Démoni korona',     'ARMOR',  'LEGENDARY',  0, 5, 800, 'assets/legendary_crown.png',   'sisak');
+ (13, 'Démoni korona',     'ARMOR',  'LEGENDARY',  0, 5, 800, 'assets/legendary_helmet.png',   'sisak');
 
-INSERT OR IGNORE INTO Szorny (id, nev, alap_hp, tamadas, vedekezes, kezdemenyezes, is_boss, titulus_jutalom) VALUES
- (1, 'Goblin',   30,  12,  2, 0.4, 0, NULL),
- (2, 'Farkas',   45, 15,  3, 0.6, 0, NULL),
- (3, 'Sárkány', 300, 40, 20, 0.3, 1, 'Sárkányölő');
+--INSERT OR IGNORE INTO Szorny (id, nev, alap_hp, tamadas, vedekezes, kezdemenyezes, is_boss, titulus_jutalom) VALUES
+-- (1, 'Goblin',   30,  12,  2, 0.4, 0, NULL),
+-- (2, 'Farkas',   45, 15,  3, 0.6, 0, NULL),
+-- (3, 'Sárkány', 300, 40, 20, 0.3, 1, 'Sárkányölő');
 
 -- A palya_1.json szörnyei (a név egyezik a JSON-ban lévő "nev" mezővel – ez alapján keresi a játék a dropokat)
 INSERT OR IGNORE INTO Szorny (nev, alap_hp, tamadas, vedekezes, kezdemenyezes, is_boss, titulus_jutalom) VALUES
@@ -30,7 +30,7 @@ INSERT OR IGNORE INTO Szorny (nev, alap_hp, tamadas, vedekezes, kezdemenyezes, i
  ('Csontváz Harcos',        40, 14, 4, 0.4, 0, NULL),
  ('Pók',                    25, 14, 0, 0.4, 0, NULL),
  ('Árnyék',                 50, 11, 3, 0.4, 0, NULL),
- ('BOSS: Demonic Overlord', 250, 25, 8, 0.4, 1, NULL);
+ ('BOSS: Demonic Overlord', 250, 25, 8, 0.4, 1, 'Démonvadász');
 
 -- Zsákmány: esely 0.25 = 25%, 1.0 = mindig; a mennyiség min..max között sorsolódik
 INSERT OR IGNORE INTO Szorny_Drop (szorny_id, item_id, esely, min_mennyiseg, max_mennyiseg)
@@ -43,6 +43,20 @@ SELECT s.id, d.item_id, d.esely, 1, 1 FROM Szorny s JOIN (
     UNION ALL SELECT 'BOSS: Demonic Overlord',     12, 1.00
     UNION ALL SELECT 'BOSS: Demonic Overlord',     13, 0.60
 ) d ON d.nev = s.nev;
+
+-- Potik
+INSERT OR IGNORE INTO Potion (id, nev, hatas_tipus, ertek, idotartam_kor, kep_utvonal, arany_ertek) VALUES
+ (1, 'Erőpoti',       'ATTACK', 6, 0, 'assets/strength_potion.png', 40),   -- +6 sebzés a harc végéig
+ (2, 'Gyógyítópoti',  'HEALTH', 8, 6, 'assets/health_potion.png',  40);   -- +8 HP körönként, 6 körön át
+
+-- Nincs kezdő poti: a potikat a szörnyek dobják. Minden nem-boss szörny: 50% gyógyítópoti, 25% erőpoti.
+-- (Az új szörnyek dropjához emeld a db.py-ban a SEED_VERZIO-t: ez a sor a hiányzó párokat pótolja.)
+INSERT OR IGNORE INTO Szorny_Potion_Drop (szorny_id, potion_id, esely, min_mennyiseg, max_mennyiseg)
+SELECT s.id, p.id,
+       CASE p.hatas_tipus WHEN 'HEALTH' THEN 0.50 WHEN 'ATTACK' THEN 0.25 ELSE 0.10 END,
+       1, 1
+FROM Szorny s CROSS JOIN Potion p
+WHERE s.is_boss = 0;
 
 INSERT OR IGNORE INTO Map (id, nev, leiras, palya_fajl) VALUES
  (1, 'Sötét erdő', 'Goblinok és farkasok lakta erdő.', 'palya_1.json');

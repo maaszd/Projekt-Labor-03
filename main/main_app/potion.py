@@ -23,12 +23,14 @@ class Potion:
       image_path: str,
       effect_type: EffectType,
       value: int,
+      duration: int = 0,  # hány körig hat (0 = a harc végéig)
   ):
     self._param_id = param_id  # Egyedi azonosító az adatbázisból
     self._name = name  # A poti neve
     self._image_path = image_path  # A kép útvonala
     self._effect_type = effect_type  # A hatás típusa (Enum)
     self._value = value  # A növelés mértéke
+    self._duration = duration  # Hatásidő körökben (0 = a harc végéig)
 
   @property
   def param_id(self) -> int:
@@ -50,6 +52,10 @@ class Potion:
   def value(self) -> int:
     return self._value
 
+  @property
+  def duration(self) -> int:
+    return self._duration
+
   @value.setter
   def value(self, new_value: int):
     self._value = new_value
@@ -58,6 +64,6 @@ class Potion:
     type_name = self.effect_type.get_name_hungarian()
     return (
         f"<Potion [{self.name}] -> Típus: {type_name}"
-        f" ({self.effect_type.value}), Érték: +{self.value}, Kép:"
+        f" ({self.effect_type.value}), Érték: +{self.value}, Idő: {self.duration}, Kép:"
         f" {self.image_path}>"
     )

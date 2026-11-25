@@ -74,6 +74,39 @@ CREATE TABLE IF NOT EXISTS Szorny_Drop (
     CHECK (max_mennyiseg >= min_mennyiseg)
 );
 
+-- Potik (fogyóeszközök). A hatás típusa a potion.py EffectType enumja; jelenleg a játék ezeket kezeli:
+--   ATTACK = sebzésbónusz a harc végéig, HEALTH = életregeneráció körönként `idotartam_kor` körig
+CREATE TABLE IF NOT EXISTS Potion (
+    id                  INTEGER PRIMARY KEY AUTOINCREMENT,
+    nev                 VARCHAR(100) NOT NULL UNIQUE,
+    hatas_tipus         VARCHAR(20)  NOT NULL CHECK (hatas_tipus IN ('HEALTH','ATTACK')),
+    ertek               INTEGER NOT NULL CHECK (ertek > 0),               -- ATTACK: +sebzés; HEALTH: HP körönként
+    idotartam_kor       INTEGER NOT NULL DEFAULT 0 CHECK (idotartam_kor >= 0),  -- 0 = a harc végéig
+    kep_utvonal         VARCHAR(200) NOT NULL DEFAULT '',
+    arany_ertek         INTEGER NOT NULL DEFAULT 0 CHECK (arany_ertek >= 0)
+);
+
+-- A játékosnál lévő potik darabszáma
+CREATE TABLE IF NOT EXISTS Potion_Inventory (
+    id                  INTEGER PRIMARY KEY AUTOINCREMENT,
+    jatekos_id          INTEGER NOT NULL REFERENCES Jatekos(id) ON DELETE CASCADE,
+    potion_id           INTEGER NOT NULL REFERENCES Potion(id)  ON DELETE CASCADE,
+    mennyiseg           INTEGER NOT NULL DEFAULT 0 CHECK (mennyiseg >= 0),
+    UNIQUE (jatekos_id, potion_id)
+);
+
+-- Szörny potion-zsákmány: melyik szörny, mekkora eséllyel, melyik potit dobhatja
+CREATE TABLE IF NOT EXISTS Szorny_Potion_Drop (
+    id                  INTEGER PRIMARY KEY AUTOINCREMENT,
+    szorny_id           INTEGER NOT NULL REFERENCES Szorny(id) ON DELETE CASCADE,
+    potion_id           INTEGER NOT NULL REFERENCES Potion(id) ON DELETE CASCADE,
+    esely               REAL    NOT NULL DEFAULT 1.0 CHECK (esely > 0 AND esely <= 1),  -- 0.5 = 50%
+    min_mennyiseg       INTEGER NOT NULL DEFAULT 1   CHECK (min_mennyiseg >= 1),
+    max_mennyiseg       INTEGER NOT NULL DEFAULT 1,
+    UNIQUE (szorny_id, potion_id),
+    CHECK (max_mennyiseg >= min_mennyiseg)
+);
+
 -- Játékmező = mentett játékállás (játékosonként egy sor)
 
 CREATE TABLE IF NOT EXISTS Jatekmezo (
@@ -98,3 +131,5 @@ CREATE INDEX IF NOT EXISTS idx_jatekmezo_szorny   ON Jatekmezo(szorny_id);
 CREATE INDEX IF NOT EXISTS idx_jatekmezo_kuldetes ON Jatekmezo(kuldetes_id);
 CREATE INDEX IF NOT EXISTS idx_jatekmezo_map      ON Jatekmezo(map_id);
 CREATE INDEX IF NOT EXISTS idx_drop_szorny         ON Szorny_Drop(szorny_id);
+CREATE INDEX IF NOT EXISTS idx_potion_inv_jatekos  ON Potion_Inventory(jatekos_id);
+CREATE INDEX IF NOT EXISTS idx_potion_drop_szorny  ON Szorny_Potion_Drop(szorny_id);

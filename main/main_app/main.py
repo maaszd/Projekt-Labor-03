@@ -9,10 +9,11 @@ from monster import Monster, GraphicalMonster
 from user import User
 from user_db import UserDatabaseManager
 from PySide6.QtCore import Qt, QSize, QObject, Signal, QTimer, QRect
-from PySide6.QtWidgets import QApplication, QLabel, QFrame, QMainWindow, QListWidget, QListWidgetItem, QAbstractItemView, QListView, QGraphicsScene, QGraphicsPixmapItem,  QGraphicsBlurEffect, QGraphicsRectItem, QGraphicsItem
+from PySide6.QtWidgets import QApplication, QLabel, QFrame, QMainWindow, QListWidget, QListWidgetItem, QAbstractItemView, QListView, QGraphicsScene, QGraphicsPixmapItem,  QGraphicsBlurEffect, QGraphicsRectItem, QGraphicsItem, QMenu, QPushButton, QHBoxLayout
 from PySide6.QtGui import QIcon, QPixmap, QBrush, QColor, QPen, QImage, QPainter
 from ui_menu import Ui_MainWindow
 from db import Adatbazis
+from potion import EffectType
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 #textBrowserbe kiiratas miatt kell
@@ -31,6 +32,11 @@ class ConsoleRedirector(QObject):
 
           
 class JatekAblak(QMainWindow):
+    #potik hatásai: csak a harc idejére élnek, nem kerülnek mentésre
+    poti_bonusz_dmg = 0
+    regen_ertek = 0
+    regen_hatralevo_korok = 0
+
     def __init__(self):
         super().__init__()
         self.ui = Ui_MainWindow()
@@ -132,6 +138,15 @@ class JatekAblak(QMainWindow):
         self.harc_timer = QTimer(self)
         self.harc_timer.timeout.connect(self.auto_harc_kor)
         self.ui.btn_harcinditas.clicked.connect(self.harc_inditasa)
+        #POTIK gomb a "Harc indítása" mellett (a hatások a menüből választható potikból jönnek)
+        self.btn_poti = QPushButton("Potik", self.ui.page4_harc)
+        self.btn_poti.setEnabled(False)
+        self.btn_poti.clicked.connect(self.poti_menu_megnyitasa)
+        gomb_sor = QHBoxLayout()
+        self.ui.gridLayout_4.removeWidget(self.ui.btn_harcinditas)
+        gomb_sor.addWidget(self.ui.btn_harcinditas)
+        gomb_sor.addWidget(self.btn_poti)
+        self.ui.gridLayout_4.addLayout(gomb_sor, 1, 1, 1, 1)
 
 
         self.lenyomott_gombok = set() 
@@ -238,6 +253,7 @@ class JatekAblak(QMainWindow):
         if erintett_szornyek:
             
             self.aktualis_harcolt_szorny = erintett_szornyek[0]
+            self.poti_hatasok_nullazasa()
             self.lenyomott_gombok.clear()
 
             
@@ -274,6 +290,7 @@ class JatekAblak(QMainWindow):
             self.ui.pb_hos_hp.setValue(self.hos.adatok.current_hp)
             
             #harci kepernyore valtas
+            self.btn_poti.setEnabled(True)
             self.ui.stackedWidget.setCurrentIndex(4)
             print(f"Harc indult a(z) {self.aktualis_harcolt_szorny.adatok.name} ellen!")
             
@@ -310,6 +327,9 @@ class JatekAblak(QMainWindow):
         self.szobavaltas_alatt = False
 
     def targyra_kattintott(self, lista_elem):
+        if lista_elem.data(Qt.UserRole + 2) == "poti":
+            print(f"{lista_elem.data(Qt.UserRole + 1)}: a potikat harc közben, a Potik gombbal használhatod.")
+            return
         item_id = lista_elem.data(Qt.UserRole)
         nev = lista_elem.data(Qt.UserRole + 1)
         if self.db.felszerel(self.jatekos_id, item_id):
@@ -368,6 +388,12 @@ class JatekAblak(QMainWindow):
         szorny_def = self.aktualis_harcolt_szorny.adatok.defense
 
         if self.hos_kore:
+            #gyógyítópoti: életregeneráció, körönként egyszer (a hős körének elején)
+            if self.regen_hatralevo_korok > 0:
+                gyogyult = self.hos.adatok.heal(self.regen_ertek)
+                self.regen_hatralevo_korok -= 1
+                self.ui.pb_hos_hp.setValue(self.hos.adatok.current_hp)
+                print(f"[REGENERÁCIÓ] +{gyogyult} életerő ({self.regen_hatralevo_korok} kör van hátra)")
             szorzo = random.uniform(0.8, 1.0)
             nyers_sebzes = int(szorzo * hos_ossz_dmg)
             valos_sebzes = max(1, nyers_sebzes - szorny_def)
@@ -385,12 +411,20 @@ class JatekAblak(QMainWindow):
             # gyozelem ellenorzes
             if not self.aktualis_harcolt_szorny.adatok.alive():
                 print(f"A(z) {self.aktualis_harcolt_szorny.adatok.name} halott!")
+                self.poti_hatasok_nullazasa()
+                self.btn_poti.setEnabled(False)
                 self.hos.adatok.gain_xp(5)
                 #zsákmány: a szörny itemeket dobhat, ezek az inventoryba kerülnek
                 zsakmany = self.db.szorny_zsakmany(self.jatekos_id, szorny_nev)
                 for item, mennyiseg in zsakmany:
                     print(f"Zsákmány: {item.name} x{mennyiseg} ({item.rarity.get_name_hungarian()})")
                 if zsakmany:
+                    self.inventory_frissites()
+                #a szörnyek potikat is dobhatnak (gyógyító 50%, erő 25% – a Szorny_Potion_Drop táblában állítható)
+                poti_zsakmany = self.db.szorny_poti_zsakmany(self.jatekos_id, szorny_nev)
+                for poti, mennyiseg in poti_zsakmany:
+                    print(f"Zsákmány: {poti.name} x{mennyiseg}")
+                if poti_zsakmany:
                     self.inventory_frissites()
                 self.ui.lbl_hos_nev.setText(f"{self.hos.adatok.name} - {self.hos.adatok.level}. szint")
                 self.karakter_statok_frissitese()
@@ -424,6 +458,8 @@ class JatekAblak(QMainWindow):
             # halal ellenorzes
             if not self.hos.adatok.alive():
                 print("Meghaltál, a Szörny megölt.")
+                self.poti_hatasok_nullazasa()
+                self.btn_poti.setEnabled(False)
                 self.harc_timer.stop()
                 self.ui.btn_harcinditas.setText("Vége a játéknak")
                 self.ui.btn_harcinditas.setEnabled(True)
@@ -476,6 +512,51 @@ class JatekAblak(QMainWindow):
     
     # ADATBÁZIS
 
+    # ---------------- POTIK ----------------
+    def poti_hatasok_nullazasa(self):
+        self.poti_bonusz_dmg = 0
+        self.regen_ertek = 0
+        self.regen_hatralevo_korok = 0
+        self.karakter_statok_frissitese()  #az erőpoti bónusza eltűnik a karakterlapról is
+
+    def poti_menu_megnyitasa(self):
+        menu = QMenu(self)
+        for sor in self.db.potik(self.jatekos_id):
+            poti = sor.potion
+            if poti.effect_type == EffectType.ATTACK:
+                leiras = f"+{poti.value} sebzés a harc végéig"
+            else:
+                leiras = f"+{poti.value} életerő/kör, {poti.duration} körön át"
+            akcio = menu.addAction(QIcon(os.path.join(self.projekt_mappa, poti.image_path)),
+                                   f"{poti.name} ({leiras}) – {sor.mennyiseg} db")
+            akcio.setEnabled(sor.mennyiseg > 0)
+            akcio.triggered.connect(lambda checked=False, pid=poti.param_id: self.poti_hasznalata(pid))
+        menu.exec(self.btn_poti.mapToGlobal(self.btn_poti.rect().topLeft()))
+
+    def poti_hasznalata(self, potion_id):
+        if not self.btn_poti.isEnabled():  #a harc közben megnyitott menü a harc végén már nem használható
+            return
+        poti = next((s.potion for s in self.db.potik(self.jatekos_id) if s.potion.param_id == potion_id), None)
+        if poti is None:
+            return
+        if poti.effect_type == EffectType.ATTACK and self.poti_bonusz_dmg > 0:
+            print(f"{poti.name}: a hatása már tart a harc végéig, nem fogyasztasz még egyet.")
+            return
+        if self.db.poti_felhasznal(self.jatekos_id, potion_id) is None:
+            print(f"Nincs több: {poti.name}!")
+            return
+
+        if poti.effect_type == EffectType.ATTACK:
+            self.poti_bonusz_dmg = poti.value
+            bonus_dmg, _ = self.hos_bonus_statok()
+            self.ui.lbl_hos_ero_ertek.setText(str(self.hos.adatok.damage + bonus_dmg))
+            print(f"{poti.name} használva: +{poti.value} sebzés a harc végéig!")
+        else:
+            #újabb gyógyítópoti: a regeneráció újraindul a teljes időtartammal (nem halmozódik)
+            self.regen_ertek = poti.value
+            self.regen_hatralevo_korok = poti.duration
+            print(f"{poti.name} használva: +{poti.value} életerő körönként, {poti.duration} körön át!")
+        self.inventory_frissites()  #a darabszám a listában csökken
     def mentes(self):
         #halott hőst nem mentünk, így a "Folytatás" az utolsó élő állapotról indul
         if not hasattr(self, "hos") or not self.hos.adatok.alive():
@@ -526,6 +607,53 @@ class JatekAblak(QMainWindow):
             lista_elem.setData(Qt.UserRole + 1, item.name)
             self.ui.listWidget.addItem(lista_elem)
             self.karakter_statok_frissitese()
+        #potik: a lista végén, darabszámmal (csak amiből van)
+        for sor in self.db.potik(self.jatekos_id):
+            if sor.mennyiseg <= 0:
+                continue
+            poti = sor.potion
+            pixmap = QPixmap(os.path.join(self.projekt_mappa, poti.image_path))
+            if pixmap.isNull():
+                print(f"HIBA: Nem található a poti képe: {poti.image_path}")
+                pixmap = QPixmap(64, 64)
+                pixmap.fill(QColor("#3a3347"))
+            pixmap = pixmap.scaled(64, 64, Qt.KeepAspectRatio, Qt.SmoothTransformation)
+            lista_elem = QListWidgetItem()
+            lista_elem.setIcon(QIcon(self.ikon_darabszammal(pixmap, sor.mennyiseg)))
+            lista_elem.setToolTip(self.poti_leiras(sor))
+            lista_elem.setData(Qt.UserRole, poti.param_id)
+            lista_elem.setData(Qt.UserRole + 1, poti.name)
+            lista_elem.setData(Qt.UserRole + 2, "poti")  #megkülönbözteti a tárgyaktól
+            self.ui.listWidget.addItem(lista_elem)
+
+    def ikon_darabszammal(self, pixmap, darab):
+        #a kép jobb alsó sarkába "x3" jelvényt rajzol
+        kep = pixmap.copy()
+        festo = QPainter(kep)
+        festo.setRenderHint(QPainter.Antialiasing)
+        betu = festo.font()
+        betu.setBold(True)
+        betu.setPointSize(9)
+        festo.setFont(betu)
+        szoveg = f"x{darab}"
+        szeles = festo.fontMetrics().horizontalAdvance(szoveg) + 8
+        magas = festo.fontMetrics().height() + 2
+        teglalap = QRect(kep.width() - szeles, kep.height() - magas, szeles, magas)
+        festo.setPen(Qt.NoPen)
+        festo.setBrush(QColor(0, 0, 0, 190))
+        festo.drawRoundedRect(teglalap, 4, 4)
+        festo.setPen(QColor("#f5eedc"))
+        festo.drawText(teglalap, Qt.AlignCenter, szoveg)
+        festo.end()
+        return kep
+
+    def poti_leiras(self, sor):
+        poti = sor.potion
+        if poti.effect_type == EffectType.ATTACK:
+            hatas = f"+{poti.value} sebzés a harc végéig"
+        else:
+            hatas = f"+{poti.value} életerő/kör, {poti.duration} körön át"
+        return f"<b>{poti.name}</b><br>{hatas}<br>Darab: {sor.mennyiseg}<br><i>Harc közben, a Potik gombbal használható</i>"
 
     def levesz(self, slot):
         if self.db.levesz(self.jatekos_id, slot):
@@ -550,6 +678,7 @@ class JatekAblak(QMainWindow):
           if sor.fel_van_szerelve:
               bonus_dmg += sor.item.bonus_attack
               bonus_def += sor.item.bonus_defense
+      bonus_dmg += self.poti_bonusz_dmg  #erőpoti (a harc végéig)
       return bonus_dmg, bonus_def
 
     def karakter_statok_frissitese(self):
