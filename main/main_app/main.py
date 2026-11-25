@@ -163,7 +163,7 @@ class JatekAblak(QMainWindow):
         self.harc_timer.timeout.connect(self.auto_harc_kor)
         self.ui.btn_harcinditas.clicked.connect(self.harc_inditasa)
         #POTIK gomb a "Harc indítása" mellett (a hatások a menüből választható potikból jönnek)
-        self.btn_poti = QPushButton("Potik", self.ui.page4_harc)
+        #self.btn_poti = QPushButton("Potik", self.ui.page4_harc)
         self.btn_poti.setEnabled(False)
         self.btn_poti.clicked.connect(self.poti_menu_megnyitasa)
         gomb_sor = QHBoxLayout()
