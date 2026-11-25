@@ -8,6 +8,11 @@ from hero import Hero, GraphicalHero
 from monster import Monster, GraphicalMonster
 from user import User
 from user_db import UserDatabaseManager
+from animacio import SebzesAnimacio, KardAnimacio
+from PySide6.QtCore import Qt, QSize, QObject, Signal, QTimer, QRect, QUrl
+from PySide6.QtWidgets import QApplication, QLabel, QFrame, QMainWindow, QListWidget, QListWidgetItem, QAbstractItemView, QListView, QGraphicsScene, QGraphicsPixmapItem,  QGraphicsBlurEffect, QGraphicsRectItem, QGraphicsItem
+from PySide6.QtGui import QIcon, QPixmap
+from PySide6.QtMultimedia import QSoundEffect, QMediaPlayer, QAudioOutput
 from PySide6.QtCore import Qt, QSize, QObject, Signal, QTimer, QRect
 from PySide6.QtWidgets import QApplication, QHBoxLayout, QLabel, QFrame, QMainWindow, QListWidget, QListWidgetItem, QAbstractItemView, QListView, QGraphicsScene, QGraphicsPixmapItem,  QGraphicsBlurEffect, QGraphicsRectItem, QGraphicsItem, QVBoxLayout, QWidget
 from PySide6.QtGui import QIcon, QPixmap, QBrush, QColor, QPen, QImage, QPainter, QRadialGradient
@@ -42,6 +47,41 @@ class JatekAblak(QMainWindow):
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
 
+
+        # harci animációk
+        self.sebzes_anim = SebzesAnimacio(self.ui)
+        self.kard_anim = KardAnimacio(self.ui)
+
+        
+        #hangok 
+        self.hangero = 0.7
+        self.zene_hangero = 0.7
+        self.beallitasok_fajl = os.path.join(os.path.dirname(os.path.abspath(__file__)), "beallitasok.json")
+        hang_mappa = os.path.join(os.path.dirname(os.path.abspath(__file__)), "assets", "sounds")
+
+        self.hangok = {}
+        hang_fajlok = {"sword": "sword.wav", "potion": "potion.wav"}
+        for nev, fajl in hang_fajlok.items():
+            hang = QSoundEffect(self)
+            hang.setSource(QUrl.fromLocalFile(os.path.join(hang_mappa, fajl)))
+            hang.setVolume(self.hangero)
+            self.hangok[nev] = hang
+
+        #háttérzenék
+        self.zene_kimenet = QAudioOutput(self)
+        self.zene_kimenet.setVolume(self.zene_hangero)
+        self.zene_lejatszo = QMediaPlayer(self)
+        self.zene_lejatszo.setAudioOutput(self.zene_kimenet)
+        self.zene_lejatszo.setLoops(QMediaPlayer.Infinite)
+        self.aktualis_zene = None
+        self.zenek = {
+            "menu": QUrl.fromLocalFile(os.path.join(hang_mappa, "menu.mp3")),
+            "kocsma": QUrl.fromLocalFile(os.path.join(hang_mappa, "kocsma.mp3")),
+            "campfire": QUrl.fromLocalFile(os.path.join(hang_mappa, "campfire.mp3")),
+            "kovacs": QUrl.fromLocalFile(os.path.join(hang_mappa, "Blacksmith.mp3")),
+        }
+
+
         self.setWindowTitle("Projekt Labor 03 - RPG Játék")  
         self.ui.statusbar.hide()  
         self.ui.menubar.hide()    
@@ -59,6 +99,9 @@ class JatekAblak(QMainWindow):
         #bal oszlop gombok meg a text doboz elrejtése 
         self.ui.frame_3.hide()       
         self.ui.textBrowser.hide()
+        #hangerö beállitás betöltése és menü zene inditás
+        self.beallitasok_betoltese()
+        self.zene_inditasa("menu")
 
         #placeholder text a mezokben
         for mezo, szoveg in [
@@ -77,8 +120,16 @@ class JatekAblak(QMainWindow):
         
         #fomenu gomb fuggvenyei
         self.ui.btn_folytatas.clicked.connect(self.jatek_folytatasa)
+        self.ui.btn_beallitasok.clicked.connect(self.beallitasok_megnyitasa)
         self.ui.btn_kilepes.clicked.connect(self.close)
         self.ui.btn_kilepes_2.clicked.connect(self.vissza_a_fomenube)
+
+        #beallitasok menu gombjai es sliderei
+        self.ui.slider_hangeffektek.valueChanged.connect(self.hangeffekt_hangero_valtozott)
+        self.ui.slider_hatterzene.valueChanged.connect(self.hatterzene_hangero_valtozott)
+        self.ui.btn_beallitasok_mentes.clicked.connect(self.beallitasok_mentese)
+        self.ui.btn_beallitasok_vissza.clicked.connect(self.vissza_a_fomenube)
+
         self.ui.btn_beallitasok.clicked.connect(lambda: self.ui.stackedWidget.setCurrentIndex(6))
         
         self.ui.btn_mentes_es_betoltes.clicked.connect(self.mentes_oldal_megnyitasa)
@@ -181,6 +232,23 @@ class JatekAblak(QMainWindow):
         self.mozgas_timer.start(16)
         self.szobavaltas_alatt = True  #amíg le nem lép az ajtóról, nincs szobaváltás
 
+        label_stilus = """
+            QLabel {
+                background-color: #1e1b24;
+                border: 2px solid #8c7853;
+                border-radius: 6px;
+                color: #f5eedc;
+                padding: 5px 10px;
+                font-size: 14px;
+                font-weight: bold;
+            }
+        """
+        for oldal in (self.ui.page3_karakter, self.ui.page4_harc):
+            for lbl in oldal.findChildren(QLabel):
+                if lbl.objectName() not in ("lbl_hos_img", "lbl_szorn_img", "sebzes_lbl"):
+                    lbl.setFrameShape(QFrame.Shape.Box)
+                    lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
+                    lbl.setStyleSheet(label_stilus)
 		
 #----------------------__init__(self): VÉGE ---------------------------------
     
@@ -205,17 +273,88 @@ class JatekAblak(QMainWindow):
         self.aktualis_felhasznalo = None
         print("Sikeresen kijelentkeztél.")
 			
+    def zene_inditasa(self, zene_nev):
+        if zene_nev not in self.zenek:
+            return
+        if self.aktualis_zene == zene_nev and self.zene_lejatszo.playbackState() == QMediaPlayer.PlayingState:
+            return
+        self.aktualis_zene = zene_nev
+        self.zene_lejatszo.setSource(self.zenek[zene_nev])
+        self.zene_lejatszo.play()
+
+    def zene_leallitasa(self):
+        self.zene_lejatszo.stop()
+        self.aktualis_zene = None
+
     def jatek_folytatasa(self):
+        self.zene_leallitasa()
         self.ui.frame_3.show()
         self.ui.textBrowser.show()
         self.ui.stackedWidget.setCurrentIndex(1)
         print("Üdv újra a játékban!")
+
+    def beallitasok_megnyitasa(self):
+        self.beallitasok_ui_frissites()
+        self.ui.stackedWidget.setCurrentWidget(self.ui.page6_beallitasok)
+
+    def beallitasok_ui_frissites(self):
+        hangeffekt_szazalek = int(round(self.hangero * 100))
+        hatterzene_szazalek = int(round(self.zene_hangero * 100))
+        self.ui.slider_hangeffektek.setValue(hangeffekt_szazalek)
+        self.ui.lbl_hangeffektek_ertek.setText(f"{hangeffekt_szazalek}%")
+        self.ui.slider_hatterzene.setValue(hatterzene_szazalek)
+        self.ui.lbl_hatterzene_ertek.setText(f"{hatterzene_szazalek}%")
+
+    def hangeffekt_hangero_valtozott(self, ertek):
+        self.ui.lbl_hangeffektek_ertek.setText(f"{ertek}%")
+
+    def hatterzene_hangero_valtozott(self, ertek):
+        self.ui.lbl_hatterzene_ertek.setText(f"{ertek}%")
+
+    def beallitasok_betoltese(self):
+        adatok = {"hangeffektek": 70,"hatterzene": 70}
+        if os.path.exists(self.beallitasok_fajl):
+            try:
+                with open(self.beallitasok_fajl, "r", encoding="utf-8") as f:
+                    betoltott = json.load(f)
+                if isinstance(betoltott, dict):
+                    adatok.update(betoltott)
+            except (json.JSONDecodeError, OSError) as e:
+                print(f"Nem sikerült betölteni a beállításokat: {e}")
+
+        self.hangero = adatok["hangeffektek"] / 100.0
+        self.zene_hangero = adatok["hatterzene"] / 100.0
+
+        for hang in self.hangok.values():
+            hang.setVolume(self.hangero)
+        self.zene_kimenet.setVolume(self.zene_hangero)
+
+        self.beallitasok_ui_frissites()
+
+    def beallitasok_mentese(self):
+        hangeffektek = self.ui.slider_hangeffektek.value()
+        hatterzene = self.ui.slider_hatterzene.value()
+        
+        self.hangero = hangeffektek / 100.0
+        self.zene_hangero = hatterzene / 100.0
+        for hang in self.hangok.values():
+            hang.setVolume(self.hangero)
+        self.zene_kimenet.setVolume(self.zene_hangero)
+
+        adatok = {"hangeffektek": hangeffektek, "hatterzene": hatterzene}
+        try:
+            with open(self.beallitasok_fajl, "w", encoding="utf-8") as f:
+                json.dump(adatok, f, indent=4, ensure_ascii=False)
+            print("Beállítások sikeresen elmentve!")
+        except OSError as e:
+            print(f"Hiba a beállítások mentésekor: {e}")
 
     def vissza_a_fomenube(self):    
         self.mentes()
         self.ui.frame_3.hide()       
         self.ui.textBrowser.hide()   
         self.ui.stackedWidget.setCurrentIndex(0) 
+        self.zene_inditasa("menu")
         print("Visszatértél a főmenübe.")
     
     def keyPressEvent(self, event):
@@ -401,17 +540,32 @@ class JatekAblak(QMainWindow):
             szorzo = random.uniform(0.8, 1.0)
             nyers_sebzes = int(szorzo * hos_ossz_dmg)
             valos_sebzes = max(1, nyers_sebzes - szorny_def)
+            self.hos_kore = False
 
-            print(
-                f"[HŐS TÁMADÁS] {self.hos.adatok.name}: "
-                f"((Alap erő: {alap_dmg} + Bónusz: {bonus_dmg}) * {szorzo:.2f} = {nyers_sebzes}) "
-                f"- {szorny_nev} védelme ({szorny_def}) => {valos_sebzes} sebzés!"
-            )
+            def _hos_talalat():
+                self.sebzes_anim.start(self.ui.lbl_szorn_img, valos_sebzes)
+                self.hangok["sword"].play()
 
-            # szorny sebzodes
-            self.aktualis_harcolt_szorny.adatok.takedamage(valos_sebzes)
-            self.ui.pb_szorny_hp.setValue(self.aktualis_harcolt_szorny.adatok.current_hp)
+                print(
+                    f"[HŐS TÁMADÁS] {self.hos.adatok.name}: "
+                    f"((Alap erő: {alap_dmg} + Bónusz: {bonus_dmg}) * {szorzo:.2f} = {nyers_sebzes}) "
+                    f"- {szorny_nev} védelme ({szorny_def}) => {valos_sebzes} sebzés!"
+                )
 
+                # szorny sebzodes
+                self.aktualis_harcolt_szorny.adatok.takedamage(valos_sebzes)
+                self.ui.pb_szorny_hp.setValue(self.aktualis_harcolt_szorny.adatok.current_hp)
+
+                # gyozelem ellenorzes
+                if not self.aktualis_harcolt_szorny.adatok.alive():
+                    print(f"A(z) {self.aktualis_harcolt_szorny.adatok.name} halott!")
+                    self.hos.adatok.gain_xp(5)
+                    self.ui.lbl_hos_nev.setText(f"{self.hos.adatok.name} - {self.hos.adatok.level}. szint")
+                    self.karakter_statok_frissitese()
+                    self.mentes()
+                    self.harc_timer.stop()
+                    self.ui.btn_harcinditas.setText("Tovább a térképre")
+                    self.ui.btn_harcinditas.setEnabled(True)
             # gyozelem ellenorzes
             if not self.aktualis_harcolt_szorny.adatok.alive():
                 print(f"A(z) {self.aktualis_harcolt_szorny.adatok.name} halott!")
@@ -441,24 +595,34 @@ class JatekAblak(QMainWindow):
                 if self.aktualis_harcolt_szorny in self.aktualis_szoba.szornyek:
                     self.aktualis_szoba.szornyek.remove(self.aktualis_harcolt_szorny)
                 self.aktualis_szoba.removeItem(self.aktualis_harcolt_szorny)
-                return
 
-            self.hos_kore = False
+            self.kard_anim.start(True, _hos_talalat)
         else:
             szorzo = random.uniform(0.8, 1.0)
             nyers_sebzes = int(szorzo * szorny_dmg)
             valos_sebzes = max(0, nyers_sebzes - hos_ossz_def)
+            self.hos_kore = True
 
-            print(
-                f"[SZÖRNY TÁMADÁS] {szorny_nev}: "
-                f"(Erő: {szorny_dmg} * {szorzo:.2f} = {nyers_sebzes}) "
-                f"- Hős védelme ({alap_def} + {bonus_def} = {hos_ossz_def}) => {valos_sebzes} sebzés!"
-            )
+            def _szorny_talalat():
+                self.sebzes_anim.start(self.ui.lbl_hos_img, valos_sebzes)
+                self.hangok["sword"].play()
 
-            # hos sebzodes
-            self.hos.adatok.takedamage(valos_sebzes)
-            self.ui.pb_hos_hp.setValue(self.hos.adatok.current_hp)
+                print(
+                    f"[SZÖRNY TÁMADÁS] {szorny_nev}: "
+                    f"(Erő: {szorny_dmg} * {szorzo:.2f} = {nyers_sebzes}) "
+                    f"- Hős védelme ({alap_def} + {bonus_def} = {hos_ossz_def}) => {valos_sebzes} sebzés!"
+                )
 
+                # hos sebzodes
+                self.hos.adatok.takedamage(valos_sebzes)
+                self.ui.pb_hos_hp.setValue(self.hos.adatok.current_hp)
+
+                # halal ellenorzes
+                if not self.hos.adatok.alive():
+                    print("Meghaltál, a Szörny megölt.")
+                    self.harc_timer.stop()
+                    self.ui.btn_harcinditas.setText("Vége a játéknak")
+                    self.ui.btn_harcinditas.setEnabled(True)
             # halal ellenorzes
             if not self.hos.adatok.alive():
                 print("Meghaltál, a Szörny megölt. A dungeon alaphelyzetbe állt!")
@@ -473,6 +637,8 @@ class JatekAblak(QMainWindow):
                 self.ui.btn_harcinditas.setText("Vége a játéknak")
                 self.ui.btn_harcinditas.setEnabled(True)
                 return
+
+            self.kard_anim.start(False, _szorny_talalat)
 
             self.hos_kore = True
 
@@ -560,6 +726,7 @@ class JatekAblak(QMainWindow):
     def inventory_frissites(self):
         #a lista és a felszerelés-gombok újraépítése az adatbázis alapján
         self.ui.listWidget.clear()
+        self.kard_anim.felszerelt_kard_kep = None
         for slot in self.slotok:
             gomb = getattr(self.ui, f"btn_{slot}")
             gomb.setIcon(QIcon())
@@ -577,6 +744,8 @@ class JatekAblak(QMainWindow):
                 gomb.setIcon(ikon)
                 gomb.setIconSize(QSize(64, 64))
                 gomb.setText("")
+                if sor.slot == "kard":
+                    self.kard_anim.felszerelt_kard_kep = item.image_path
                 continue
 
             lista_elem = QListWidgetItem()

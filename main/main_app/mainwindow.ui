@@ -165,7 +165,7 @@
                 <item>
                  <widget class="QPushButton" name="btn_beallitasok">
                   <property name="text">
-                   <string>Beállítások(Coming Soon!)</string>
+                   <string>Beállítások</string>
                   </property>
                  </widget>
                 </item>

@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'mainwindow.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.12.0
+## Created by: Qt User Interface Compiler version 6.11.2
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -463,6 +463,11 @@ class Ui_MainWindow(object):
         self.stackedWidget.addWidget(self.page3_karakter)
         self.page4_harc = QWidget()
         self.page4_harc.setObjectName(u"page4_harc")
+        self.sebzes_lbl = QLabel(self.page4_harc)
+        self.sebzes_lbl.setObjectName(u"sebzes_lbl")
+        self.sebzes_lbl.setGeometry(QRect(0, 0, 100, 30))
+        self.sebzes_lbl.setStyleSheet(u"color: #ff3b3b; font-size: 26px; font-weight: bold; background: transparent; border: none;")
+        self.sebzes_lbl.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.verticalLayout_8 = QVBoxLayout(self.page4_harc)
         self.verticalLayout_8.setObjectName(u"verticalLayout_8")
         self.gridLayout_4 = QGridLayout()
@@ -958,6 +963,7 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
 
         self.stackedWidget.setCurrentIndex(5)
+        self.stackedWidget.setCurrentIndex(5)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -1003,6 +1009,7 @@ class Ui_MainWindow(object):
         self.label_14.setText(QCoreApplication.translate("MainWindow", u"Kezdem\u00e9nyez\u00e9s:", None))
         self.label_89.setText("")
         self.label_94.setText(QCoreApplication.translate("MainWindow", u"Er\u0151:", None))
+        self.sebzes_lbl.setText(QCoreApplication.translate("MainWindow", u"-0", None))
         self.btn_harcinditas.setText(QCoreApplication.translate("MainWindow", u"Harc ind\u00edt\u00e1sa", None))
         self.label_96.setText(QCoreApplication.translate("MainWindow", u"V\u00e9dekez\u00e9s:", None))
         self.label_98.setText(QCoreApplication.translate("MainWindow", u"Kezdem\u00e9nyez\u00e9s:", None))
